@@ -8,4 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:font">@font/nunito_regular</item>
     </style>
+
+    <style name="Heading">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:fontFamily">@font/nunito_bold</item>
+        <item name="android:layout_marginTop">12dp</item>
+    </style>
 </resources>

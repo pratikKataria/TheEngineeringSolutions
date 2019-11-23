@@ -26,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.splashActivity_progress_bar);
 
         new Handler().postDelayed(() -> {
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, MainActivity.class));
             finish();
         }, 3000);
     }
