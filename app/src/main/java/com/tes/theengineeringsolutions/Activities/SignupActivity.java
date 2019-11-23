@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.EditText;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -12,6 +13,7 @@ import com.tes.theengineeringsolutions.R;
 public class SignupActivity extends AppCompatActivity {
 
     private MaterialButton materialButton;
+    private EditText mEmailAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
