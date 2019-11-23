@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "169155525169",
+    "firebase_url": "https://the-engineering-solutions.firebaseio.com",
+    "project_id": "the-engineering-solutions",
+    "storage_bucket": "the-engineering-solutions.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:169155525169:android:10a4a0a97699e1cf3e3310",
+        "android_client_info": {
+          "package_name": "com.tes.theengineeringsolutions"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "169155525169-fef00lr0o6to29ilqbernjs4s5nf9pv9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tes.theengineeringsolutions",
+            "certificate_hash": "8b593eda0d0aa3f8b2cf9ad6d8f2d573b6c27be4"
+          }
+        },
+        {
+          "client_id": "169155525169-083o6u6t525vm4ek73vgj9b6o58osdfd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuD5TDgN4FLhuD2DSD8vk_uPvjH8KEHgM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "169155525169-083o6u6t525vm4ek73vgj9b6o58osdfd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
