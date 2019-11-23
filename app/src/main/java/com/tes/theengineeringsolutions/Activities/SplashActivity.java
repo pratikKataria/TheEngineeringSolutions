@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.os.Handler;
 import android.widget.ProgressBar;
 
 import com.tes.theengineeringsolutions.R;
@@ -24,9 +25,9 @@ public class SplashActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.splashActivity_progress_bar);
 
-//        new Handler().postDelayed(() -> {
+        new Handler().postDelayed(() -> {
             startActivity(new Intent(this, ActivityLogin.class));
             finish();
-//        }, 3000);
+        }, 3000);
     }
 }
