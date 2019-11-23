@@ -21,7 +21,7 @@ public class SignupActivity extends AppCompatActivity {
 
         materialButton.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(SignupActivity.this, ActivityLogin.class));
+            startActivity(new Intent(SignupActivity.this, LoginActivity.class));
             finish();
         });
     }

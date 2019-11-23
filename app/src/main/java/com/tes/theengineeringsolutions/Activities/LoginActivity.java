@@ -13,7 +13,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tes.theengineeringsolutions.R;
 
-public class ActivityLogin extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText mEmailAdd;
     private TextInputEditText mPass;
@@ -37,7 +37,7 @@ public class ActivityLogin extends AppCompatActivity {
         initializeField();
 
         if (mFirebaseAuth.getCurrentUser() != null) {
-            startActivity(new Intent(ActivityLogin.this, SignupActivity.class));
+            startActivity(new Intent(LoginActivity.this, SignupActivity.class));
             finish();
         }
 
@@ -57,13 +57,13 @@ public class ActivityLogin extends AppCompatActivity {
             String email = mEmailAdd.getText().toString();
             String password = mPass.getText().toString();
             mFirebaseAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(ActivityLogin.this, task -> {
+                    .addOnCompleteListener(LoginActivity.this, task -> {
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         mProgressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
-                            startActivity(new Intent(ActivityLogin.this, SignupActivity.class));
+                            startActivity(new Intent(LoginActivity.this, SignupActivity.class));
                             finish();
                         } else {
                             Toast.makeText(this, "Authentication Failed", Toast.LENGTH_SHORT).show();
