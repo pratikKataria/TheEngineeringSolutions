@@ -1,41 +1,38 @@
 package com.tes.theengineeringsolutions.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tes.theengineeringsolutions.R;
 
 public class SignupActivity extends AppCompatActivity {
 
-    private MaterialButton materialButton;
     private EditText mEmail;
     private EditText mUsername;
     private EditText mPassword;
     private EditText mCnfPassword;
+    private TextView mLogin;
     private MaterialButton mSignupBtn;
     private ProgressBar mProgressBar;
     private FirebaseAuth mFirebaseAuth;
 
     private void initializeFields() {
-        mEmail      = findViewById(R.id.signupActivity_et_email);
-        mUsername   = findViewById(R.id.signupActivity_et_username);
-        mPassword   = findViewById(R.id.signupActivity_et_password);
+        mEmail = findViewById(R.id.signupActivity_et_email);
+        mUsername = findViewById(R.id.signupActivity_et_username);
+        mPassword = findViewById(R.id.signupActivity_et_password);
         mCnfPassword = findViewById(R.id.signupActivity_et_cnf_password);
-        mSignupBtn   = findViewById(R.id.signupActivity_btn_signup);
+        mSignupBtn = findViewById(R.id.signupActivity_btn_signup);
         mProgressBar = findViewById(R.id.signupActivity_progress_bar);
-        materialButton = findViewById(R.id.logout_test);
+        mLogin = findViewById(R.id.activitySignup_tv_login);
         mFirebaseAuth = FirebaseAuth.getInstance();
     }
 
@@ -45,6 +42,8 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         initializeFields();
+
+        mLogin.setOnClickListener(v -> startActivity(new Intent(SignupActivity.this, LoginActivity.class)));
 
         mSignupBtn.setOnClickListener(v -> {
             if (mUsername.getText().toString().isEmpty()) {
@@ -71,8 +70,20 @@ public class SignupActivity extends AppCompatActivity {
                 return;
             }
 
+            if (mCnfPassword.length() < 6) {
+                mCnfPassword.setError("greater then 6");
+                mCnfPassword.requestFocus();
+                return;
+            }
+
             if (!mPassword.getText().toString().equals(mCnfPassword.getText().toString())) {
                 Toast.makeText(this, "password does not match", Toast.LENGTH_SHORT).show();
+                mPassword.requestFocus();
+                return;
+            }
+
+            if (mPassword.length() < 6) {
+                mPassword.setError("greater then 6");
                 mPassword.requestFocus();
                 return;
             }
@@ -85,20 +96,17 @@ public class SignupActivity extends AppCompatActivity {
             mFirebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Toast.makeText(this, "user signup succesfully", Toast.LENGTH_SHORT).show();
-                            mProgressBar.setVisibility(View.GONE);
-                            if (mFirebaseAuth != null) {
-
-                            }
-                        } else Toast.makeText(this, "signup error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "SINGED UP SUCCESSFULLY", Toast.LENGTH_SHORT).show();
+                            mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()) {
+                                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                                    mProgressBar.setVisibility(View.GONE);
+                                    finish();
+                                } else Toast.makeText(this, "LOGIN ERROR", Toast.LENGTH_SHORT).show();
+                            });
+                        } else Toast.makeText(this, "SINGED IN ERROR", Toast.LENGTH_SHORT).show();
                     });
 
-        });
-
-        materialButton.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(SignupActivity.this, LoginActivity.class));
-            finish();
         });
     }
 }

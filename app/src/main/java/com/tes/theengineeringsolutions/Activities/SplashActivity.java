@@ -22,12 +22,9 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen_layout);
-
-        progressBar = findViewById(R.id.splashActivity_progress_bar);
-
-        new Handler().postDelayed(() -> {
-            startActivity(new Intent(this, MainActivity.class));
+//        new Handler().postDelayed(() -> {
+            startActivity(new Intent(this, SignupActivity.class));
             finish();
-        }, 3000);
+//        }, 4500);
     }
 }

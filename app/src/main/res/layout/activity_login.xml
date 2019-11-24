@@ -12,8 +12,8 @@
         android:layout_height="107dp"
         android:layout_marginTop="64dp"
         android:background="@drawable/ic_tes"
-        app:layout_constraintEnd_toEndOf="@+id/activityLogin_tv_forget_pass"
-        app:layout_constraintStart_toStartOf="@+id/activityLogin_tv_forget_pass"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -58,7 +58,6 @@
             android:id="@+id/textInputLayout"
             android:layout_width="match_parent"
             android:layout_marginTop="8dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -66,6 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_regular"
+                android:transitionName="editTextTransition"
                 android:hint="email address"
                 android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -75,7 +75,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:counterEnabled="true"
             app:counterMaxLength="10"
             app:passwordToggleEnabled="true">
@@ -100,6 +99,7 @@
         android:fontFamily="@font/nunito_bold"
         android:text="login"
         android:textColor="@color/black"
+        android:transitionName="buttonTransition"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -119,16 +119,18 @@
 
     <TextView
         android:id="@+id/activityLogin_tv_forget_pass"
+        style="@style/Heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="forget password ?"
-        style="@style/Heading"
-        android:clickable="true"
+        android:layout_marginTop="20dp"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:text="FORGET PASSWORD?"
+        android:transitionName="textTransition"
         app:layout_constraintEnd_toEndOf="@+id/activityLogin_mbtn_login"
         app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="@+id/activityLogin_mbtn_login"
-        app:layout_constraintTop_toBottomOf="@+id/activityLogin_mbtn_login" />
+        app:layout_constraintTop_toBottomOf="@+id/activityLogin_progressBar" />
 
     <View
         android:id="@+id/view"

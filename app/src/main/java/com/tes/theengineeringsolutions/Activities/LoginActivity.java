@@ -1,22 +1,29 @@
 package com.tes.theengineeringsolutions.Activities;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.Bundle;
+import android.transition.ChangeBounds;
+import android.transition.Transition;
+import android.util.Pair;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.Intent;
-import android.widget.ProgressBar;
-import com.tes.theengineeringsolutions.R;
-import com.google.firebase.auth.FirebaseAuth;
+
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.tes.theengineeringsolutions.R;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
     private TextInputEditText mEmailAdd;
     private TextInputEditText mPass;
     private TextView mRegister;
@@ -24,15 +31,14 @@ public class LoginActivity extends AppCompatActivity {
     private MaterialButton mLoginBtn;
     private ProgressBar mProgressBar;
     private FirebaseAuth mFirebaseAuth;
-    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
 
     private void initializeField() {
         mEmailAdd = findViewById(R.id.activityLogin_et_email);
-        mPass = findViewById(R.id.activityLogin_et_password);
         mLoginBtn = findViewById(R.id.activityLogin_mbtn_login);
+        mForgetPass = findViewById(R.id.activityLogin_tv_forget_pass);
+        mPass = findViewById(R.id.activityLogin_et_password);
         mProgressBar = findViewById(R.id.activityLogin_progressBar);
         mRegister = findViewById(R.id.activityLogin_tv_register);
-        mForgetPass = findViewById(R.id.activityLogin_tv_forget_pass);
         mFirebaseAuth = FirebaseAuth.getInstance();
     }
 
@@ -43,6 +49,12 @@ public class LoginActivity extends AppCompatActivity {
         Matcher matcher = pattern.matcher(email);
         //returns true if it match in correct format
         return matcher.matches();
+    }
+
+    private Transition enterTransition() {
+        ChangeBounds bounds = new ChangeBounds();
+        bounds.setDuration(2000).setInterpolator(new DecelerateInterpolator());
+        return bounds;
     }
 
     @Override
@@ -61,7 +73,17 @@ public class LoginActivity extends AppCompatActivity {
 
         //forget pass text view on click event
         mForgetPass.setOnClickListener(v -> {
+            Intent sharedIntent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
 
+            Pair[] pairs = new Pair[3];
+            pairs[0] = new Pair<View, String>(mForgetPass, "textTransition");
+            pairs[1] = new Pair<View, String>(mEmailAdd, "editTextTransition");
+            pairs[2] = new Pair<View, String>(mLoginBtn, "buttonTransition");
+
+            getWindow().setSharedElementEnterTransition(enterTransition());
+
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this, pairs);
+            startActivity(sharedIntent, options.toBundle());
         });
 
         //on login button clicked
@@ -89,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             // password length is greater then 6
-            if (mPass.getText().toString().length() < 6){
+            if (mPass.getText().toString().length() < 6) {
                 mPass.setError("greater then 6");
                 mPass.requestFocus();
                 return;

@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">The Engineering Solutions</string>
+    <string name="forgetPassDesc">We just need your registered Email Id to send you password reset instructions.</string>
+    <string name="termsNconditions">By clicking continue your are accepting to the engineering solution</string>
+    <string name="my_link"><a href="http://somesite.com/">Click me!</a></string>
 </resources>
