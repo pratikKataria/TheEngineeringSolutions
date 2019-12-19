@@ -7,7 +7,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:font">@font/nunito_regular</item>
-
         <item name="android:windowContentTransitions">true</item>
     </style>
 
@@ -15,6 +14,37 @@
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:fontFamily">@font/nunito_bold</item>
         <item name="android:layout_marginTop">12dp</item>
+    </style>
+
+    <style name="error_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="MenuButtonsStyle">
+        <item name="menu_fab_size">normal</item>
+        <item name="menu_colorNormal">@color/colorPrimary</item>
+        <item name="menu_colorPressed">@color/colorPrimary</item>
+        <item name="menu_colorRipple">@color/white</item>
+        <item name="menu_icon">@drawable/fab_add</item>
+        <item name="fab_colorNormal">@color/colorAccent</item>
+        <item name="fab_colorPressed">#F2AB00</item>
+        <item name="fab_colorRipple">@color/white</item>
+        <item name="android:fontFamily">@font/nunito_bold</item>
+    </style>
+
+    <style name="ChipTheme" parent="Widget.MaterialComponents.Chip.Entry">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/CreamBrulee</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/CeriseRed</item>
+        <item name="android:textColor">@color/CeriseRed</item>
+        <item name="chipBackgroundColor">@color/CreamBrulee</item>
+    </style>
+
+    <!-- Theme.AppCompat.Light.Dialog -->
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 </resources>

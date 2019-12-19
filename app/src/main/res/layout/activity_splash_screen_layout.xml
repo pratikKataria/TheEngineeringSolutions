@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="#1E1E1E">
+    android:background="@color/black">
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieAnimationView1"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         app:lottie_autoPlay="true"
-        app:lottie_fileName="splash_logo.json"
+        app:lottie_fileName="dtd.json"
         app:lottie_loop="true" />
 
     <ProgressBar

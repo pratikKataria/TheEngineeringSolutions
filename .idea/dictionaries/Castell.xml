@@ -2,6 +2,9 @@
   <dictionary name="Castell">
     <words>
       <w>firebase</w>
+      <w>firestore</w>
+      <w>lamdaexpression</w>
+      <w>uids</w>
     </words>
   </dictionary>
 </component>

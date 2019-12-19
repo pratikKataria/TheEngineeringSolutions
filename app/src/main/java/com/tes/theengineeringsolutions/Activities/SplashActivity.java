@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
-import android.os.Handler;
 import android.widget.ProgressBar;
 
 import com.tes.theengineeringsolutions.R;
@@ -23,7 +22,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen_layout);
 //        new Handler().postDelayed(() -> {
-            startActivity(new Intent(this, SignupActivity.class));
+            startActivity(new Intent(this, MainActivity.class));
+//        startActivity(new Intent(this, QuizActivity.class));
             finish();
 //        }, 4500);
     }

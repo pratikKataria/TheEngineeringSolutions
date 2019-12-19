@@ -1,0 +1,13 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+   <solid
+       android:color="@color/colorAccent">
+   </solid>
+    <corners
+        android:radius="@dimen/cardCornerRadius" />
+    <padding
+        android:left="@dimen/marginStart"
+        android:top="@dimen/marginStart"
+        android:right="@dimen/marginStart"
+        android:bottom="@dimen/marginStart" />
+</shape>

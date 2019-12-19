@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.LoginActivity">
+    android:background="@color/black"
+    tools:context="com.tes.theengineeringsolutions.Activities.LoginActivity">
 
     <ImageView
         android:id="@+id/imageView"
@@ -66,6 +67,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_regular"
                 android:transitionName="editTextTransition"
+                android:drawableStart="@drawable/ic_email_black"
+                android:drawablePadding="8dp"
                 android:hint="email address"
                 android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -86,6 +89,8 @@
                 android:fontFamily="@font/nunito_regular"
                 android:hint="password"
                 android:inputType="textPassword"
+                android:drawableStart="@drawable/ic_lock_black"
+                android:drawablePadding="8dp"
                 android:maxLength="10" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
@@ -104,6 +109,20 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout1" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieAnimationView1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/activityLogin_tv_forget_pass"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/activityLogin_tv_forget_pass"
+        app:layout_constraintVertical_bias="0.0"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="loading_anim.json"
+        app:lottie_loop="true" />
 
     <ProgressBar
         android:id="@+id/activityLogin_progressBar"

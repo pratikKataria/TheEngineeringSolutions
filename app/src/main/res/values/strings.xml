@@ -1,6 +1,17 @@
 <resources>
     <string name="app_name">The Engineering Solutions</string>
     <string name="forgetPassDesc">We just need your registered Email Id to send you password reset instructions.</string>
-    <string name="termsNconditions">By clicking continue your are accepting to the engineering solution</string>
+    <string name="termsNconditions">By clicking continue your are accepting to the engineering solution terms and conditions</string>
+    <string name="pass_error">check password</string>
+    <string name="email_error">check email</string>
+    <string name="Open">open</string>
+    <string name="Close">close</string>
+    <string name="fonts"></string>
+
+    <string name="inbox">Inbox</string>
+    <string name="documents">Documents</string>
     <string name="my_link"><a href="http://somesite.com/">Click me!</a></string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

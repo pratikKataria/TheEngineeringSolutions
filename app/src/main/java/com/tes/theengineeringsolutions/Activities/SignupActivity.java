@@ -8,11 +8,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.tes.theengineeringsolutions.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -24,6 +36,7 @@ public class SignupActivity extends AppCompatActivity {
     private MaterialButton mSignupBtn;
     private ProgressBar mProgressBar;
     private FirebaseAuth mFirebaseAuth;
+    private FirebaseFirestore firebaseFirestore;
 
     private void initializeFields() {
         mEmail = findViewById(R.id.signupActivity_et_email);
@@ -34,6 +47,8 @@ public class SignupActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.signupActivity_progress_bar);
         mLogin = findViewById(R.id.activitySignup_tv_login);
         mFirebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
     }
 
     @Override
@@ -44,8 +59,12 @@ public class SignupActivity extends AppCompatActivity {
         initializeFields();
 
         mLogin.setOnClickListener(v -> startActivity(new Intent(SignupActivity.this, LoginActivity.class)));
+        validateUser();
+    }
 
+    private void validateUser() {
         mSignupBtn.setOnClickListener(v -> {
+
             if (mUsername.getText().toString().isEmpty()) {
                 mUsername.setError("should not be empty");
                 mUsername.requestFocus();
@@ -92,21 +111,81 @@ public class SignupActivity extends AppCompatActivity {
             String password = mPassword.getText().toString();
             String email = mEmail.getText().toString();
 
-            mProgressBar.setVisibility(View.VISIBLE);
-            mFirebaseAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(this, "SINGED UP SUCCESSFULLY", Toast.LENGTH_SHORT).show();
-                            mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task1 -> {
-                                if (task1.isSuccessful()) {
-                                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
-                                    mProgressBar.setVisibility(View.GONE);
-                                    finish();
-                                } else Toast.makeText(this, "LOGIN ERROR", Toast.LENGTH_SHORT).show();
-                            });
-                        } else Toast.makeText(this, "SINGED IN ERROR", Toast.LENGTH_SHORT).show();
-                    });
+            signupUser(email, password);
 
         });
+    }
+
+    private void signupUser(String email, String password) {
+        //make progress bar visible
+        mProgressBar.setVisibility(View.VISIBLE);
+
+        //signup using email and password
+        mFirebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(this, "SINGED UP SUCCESSFULLY", Toast.LENGTH_SHORT).show();
+                        mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                setUIDS();
+                                createUserDocument();
+                            } else {
+                                Toast.makeText(this, "LOGIN ERROR", Toast.LENGTH_SHORT).show();
+                                mProgressBar.setVisibility(View.GONE);
+                            }
+                        });
+                    } else {
+                        //FirebaseAuthUserCollisionException: if there already exists an account with the given email address.
+                        try {
+                            throw task.getException();
+                        } catch (FirebaseAuthUserCollisionException existEmail) {
+                            Toast.makeText(this, "user already exist", Toast.LENGTH_SHORT).show();
+                            mProgressBar.setVisibility(View.GONE);
+                        } catch (FirebaseAuthInvalidCredentialsException malformedException) {
+                            Toast.makeText(this, "check your email Address", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }//else
+                });//createUserWithEmailAndPassword
+    }
+
+    public void setUIDS() {
+        if (mFirebaseAuth.getUid() != null) {
+            String uidString = mFirebaseAuth.getUid();
+            Map<String, String> map = new HashMap<>();
+            map.put(uidString, uidString);
+            DocumentReference documentReference = firebaseFirestore.collection("Admin").document("UIDS");
+            documentReference.set(map, SetOptions.merge()).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                    Toast.makeText(SignupActivity.this, "uid SET", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SignupActivity.this, "Unable to set uid", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    public void createUserDocument() {
+        if (mFirebaseAuth.getUid() != null) {
+            Map<String, Object> rootMap = new HashMap<>();
+            Map<String, Object> userDocuments = new HashMap<>();
+            userDocuments.put("user_id", mFirebaseAuth.getUid());
+            userDocuments.put("user_name", mUsername.getText().toString());
+            userDocuments.put("email_address", mEmail.getText().toString());
+            userDocuments.put("password", mPassword.getText().toString());
+            userDocuments.put("Branch", "nd");
+            userDocuments.put("user_address", "nd");
+            userDocuments.put("gender", "nd");
+            rootMap.put("user_info", userDocuments);
+            DocumentReference documentReference = firebaseFirestore.collection("User").document(mFirebaseAuth.getUid());
+            documentReference.set(rootMap).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(SignupActivity.this, "document uploaded successfully", Toast.LENGTH_LONG).show();
+                } else
+                    Toast.makeText(SignupActivity.this, "fail to upload documents", Toast.LENGTH_LONG).show();
+            });
+        }
     }
 }
