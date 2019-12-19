@@ -77,6 +77,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         colorMap.put(R.color.skin, false);
         colorMap.put(R.color.blue, false);
         colorMap.put(R.color.dullSkin, false);
+        colorMap.put(R.color.greyMaterial, false);
         colorMap.put(R.color.lightGreenMaterial, false);
 
     }
