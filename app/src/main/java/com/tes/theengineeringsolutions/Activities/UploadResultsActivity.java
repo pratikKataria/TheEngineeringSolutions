@@ -1,6 +1,5 @@
 package com.tes.theengineeringsolutions.Activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -40,22 +39,10 @@ import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 
 import static com.tes.theengineeringsolutions.Models.ConnectivityReceiver.isConnected;
 
-public class UploadResultsActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener{
+public class UploadResultsActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
-    private static final int[] colors = {
-            R.color.orange,
-            R.color.green,
-            R.color.darkBrown,
-            R.color.skin,
-            R.color.lightGrey,
-            R.color.blue,
-            R.color.greyMaterial,
-            R.color.darkMaterial,
-            R.color.lightGreen,
-            R.color.dullSkin,
-            R.color.lightGreenMaterial,
-            R.color.mudBrown,
-    };
+    private static Map<Integer, String> colors = new HashMap<>();
+
     private final Date date = new Date();
     HashMap<Integer, Integer> questionAnswered;
     List<LocalTestDatabase> questionList;
@@ -66,6 +53,19 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
     private String subject;
     private String stringDate;
     private int totalQuestion;
+
+    private int[] keys = {R.color.orange,
+            R.color.green,
+            R.color.darkBrown,
+            R.color.skin,
+            R.color.lightGrey,
+            R.color.blue,
+            R.color.greyMaterial,
+            R.color.darkMaterial,
+            R.color.lightGreen,
+            R.color.dullSkin,
+            R.color.lightGreenMaterial,
+            R.color.mudBrown};
 
     private void init_fields() {
         progressBar = findViewById(R.id.progressbar);
@@ -79,6 +79,19 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         totalQuestion = getIntent().getIntExtra("TOTAL_QUESTIONS", 0);
         stringDate = new SimpleDateFormat("EE").format(date) + "-" + new SimpleDateFormat("dd").format(date) + "-" + new SimpleDateFormat("MM").format(date) + "-" + new SimpleDateFormat("YYYY").format(date);
 
+
+        colors.put(R.color.orange, "#E97939");
+        colors.put(R.color.green, "#607F55");
+        colors.put(R.color.darkBrown, "#3C3B1D");
+        colors.put(R.color.skin, "#F8C9B5");
+        colors.put(R.color.lightGrey, "#596164");
+        colors.put(R.color.blue, "#79CBE8");
+        colors.put(R.color.greyMaterial, "#838294");
+        colors.put(R.color.darkMaterial, "#252831");
+        colors.put(R.color.lightGreen, "#736E4E");
+        colors.put(R.color.dullSkin, "#D1A38B");
+        colors.put(R.color.lightGreenMaterial, "#BDD8AF");
+        colors.put(R.color.mudBrown, "#976F39");
 
         populateMap();
         populateTestList();
@@ -100,8 +113,7 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         Random random = new Random();
 
 
-
-       Map<String, String>data = build_data(subject, subjectCode, stringDate, answers[0], answers[1], totalQuestion, questionAnswered.size(), colors[random.nextInt(11)], percent);
+        Map<String, String> data = build_data(subject, subjectCode, stringDate, answers[0], answers[1], totalQuestion, questionAnswered.size(), colors.get(keys[random.nextInt(11)]), percent);
         Map<String, Object> header = new HashMap<>();
         header.put(subjectCode, data);
 
@@ -110,17 +122,17 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         }
     }
 
-    private Map<String, String> build_data(String subject, String subjectCode, String date, int  questionCorrect, int questionIncorrect, int totalQuestions, int questionAnswered, int color, float percent) {
+    private Map<String, String> build_data(String subject, String subjectCode, String date, int questionCorrect, int questionIncorrect, int totalQuestions, int questionAnswered, String color, float percent) {
         Map<String, String> fields = new HashMap<>();
         fields.put("subject", subject);
         fields.put("subject_code", subjectCode);
         fields.put("date", date);
         fields.put("score", questionCorrect + "");
         fields.put("question_correct", questionCorrect + "");
-        fields.put("questions_incorrect",questionIncorrect + "");
+        fields.put("questions_incorrect", questionIncorrect + "");
         fields.put("total_questions", totalQuestions + "");
         fields.put("questions_unanswered", (totalQuestions - questionAnswered) + "");
-        fields.put("color", color+"");
+        fields.put("color", color + "");
         if (percent > 20) fields.put("result", "pass");
         else fields.put("result", "fail");
 
@@ -265,12 +277,6 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         snackbar.setBehavior(new NoSwipeBehavior());
         snackbar.show();
     }
-    class NoSwipeBehavior extends BaseTransientBottomBar.Behavior {
-        @Override
-        public boolean canSwipeDismissView(View child) {
-            return false;
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -279,6 +285,14 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         builder.setTitle("Are you sure to exit ?");
         builder.setMessage("You will loose your score if you exit");
         builder.setPositiveButton("YES", (dialog, which) -> UploadResultsActivity.super.onBackPressed())
-                .setPositiveButton("NO", (dialog, which) -> {});
+                .setPositiveButton("NO", (dialog, which) -> {
+                });
+    }
+
+    class NoSwipeBehavior extends BaseTransientBottomBar.Behavior {
+        @Override
+        public boolean canSwipeDismissView(View child) {
+            return false;
+        }
     }
 }

@@ -5,9 +5,4 @@
    </solid>
     <corners
         android:radius="@dimen/cardCornerRadius" />
-    <padding
-        android:left="@dimen/marginStart"
-        android:top="@dimen/marginStart"
-        android:right="@dimen/marginStart"
-        android:bottom="@dimen/marginStart" />
 </shape>

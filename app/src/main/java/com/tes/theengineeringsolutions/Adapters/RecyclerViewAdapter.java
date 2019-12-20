@@ -3,6 +3,7 @@ package com.tes.theengineeringsolutions.Adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +64,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     //list of list to show in recycler view
     private List<QuizContract> testList;
 
-    public static final HashMap<Integer, Boolean> colorMap = new HashMap<>();
+    public static HashMap<Integer, Boolean> colorMap = new HashMap<>();
 
     //constructor to populate list and context of Test Fragment
     public RecyclerViewAdapter(Context context, List<QuizContract> testList, int currentView) {
@@ -437,9 +438,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             Log.e(TAG, color + "");
             if (color != null)
-                cardView.setCardBackgroundColor(context.getColor(Integer.parseInt(color)));
+                cardView.setCardBackgroundColor(Color.parseColor(color));
 
-            if (colorMap.containsKey(Integer.parseInt(color))) {
+            if (colorMap.containsKey(Color.parseColor(color))) {
                 textViewSubject.setTextColor(context.getColor(R.color.black));
                 textViewSubjectCode.setTextColor(context.getColor(R.color.black));
                 textViewDate.setTextColor(context.getColor(R.color.black));
