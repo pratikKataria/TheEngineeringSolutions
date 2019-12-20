@@ -40,4 +40,8 @@
     <color name="chartIdealBar">#448AFF</color>
     <color name="chartSelectedBar">#8988B0</color>
 
+    colorMap.put("#3C3B1D", false);
+    colorMap.put("#596164", false);
+    colorMap.put("#838294", false);
+
 </resources>

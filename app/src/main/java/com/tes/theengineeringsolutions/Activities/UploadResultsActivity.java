@@ -42,6 +42,21 @@ import static com.tes.theengineeringsolutions.Models.ConnectivityReceiver.isConn
 public class UploadResultsActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     private static Map<Integer, String> colors = new HashMap<>();
+    private int[] keys = {
+            R.color.orange,
+            R.color.green,
+            R.color.darkBrown,
+            R.color.skin,
+            R.color.lightGrey,
+            R.color.blue,
+            R.color.greyMaterial,
+            R.color.darkMaterial,
+            R.color.dullSkin,
+            R.color.AliceBlue,
+            R.color.chipWrongColor,
+            R.color.lightGreenMaterial,
+    };
+
 
     private final Date date = new Date();
     HashMap<Integer, Integer> questionAnswered;
@@ -54,18 +69,6 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
     private String stringDate;
     private int totalQuestion;
 
-    private int[] keys = {R.color.orange,
-            R.color.green,
-            R.color.darkBrown,
-            R.color.skin,
-            R.color.lightGrey,
-            R.color.blue,
-            R.color.greyMaterial,
-            R.color.darkMaterial,
-            R.color.lightGreen,
-            R.color.dullSkin,
-            R.color.lightGreenMaterial,
-            R.color.mudBrown};
 
     private void init_fields() {
         progressBar = findViewById(R.id.progressbar);
@@ -80,18 +83,19 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         stringDate = new SimpleDateFormat("EE").format(date) + "-" + new SimpleDateFormat("dd").format(date) + "-" + new SimpleDateFormat("MM").format(date) + "-" + new SimpleDateFormat("YYYY").format(date);
 
 
-        colors.put(R.color.orange, "#E97939");
-        colors.put(R.color.green, "#607F55");
+        colors.put(R.color.orange,    "#E97939");
+        colors.put(R.color.green,     "#607F55");
         colors.put(R.color.darkBrown, "#3C3B1D");
-        colors.put(R.color.skin, "#F8C9B5");
         colors.put(R.color.lightGrey, "#596164");
-        colors.put(R.color.blue, "#79CBE8");
         colors.put(R.color.greyMaterial, "#838294");
         colors.put(R.color.darkMaterial, "#252831");
-        colors.put(R.color.lightGreen, "#736E4E");
-        colors.put(R.color.dullSkin, "#D1A38B");
+
+        colors.put(R.color.skin,      "#F8C9B5");
+        colors.put(R.color.blue,      "#79CBE8");
+        colors.put(R.color.dullSkin,  "#D1A38B");
+        colors.put(R.color.AliceBlue, "#B4DDF6");
+        colors.put(R.color.chipWrongColor,     "#FFD8D8");
         colors.put(R.color.lightGreenMaterial, "#BDD8AF");
-        colors.put(R.color.mudBrown, "#976F39");
 
         populateMap();
         populateTestList();
@@ -113,7 +117,7 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         Random random = new Random();
 
 
-        Map<String, String> data = build_data(subject, subjectCode, stringDate, answers[0], answers[1], totalQuestion, questionAnswered.size(), colors.get(keys[random.nextInt(11)]), percent);
+        Map<String, String> data = build_data(subject, subjectCode, stringDate, answers[0], answers[1], totalQuestion, questionAnswered.size(), colors.get(keys[random.nextInt(11)]), percent, "no badge");
         Map<String, Object> header = new HashMap<>();
         header.put(subjectCode, data);
 
@@ -122,7 +126,7 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         }
     }
 
-    private Map<String, String> build_data(String subject, String subjectCode, String date, int questionCorrect, int questionIncorrect, int totalQuestions, int questionAnswered, String color, float percent) {
+    private Map<String, String> build_data(String subject, String subjectCode, String date, int questionCorrect, int questionIncorrect, int totalQuestions, int questionAnswered, String color, float percent, String badge) {
         Map<String, String> fields = new HashMap<>();
         fields.put("subject", subject);
         fields.put("subject_code", subjectCode);
@@ -133,6 +137,7 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         fields.put("total_questions", totalQuestions + "");
         fields.put("questions_unanswered", (totalQuestions - questionAnswered) + "");
         fields.put("color", color + "");
+        fields.put("badge", badge);
         if (percent > 20) fields.put("result", "pass");
         else fields.put("result", "fail");
 

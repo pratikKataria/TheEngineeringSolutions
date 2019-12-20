@@ -56,7 +56,6 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_person_black"
                 android:drawablePadding="8dp"
-                android:fontFamily="@font/nunito_regular"
                 android:hint="username" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -69,11 +68,7 @@
                 android:id="@+id/signupActivity_et_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_email_black"
-                android:drawablePadding="8dp"
-                android:fontFamily="@font/nunito_regular"
-                android:hint="email"
-                android:inputType="textEmailAddress" />
+                style="@style/username"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -88,12 +83,7 @@
                 android:id="@+id/signupActivity_et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_lock_black"
-                android:drawablePadding="8dp"
-                android:fontFamily="@font/nunito_regular"
-                android:hint="password"
-                android:inputType="textPassword"
-                android:maxLength="10" />
+                style="@style/password"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -108,11 +98,7 @@
                 android:id="@+id/signupActivity_et_cnf_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_lock_black"
-                android:drawablePadding="8dp"
-                android:fontFamily="@font/nunito_regular"
-                android:hint="confirm password"
-                android:inputType="textPassword" />
+                style="@style/password"/>
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 

@@ -34,6 +34,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /* CREATED BY PRATIK KATARIYA
  * 1-DEC-2019
@@ -62,6 +63,24 @@ public class UploadTestFile extends AppCompatActivity {
     Long testCounter = 0L;
     private int mYear, mMonth, mDay;
 
+
+    private static Map<Integer, String> colors = new HashMap<>();
+    private int[] keys = {
+            R.color.orange,
+            R.color.green,
+            R.color.darkBrown,
+            R.color.skin,
+            R.color.lightGrey,
+            R.color.blue,
+            R.color.greyMaterial,
+            R.color.darkMaterial,
+            R.color.dullSkin,
+            R.color.AliceBlue,
+            R.color.chipWrongColor,
+            R.color.lightGreenMaterial,
+    };
+
+
     private void init_fields() {
         //link all the view with instance
         editTextDisplayName = findViewById(R.id.activityTestFile_et_test_disp_name);
@@ -79,6 +98,21 @@ public class UploadTestFile extends AppCompatActivity {
 
         firebaseFirestore = FirebaseFirestore.getInstance(); //instance of firestore database
         mStorageRef = FirebaseStorage.getInstance().getReference();
+
+
+        colors.put(R.color.orange,    "#E97939");
+        colors.put(R.color.green,     "#607F55");
+        colors.put(R.color.darkBrown, "#3C3B1D");
+        colors.put(R.color.lightGrey, "#596164");
+        colors.put(R.color.greyMaterial, "#838294");
+        colors.put(R.color.darkMaterial, "#252831");
+
+        colors.put(R.color.skin,      "#F8C9B5");
+        colors.put(R.color.blue,      "#79CBE8");
+        colors.put(R.color.dullSkin,  "#D1A38B");
+        colors.put(R.color.AliceBlue, "#B4DDF6");
+        colors.put(R.color.chipWrongColor,     "#FFD8D8");
+        colors.put(R.color.lightGreenMaterial, "#BDD8AF");
 
     }
 
@@ -251,6 +285,8 @@ public class UploadTestFile extends AppCompatActivity {
                         Task<Uri> file = task.getResult().getMetadata().getReference().getDownloadUrl();
                         file.addOnSuccessListener(uri -> {
 
+                            Random random = new Random();
+
                             Map<String, String> quizDetails = new HashMap<>();
                             quizDetails.put("display_name", editTextDisplayName.getText().toString());
                             quizDetails.put("file_uri", uri.toString());
@@ -262,6 +298,7 @@ public class UploadTestFile extends AppCompatActivity {
                                     editTextSubjectCode.getText().toString() +
                                     editTextTestCounter.getText().toString());
                             quizDetails.put("date", mDateSelector.getText().toString());
+                            quizDetails.put("color", colors.get(keys[random.nextInt(11)]));
 
                             uploadTestDetails(quizDetails);
 

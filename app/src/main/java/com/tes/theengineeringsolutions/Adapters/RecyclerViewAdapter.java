@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorStateListDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -41,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import android.content.res.ColorStateList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -68,14 +71,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.currentView = currentView;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        colorMap.put("#E97939", false);
-        colorMap.put("#607F55", false);
         colorMap.put("#F8C9B5", false);
         colorMap.put("#79CBE8", false);
         colorMap.put("#D1A38B", false);
-        colorMap.put("#252831", false);
+        colorMap.put("#B4DDF6", false);
+        colorMap.put("#FFD8D8", false);
         colorMap.put("#BDD8AF", false);
-        colorMap.put("#736E4E", false);
 
     }
 
@@ -123,6 +124,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         testList.get(position).getDate() + "",
                         testList.get(position).getNumber_of_questions() + " questions",
                         testList.get(position).getTest_duration() + " mins");
+
+                testCardViewHolder.setCardColor(testList.get(position).getColor());
 
                 testCardViewHolder.mLockBtn.setOnClickListener(v -> {
                     testCardViewHolder.clearDataBase();
@@ -204,6 +207,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private ImageButton mLockBtn;
         private ImageButton mDownloadBtn;
         private ProgressBar progressBar;
+        private MaterialCardView materialCardView;
 
         public TestCardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -216,6 +220,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mDownloadBtn = itemView.findViewById(R.id.card_ib_download_test_file);
             progressBar = itemView.findViewById(R.id.card_pb_progress);
             textViewSubjectCode = itemView.findViewById(R.id.card_tv_test_unique_name);
+            materialCardView = itemView.findViewById(R.id.card_view);
         }
 
         public void setCardView(String testTitle, String uniqueName, String date, String noOfQuestion, String testDuration) {
@@ -224,6 +229,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mDate.setText(date);//set date fetched form firestore
             mNoOfQuestion.setText(noOfQuestion);//set no questions
             mTestDuration.setText(testDuration);//set testDuration
+        }
+
+        void setCardColor(String color) {
+            if (color != null) {
+                Log.e(TAG, color +"test card view color");
+
+                materialCardView.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(color)));
+            }
         }
 
         void downloadFile(String url) {
@@ -309,7 +322,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         DocumentSnapshot documentSnapshot = task.getResult();
                         Map<String, Object> data = documentSnapshot.getData();
                         if (data.get("password").equals(mPassEditText.getText().toString())) {
-                            progressBar.setVisibility(View.GONE);
                             setTestCompleted();
                             dialog.cancel();
                         } else {
@@ -431,26 +443,30 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 textViewResult.setText(result);
                 textViewResult.setTextColor(context.getColor(R.color.green));
             }
-            Log.e(TAG, color + "");
-            if (color != null)
+            Log.e(TAG, color + "cccccccccccccccccccccccccccccccccccc");
+            if (color != null) {
                 cardView.setCardBackgroundColor(Color.parseColor(color));
+            }
 
-            if (colorMap.containsKey(color)) {
-                textViewSubject.setTextColor(context.getColor(R.color.black));
-                textViewSubjectCode.setTextColor(context.getColor(R.color.black));
-                textViewDate.setTextColor(context.getColor(R.color.black));
-                textViewPercent.setTextColor(context.getColor(R.color.black));
-                textViewPercent2.setTextColor(context.getColor(R.color.black));
-                textViewQuestionCorrect.setTextColor(context.getColor(R.color.black));
-                textViewQuestionIncorrect.setTextColor(context.getColor(R.color.black));
-                textViewWeekDay.setTextColor(context.getColor(R.color.black));
-                textViewQuestionAnswered.setTextColor(context.getColor(R.color.black));
-                view.setBackgroundColor(context.getColor(R.color.black));
-                linearLayout.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.black));
+            if (color != null) {
+                if (colorMap.containsKey(color)) {
+                    textViewSubject.setTextColor(context.getColor(R.color.black));
+                    textViewSubjectCode.setTextColor(context.getColor(R.color.black));
+                    textViewDate.setTextColor(context.getColor(R.color.black));
+                    textViewPercent.setTextColor(context.getColor(R.color.black));
+                    textViewPercent2.setTextColor(context.getColor(R.color.black));
+                    textViewQuestionCorrect.setTextColor(context.getColor(R.color.black));
+                    textViewQuestionIncorrect.setTextColor(context.getColor(R.color.black));
+                    textViewWeekDay.setTextColor(context.getColor(R.color.black));
+                    textViewQuestionAnswered.setTextColor(context.getColor(R.color.black));
+                    view.setBackgroundColor(context.getColor(R.color.black));
+                    linearLayout.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.black));
+                }
             }
         }
 
         private String formattedDate(String date) {
+            Log.e(TAG, "date error "+date);
             if (date != null)
                 return date.substring(4);
             else return "";

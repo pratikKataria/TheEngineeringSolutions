@@ -1,13 +1,29 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="AppTheme" parent="@style/Theme.MaterialComponents.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:font">@font/nunito_regular</item>
+        <item name="android:fontFamily">@font/nunito_semi_bold</item>
         <item name="android:windowContentTransitions">true</item>
+    </style>
+
+
+    <style name="password">
+        <item name="android:maxLength">6</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:drawableStart">@drawable/ic_lock_black</item>
+        <item name="android:inputType">textPassword</item>
+        <item name="android:hint">password</item>
+    </style>
+
+    <style name="username">
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:drawableStart">@drawable/ic_email_black</item>
+        <item name="android:inputType">textEmailAddress</item>
+        <item name="android:hint">email</item>
     </style>
 
     <style name="Heading">

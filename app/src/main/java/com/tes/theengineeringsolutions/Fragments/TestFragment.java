@@ -37,7 +37,7 @@ public class TestFragment extends Fragment {
     private List<QuizContract> testList;
     private RecyclerViewAdapter recyclerViewAdapter;
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+//    private SwipeRefreshLayout swipeRefreshLayout;
 
     private FirebaseFirestore firebaseFirestore;
 
@@ -50,7 +50,7 @@ public class TestFragment extends Fragment {
         testRecyclerView = view.findViewById(R.id.fragTest_rv);
         testList = new ArrayList<>();
         firebaseFirestore = FirebaseFirestore.getInstance();
-        swipeRefreshLayout = view.findViewById(R.id.swipeToRefresh);
+//        swipeRefreshLayout = view.findViewById(R.id.swipeToRefresh);
 
         populateTestList();
     }
@@ -63,7 +63,7 @@ public class TestFragment extends Fragment {
 
         initializeFields(view);
         init_recyclerView();
-        init_swipeRefresh();
+//        init_swipeRefresh();
         recyclerViewAdapter.notifyDataSetChanged();
 
         return view;
@@ -78,39 +78,41 @@ public class TestFragment extends Fragment {
         testRecyclerView.setAdapter(recyclerViewAdapter);
     }
 
-    private void init_swipeRefresh() {
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            testList.clear();
-            new Handler().postDelayed(() -> {
-                populateTestList();
-                swipeRefreshLayout.setRefreshing(false);
-            },1500);
-        });
-    }
+//    private void init_swipeRefresh() {
+//        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+//        swipeRefreshLayout.setOnRefreshListener(() -> {
+//            testList.clear();
+//            new Handler().postDelayed(() -> {
+//                populateTestList();
+//                swipeRefreshLayout.setRefreshing(false);
+//            }, 1500);
+//        });
+//    }
 
     private void populateTestList() {
         if (FirebaseAuth.getInstance().getUid() != null) {
             DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
             documentReference.get().addOnCompleteListener(task -> {
-                DocumentSnapshot snapshot = task.getResult();
-                assert snapshot != null;
-                if (snapshot.exists()) {
-                    Map<String, Object> data = snapshot.getData();
-                    Map<String, Boolean> rootMap = (Map<String, Boolean>) data.get("test_completed");
+                if (task.isSuccessful()) {
+                    DocumentSnapshot snapshot = task.getResult();
+                    assert snapshot != null;
+                    if (snapshot.exists()) {
+                        Map<String, Object> data = snapshot.getData();
+                        Map<String, Boolean> rootMap = (Map<String, Boolean>) data.get("test_completed");
 
-                    firebaseFirestore.collection("Admin").addSnapshotListener((queryDocumentSnapshots, e) -> {
-                        assert queryDocumentSnapshots != null;
-                        for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-                            QuizContract quizContract = doc.getDocument().toObject(QuizContract.class);
-                            if (rootMap.containsKey(quizContract.getSubject_code())) {
-                                if (!rootMap.get(quizContract.getSubject_code())) {
-                                    testList.add(quizContract);
+                        firebaseFirestore.collection("Admin").addSnapshotListener((queryDocumentSnapshots, e) -> {
+                            assert queryDocumentSnapshots != null;
+                            for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                                QuizContract quizContract = doc.getDocument().toObject(QuizContract.class);
+                                if (rootMap.containsKey(quizContract.getSubject_code())) {
+                                    if (!rootMap.get(quizContract.getSubject_code())) {
+                                        testList.add(quizContract);
+                                    }
                                 }
+                                recyclerViewAdapter.notifyDataSetChanged();
                             }
-                            recyclerViewAdapter.notifyDataSetChanged();
-                        }
-                    });
+                        });
+                    }
                 }
             });
         }

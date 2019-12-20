@@ -88,7 +88,8 @@ public class ResultFragment extends Fragment {
                             subData.get("question_correct") + "",
                             subData.get("questions_incorrect")+"",
                             subData.get("total_questions")+"",
-                            subData.get("color")+"");
+                            subData.get("color")+"",
+                                   subData.get("badge")+"");
                     resultList.add(quizContract1);
                     recyclerViewAdapter.notifyDataSetChanged();
                     Log.e(TAG, "list size " + resultList.size());
