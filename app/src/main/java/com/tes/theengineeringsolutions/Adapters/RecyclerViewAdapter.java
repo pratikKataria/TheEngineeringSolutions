@@ -3,8 +3,8 @@ package com.tes.theengineeringsolutions.Adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.ColorStateListDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +43,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import android.content.res.ColorStateList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -233,9 +232,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         void setCardColor(String color) {
             if (color != null) {
-                Log.e(TAG, color +"test card view color");
-
+                Log.e(TAG, color + "test card view color");
                 materialCardView.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(color)));
+                if (colorMap.containsKey(color)) {
+                    textViewDisplayName.setTextColor(context.getColor(R.color.black));
+                    mDate.setTextColor(context.getColor(R.color.black));
+                    mNoOfQuestion.setTextColor(context.getColor(R.color.black));
+                    mTestDuration.setTextColor(context.getColor(R.color.black));
+                    textViewSubjectCode.setTextColor(context.getColor(R.color.black));
+                }
             }
         }
 
@@ -466,7 +471,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         private String formattedDate(String date) {
-            Log.e(TAG, "date error "+date);
+            Log.e(TAG, "date error " + date);
             if (date != null)
                 return date.substring(4);
             else return "";

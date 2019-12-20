@@ -1,48 +1,68 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    android:orientation="vertical"
     tools:context=".Fragments.TestFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/darkGrey"
-        android:fitsSystemWindows="true">
+        android:layout_height="240dp"
+        android:fitsSystemWindows="true"
+        android:backgroundTint="@color/darkGrey">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|bottom"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="40dp"
-            android:text="Test"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="210dip"
+            android:fitsSystemWindows="true"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-            android:fontFamily="@font/nunito_bold"
-            android:textColor="@color/white"
-            android:textSize="32dp"
-            app:layout_collapseMode="parallax"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/nunito_bold"
+                android:text="Test"
+                android:layout_marginTop="150dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/white"
+                android:textSize="32dp"
+                app:layout_collapseMode="parallax"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap"/>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"></androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragTest_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:behavior_overlapTop="40dp"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        android:layout_marginTop="16dp"
+        android:scrollbars="vertical"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/fragTest_rv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layoutAnimation="@anim/layout_animation_fall_down" />
-    </androidx.core.widget.NestedScrollView>
+    <com.google.android.material.chip.Chip
+        android:layout_width="wrap_content"
+        android:layout_height="43dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:padding="8dp"
+        android:text="Reload Test"
+        android:textColor="@color/white"
+        android:paddingEnd="8dp"
+        android:textSize="24dp"
+        app:behavior_overlapTop="2dp"
+        app:chipBackgroundColor="@color/CeriseRed"
+        app:chipCornerRadius="18dp"
+        app:chipIcon="@drawable/ic_refresh_black_24dp"
+        app:iconStartPadding="12dp"
+        app:layout_anchor="@id/appbar"
+        app:layout_anchorGravity="center|bottom"
+        app:layout_collapseMode="pin" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -272,7 +272,7 @@ public class UploadTestFile extends AppCompatActivity {
         ///check if fileUri is not null
         if (fileUri != null) {
             //if selected file is of type xls then proceed
-            if (getFileExtension(fileUri).equals("csv")||getFileExtension(fileUri).equals("xls")) {
+            if (getFileExtension(fileUri).equals("csv")) {
                 //make progress visible
                 progressBar.setVisibility(View.VISIBLE);
                 //create new storage Reference add file to child below
@@ -294,8 +294,8 @@ public class UploadTestFile extends AppCompatActivity {
                             quizDetails.put("password", editTextPassword.getText().toString());
                             quizDetails.put("number_of_questions", editTextNumberOfQuestions.getText().toString());
                             quizDetails.put("test_duration", editTextDuration.getText().toString());
-                            quizDetails.put("subject_code", editTextSubject.getText().toString() +
-                                    editTextSubjectCode.getText().toString() +
+                            quizDetails.put("subject_code", editTextSubject.getText().toString() +"-"+
+                                    editTextSubjectCode.getText().toString() +"-"+
                                     editTextTestCounter.getText().toString());
                             quizDetails.put("date", mDateSelector.getText().toString());
                             quizDetails.put("color", colors.get(keys[random.nextInt(11)]));
@@ -312,7 +312,7 @@ public class UploadTestFile extends AppCompatActivity {
     }
 
     private void uploadTestDetails(Map<String, String> quizContract) {
-        String subjectCode = editTextSubject.getText().toString() + editTextSubjectCode.getText().toString() + editTextTestCounter.getText().toString();
+        String subjectCode = editTextSubject.getText().toString() + "-" + editTextSubjectCode.getText().toString() + "-" + editTextTestCounter.getText().toString();
 
         firebaseFirestore.collection("Admin").document(subjectCode).set(quizContract).addOnCompleteListener(task1 -> {
             if (task1.isSuccessful()) {
@@ -349,7 +349,7 @@ public class UploadTestFile extends AppCompatActivity {
                     Map<String, Object> map = documentSnapshot.getData();
                     for (Map.Entry<String, Object> entry : map.entrySet()) {
                         uidList.add(entry.getValue().toString());
-                        String testUID = editTextSubject.getText().toString() + editTextSubjectCode.getText().toString() + editTextTestCounter.getText().toString();
+                        String testUID = editTextSubject.getText().toString() + "-" + editTextSubjectCode.getText().toString() + "-" + editTextTestCounter.getText().toString();
                         Map<String, Object> test = new HashMap<>();
                         Map<String, Object> isCompleted = new HashMap<>();
                         test.put(testUID, false);
