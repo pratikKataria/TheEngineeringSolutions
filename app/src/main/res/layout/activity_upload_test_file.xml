@@ -131,6 +131,7 @@
         android:fontFamily="@font/nunito_semi_bold_italic"
         android:hint="TEST DISPLAY NAME"
         android:singleLine="true"
+        android:inputType="textCapWords"
         android:textColor="@color/mainTitle"
         app:layout_constraintStart_toStartOf="@+id/constraintLayout2"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />

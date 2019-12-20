@@ -124,23 +124,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 testCardViewHolder.setCardView(testList.get(position).getDisplay_name() + "",
                         testList.get(position).getSubject_code() + "",
                         testList.get(position).getDate() + "",
-                        testList.get(position).getTest_duration() + " questions",
+                        testList.get(position).getNumber_of_questions() + " questions",
                         testList.get(position).getTest_duration() + " mins");
 
                 testCardViewHolder.mLockBtn.setOnClickListener(v -> {
-                    if (LocalTestDatabase.listAll(LocalTestDatabase.class).size() > 0)
-                        LocalTestDatabase.deleteAll(LocalTestDatabase.class);
-
-                    boolean isFileExist = new File("/data/data/com.tes.theengineeringsolutions/test_files/" + testList.get(position).getSubject_code() + ".csv").exists();
-                    if (isFileExist) {
+                    testCardViewHolder.clearDataBase();
+                    if (testCardViewHolder.isFileExist())
                         testCardViewHolder.isTestCompleted();
-                    }
+                    else Toast.makeText(context, "download file first", Toast.LENGTH_SHORT).show();
                 });
 
-                testCardViewHolder.mDownloadBtn.setOnClickListener(v ->
-                        testCardViewHolder.downloadFile(testList.get(position).getFile_uri())
-                );
+                testCardViewHolder.mDownloadBtn.setOnClickListener(v -> testCardViewHolder.downloadFile(testList.get(position).getFile_uri()) );
                 break;
+
             case VIEW_TYPE_RESULTVIEW:
                 ResultCardViewHolder resultRecyclerView = (ResultCardViewHolder) holder;
 
@@ -376,6 +372,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             context.startActivity(intent);
         }
 
+        void clearDataBase() {
+            if (LocalTestDatabase.listAll(LocalTestDatabase.class).size() > 0)
+                LocalTestDatabase.deleteAll(LocalTestDatabase.class);
+
+        }
+
+        boolean isFileExist() {
+           return new File("/data/data/com.tes.theengineeringsolutions/test_files/" + textViewSubjectCode.getText().toString() + ".csv").exists();
+        }
 
     }
 
@@ -394,6 +399,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private TextView textViewWeekDay;
         private TextView textViewQuestionAnswered;
         private LinearLayout linearLayout;
+        private View view;
 
         public ResultCardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -409,6 +415,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textViewQuestionAnswered = itemView.findViewById(R.id.cardView_tv_answered);
             cardView = itemView.findViewById(R.id.result_card_view);
             linearLayout = itemView.findViewById(R.id.cardView_linearLayout);
+            view = itemView.findViewById(R.id.view);
         }
 
         public void setCardView(String subject, String subjectCode, String date, String result, String percentage, String correct, String incorrect, String totalQuestions, String color) {
@@ -428,7 +435,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 textViewResult.setText(result);
                 textViewResult.setTextColor(context.getColor(R.color.green));
             }
-
+            Log.e(TAG, color + "");
             if (color != null)
                 cardView.setCardBackgroundColor(context.getColor(Integer.parseInt(color)));
 
@@ -442,6 +449,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 textViewQuestionIncorrect.setTextColor(context.getColor(R.color.black));
                 textViewWeekDay.setTextColor(context.getColor(R.color.black));
                 textViewQuestionAnswered.setTextColor(context.getColor(R.color.black));
+                view.setBackgroundColor(context.getColor(R.color.black));
                 linearLayout.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.black));
             }
         }

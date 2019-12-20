@@ -3,15 +3,16 @@
     package="com.tes.theengineeringsolutions">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name="com.orm.SugarApp"
+        android:name=".Activities.MyApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.UploadResultsActivity"></activity>
+        <activity android:name=".Activities.UploadResultsActivity" />
         <activity android:name=".Activities.QuizResult" />
 
         <meta-data
@@ -32,11 +33,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.UploadTestFile"/>
+        <activity android:name=".Activities.UploadTestFile" />
         <activity android:name=".Activities.MainActivity" />
         <activity android:name=".Activities.LoginActivity" />
         <activity android:name=".Activities.ForgetPasswordActivity" />
         <activity android:name=".Activities.SignupActivity" />
+
+        <receiver
+            android:name=".Models.ConnectivityReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

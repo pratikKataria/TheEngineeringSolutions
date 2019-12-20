@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -23,8 +22,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
-                android:backgroundTint="@color/white"
                 android:background="@drawable/ic_rect_round"
+                android:backgroundTint="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -36,7 +35,9 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:fontFamily="@font/nunito_bold"
+
                     android:text="100"
+                    android:textColor="@color/white"
                     android:textSize="15dp" />
 
                 <TextView
@@ -47,6 +48,8 @@
                     android:layout_marginEnd="8dp"
                     android:fontFamily="@font/nunito_bold"
                     android:text="%"
+                    android:textColor="@color/white"
+
                     android:textSize="15dp" />
 
             </LinearLayout>
@@ -54,21 +57,28 @@
 
             <TextView
                 android:id="@+id/cardView_tv_subject"
-                android:layout_width="83dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/nunito_bold"
                 android:text="Mathematics"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/cardView_linearLayout"
                 app:layout_constraintTop_toBottomOf="@+id/cardView_linearLayout" />
 
             <TextView
                 android:id="@+id/cardView_tv_subject_code"
-                android:layout_width="116dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/nunito_bold"
                 android:text="MATH-M023-T03"
+
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/cardView_linearLayout"
                 app:layout_constraintTop_toBottomOf="@+id/cardView_tv_subject" />
 
@@ -76,9 +86,10 @@
                 android:id="@+id/view"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
+                android:background="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardView_tv_subject_code" />
 
@@ -97,20 +108,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_bold"
-                    android:text="CORRECT" />
+                    android:text="CORRECT"
+
+                    android:textColor="@color/white" />
 
                 <TextView
                     android:id="@+id/cardView_tv_incorrect"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_bold"
-                    android:text="INCORRECT" />
+                    android:text="INCORRECT"
+
+                    android:textColor="@color/white" />
+
                 <TextView
                     android:id="@+id/cardView_tv_answered"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+
                     android:fontFamily="@font/nunito_bold"
-                    android:text="Answered" />
+                    android:text="Answered"
+                    android:textColor="@color/white" />
             </LinearLayout>
 
             <ImageView
@@ -132,6 +150,7 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/nunito_bold"
                 android:text="DATE"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="@+id/linearLayout7"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />
 

@@ -44,6 +44,13 @@
             app:menu="@menu/buttom_navigation_view">
         </com.google.android.material.bottomnavigation.BottomNavigationView>
 
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/viewSnack"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            app:layout_constraintBottom_toTopOf="@+id/activityMain_bottom_navigation_view"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView

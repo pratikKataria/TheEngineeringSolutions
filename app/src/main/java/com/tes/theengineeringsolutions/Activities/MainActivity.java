@@ -1,5 +1,12 @@
 package com.tes.theengineeringsolutions.Activities;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,31 +14,34 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import android.content.Intent;
-import android.os.Bundle;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tes.theengineeringsolutions.Fragments.HomeFragment;
 import com.tes.theengineeringsolutions.Fragments.ResultFragment;
 import com.tes.theengineeringsolutions.Fragments.TestFragment;
+import com.tes.theengineeringsolutions.Models.ConnectivityReceiver;
 import com.tes.theengineeringsolutions.R;
 
-public class MainActivity extends AppCompatActivity {
+import static com.tes.theengineeringsolutions.Models.ConnectivityReceiver.isConnected;
 
+public class MainActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
+
+    private static String TAG = "MAINACTIVITY";
     private MaterialButton mMaterialButton;
     private DrawerLayout mDrawerLayout; // layout to implement side nav bar
     private NavigationView mNavigationView; // side var bar
     private ActionBarDrawerToggle actionBarDrawerToggle;//  actionbar
     private BottomNavigationView bottomNavigationView;//bottom navigation bar
     private Toolbar mToolbar;// top toolbar in activity
-
     //Fragments Classes
     private HomeFragment homeFragment;
     private TestFragment testFragment;
     private ResultFragment resultFragment;
-
 
     private void initializeFields() {
         //find the toolbar view inside the activity layout
@@ -52,9 +62,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseAuth mFirebaseUser= FirebaseAuth.getInstance();
+        FirebaseAuth mFirebaseUser = FirebaseAuth.getInstance();
         if (mFirebaseUser.getCurrentUser() == null) {
-            startActivity( new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
         }
     }
@@ -63,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        checkConnection();
 
         initializeFields();
 
@@ -117,13 +129,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
-
-//        mMaterialButton = findViewById(R.id.mainActivity_btn_logout);
-//        mMaterialButton.setOnClickListener(v -> {
-//            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//            firebaseAuth.signOut();
-//            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//        });
     }
 
     private void loadFragment(Fragment fragment) {
@@ -132,4 +137,76 @@ public class MainActivity extends AppCompatActivity {
         //replace current fragment to on click event
         fragmentManager.beginTransaction().replace(R.id.activityMain_frame_layout, fragment).addToBackStack(null).commit();
     }
+
+    private void logoutUser() {
+        //        mMaterialButton = findViewById(R.id.mainActivity_btn_logout);
+//        mMaterialButton.setOnClickListener(v -> {
+//            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+//            firebaseAuth.signOut();
+//            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//        });
+    }
+
+
+    private void checkConnection() {
+        boolean isConnected = isConnected();
+        showSnack(isConnected);
+    }
+
+    private void showSnack(boolean isConnected) {
+        String message;
+        Snackbar snackbar;
+        View parentLayout = findViewById(R.id.viewSnack);
+        int color;
+        if (isConnected) {
+            message = "Good ! Connected to Internet";
+            snackbar = Snackbar.make(parentLayout, message, Snackbar.LENGTH_SHORT);
+            color = Color.WHITE;
+        } else {
+            message = "Sorry! Not connected to internet";
+            snackbar = Snackbar.make(parentLayout, message, Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction("RETRY", v ->
+                    checkConnection()
+            );
+            color = Color.RED;
+        }
+
+        View view = snackbar.getView();
+        TextView textView = view.findViewById(com.google.android.material.R.id.snackbar_text);
+        textView.setTextColor(color);
+        snackbar.setBehavior(new NoSwipeBehavior());
+        snackbar.show();
+    }
+    class NoSwipeBehavior extends BaseTransientBottomBar.Behavior {
+        @Override
+        public boolean canSwipeDismissView(View child) {
+            return false;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkConnection();
+        // register connection status listener
+        MyApplication.getInstance().setConnectivityListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        checkConnection();
+    }
+
+    /**
+     * Callback will be triggered when there is change in
+     * network connection
+     */
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showSnack(isConnected);
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.tes.theengineeringsolutions.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -139,6 +140,8 @@ public class QuizActivity extends AppCompatActivity {
                         Toast.makeText(QuizActivity.this, "value updated", Toast.LENGTH_SHORT).show();
                     } else
                         Toast.makeText(this, "must select one question", Toast.LENGTH_SHORT).show();
+                }).setNegativeButton("cancel", (dialog, which) -> {
+
                 });
         alertDialog.show();
     }
