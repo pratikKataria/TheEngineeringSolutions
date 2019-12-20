@@ -52,19 +52,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     //where 2 is for result card view in result fragment
     private static final int VIEW_TYPE_RESULTVIEW = 2;
     private static final String TAG = "RECYLER VIEW ADAPER";
-
+    public static HashMap<String, Boolean> colorMap = new HashMap<>();
     private FirebaseStorage firebaseStorage;
-
     private LayoutInflater inflater;
-
     private int currentView;
-
     //context
     private Context context;
     //list of list to show in recycler view
     private List<QuizContract> testList;
-
-    public static HashMap<Integer, Boolean> colorMap = new HashMap<>();
 
     //constructor to populate list and context of Test Fragment
     public RecyclerViewAdapter(Context context, List<QuizContract> testList, int currentView) {
@@ -73,13 +68,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.currentView = currentView;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        colorMap.put(R.color.orange, false);
-        colorMap.put(R.color.green, false);
-        colorMap.put(R.color.skin, false);
-        colorMap.put(R.color.blue, false);
-        colorMap.put(R.color.dullSkin, false);
-        colorMap.put(R.color.greyMaterial, false);
-        colorMap.put(R.color.lightGreenMaterial, false);
+        colorMap.put("#E97939", false);
+        colorMap.put("#607F55", false);
+        colorMap.put("#F8C9B5", false);
+        colorMap.put("#79CBE8", false);
+        colorMap.put("#D1A38B", false);
+        colorMap.put("#252831", false);
+        colorMap.put("#BDD8AF", false);
+        colorMap.put("#736E4E", false);
 
     }
 
@@ -135,7 +131,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     else Toast.makeText(context, "download file first", Toast.LENGTH_SHORT).show();
                 });
 
-                testCardViewHolder.mDownloadBtn.setOnClickListener(v -> testCardViewHolder.downloadFile(testList.get(position).getFile_uri()) );
+                testCardViewHolder.mDownloadBtn.setOnClickListener(v -> testCardViewHolder.downloadFile(testList.get(position).getFile_uri()));
                 break;
 
             case VIEW_TYPE_RESULTVIEW:
@@ -147,7 +143,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 break;
         }
     }
-
 
 
     //get item count will return the number of items present int he list
@@ -313,7 +308,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     if (task.isSuccessful()) {
                         DocumentSnapshot documentSnapshot = task.getResult();
                         Map<String, Object> data = documentSnapshot.getData();
-                        if ( data.get("password").equals(mPassEditText.getText().toString())) {
+                        if (data.get("password").equals(mPassEditText.getText().toString())) {
                             progressBar.setVisibility(View.GONE);
                             setTestCompleted();
                             dialog.cancel();
@@ -380,7 +375,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         boolean isFileExist() {
-           return new File("/data/data/com.tes.theengineeringsolutions/test_files/" + textViewSubjectCode.getText().toString() + ".csv").exists();
+            return new File("/data/data/com.tes.theengineeringsolutions/test_files/" + textViewSubjectCode.getText().toString() + ".csv").exists();
         }
 
     }
@@ -440,7 +435,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (color != null)
                 cardView.setCardBackgroundColor(Color.parseColor(color));
 
-            if (colorMap.containsKey(Color.parseColor(color))) {
+            if (colorMap.containsKey(color)) {
                 textViewSubject.setTextColor(context.getColor(R.color.black));
                 textViewSubjectCode.setTextColor(context.getColor(R.color.black));
                 textViewDate.setTextColor(context.getColor(R.color.black));

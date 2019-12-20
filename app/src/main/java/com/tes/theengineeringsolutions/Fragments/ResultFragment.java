@@ -100,22 +100,22 @@ public class ResultFragment extends Fragment {
     private void chartView() {
         ArrayList<BarData> dataList = new ArrayList<>();
 
-        BarData data = new BarData("Sep", 3.4f, "3.4€");
+        BarData data = new BarData("Sep", 3.4f, "3 passed");
         dataList.add(data);
 
-        data = new BarData("Oct", 8f, "8€");
+        data = new BarData("Oct", 8f, "8 passed");
         dataList.add(data);
 
-        data = new BarData("Nov", 1.8f, "1.8€");
+        data = new BarData("Nov", 1.8f, "1 passed");
         dataList.add(data);
 
-        data = new BarData("Dec", 7.3f, "7.3€");
+        data = new BarData("Dec", 7.3f, "7 passed");
         dataList.add(data);
 
-        data = new BarData("Jan", 6.2f, "6.2€");
+        data = new BarData("Jan", 6.2f, "6 passed");
         dataList.add(data);
 
-        data = new BarData("Feb", 3.3f, "3.3€");
+        data = new BarData("Feb", 3.3f, "3 passed");
         dataList.add(data);
 
         chartProgressBar.setDataList(dataList);

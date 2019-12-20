@@ -12,62 +12,74 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_rectangle"
+        android:layout_marginTop="8dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginTop="8dp"
+        android:background="@drawable/ic_rectangle"
         android:backgroundTint="@color/darkGrey"
         android:fitsSystemWindows="true">
 
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/nunito_bold"
+            android:text="PROGRESS"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            app:layout_collapseMode="parallax"
+            app:layout_scrollFlags="scroll|snap"
+            app:layout_constraintTop_toBottomOf="@+id/ChartProgressBar" />
+
         <com.hadiidbouk.charts.ChartProgressBar
             android:id="@+id/ChartProgressBar"
-            android:layout_width="match_parent"
-            android:layout_height="240dp"
+            android:layout_width="331dp"
+            android:layout_height="232dp"
             android:layout_centerInParent="true"
             android:layout_marginStart="12dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="8dp"
             android:gravity="center"
-            app:layout_collapseMode="parallax"
-            app:layout_scrollFlags="scroll|snap"
             app:hdBarCanBeClick="true"
             app:hdBarHeight="170dp"
             app:hdBarRadius="10dp"
-            app:hdBarTitleColor="@color/bar_title_color"
+            app:hdBarTitleColor="@color/chartIdealBar"
             app:hdBarTitleMarginTop="9dp"
-            app:hdBarTitleSelectedColor="@color/colorAccent"
+            app:hdBarTitleSelectedColor="@color/CeriseRed"
             app:hdBarTitleTxtSize="12sp"
             app:hdBarWidth="12dp"
-            app:hdEmptyColor="@color/empty"
+            app:hdEmptyColor="@color/chartEmptyBar"
             app:hdMaxValue="10"
             app:hdPinBackgroundColor="@color/pin_background"
             app:hdPinDrawable="@drawable/ic_pin_shape"
-            app:hdPinMarginEnd="22dp"
-            app:hdPinMarginTop="10dp"
+            app:hdPinMarginEnd="0dp"
+            app:hdPinMarginTop="0dp"
             app:hdPinPaddingBottom="5dp"
-            app:hdPinTextColor="@color/pin_text"
-            app:hdPinTxtSize="17sp"
-            app:hdProgressClickColor="@color/progress_click"
-            app:hdProgressColor="@color/progress"
+            app:hdPinTextColor="@color/black"
+            app:hdPinTxtSize="12sp"
+            app:hdProgressClickColor="@color/CeriseRed"
+            app:hdProgressColor="@color/chartIdealBar"
             app:hdProgressDisableColor="@color/progress_disable"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_collapseMode="parallax"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed" />
 
         <TextView
             android:id="@+id/textView10"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="RESULTS"
+            android:layout_marginStart="8dp"
             android:fontFamily="@font/nunito_bold"
-            android:textSize="18dp"
+            android:text="RESULTS"
             android:textColor="@color/white"
-            app:layout_collapseMode="pin"
+            android:textSize="18dp"
             app:layout_anchor="@+id/appbar"
             app:layout_anchorGravity="bottom|center"
-            app:layout_constraintTop_toBottomOf="@+id/ChartProgressBar"
-            tools:layout_editor_absoluteX="32dp" />
+            app:layout_collapseMode="pin"
+            app:layout_constraintTop_toBottomOf="@+id/ChartProgressBar" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
 
@@ -75,6 +87,7 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:behavior_overlapTop="40dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout

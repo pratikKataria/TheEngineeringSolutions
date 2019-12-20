@@ -36,4 +36,8 @@
     <color name="lightGreenMaterial">#BDD8AF</color>
     <color name="mudBrown">#976F39</color>
 
+    <color name="chartEmptyBar">#CFD8DC</color>
+    <color name="chartIdealBar">#448AFF</color>
+    <color name="chartSelectedBar">#8988B0</color>
+
 </resources>
