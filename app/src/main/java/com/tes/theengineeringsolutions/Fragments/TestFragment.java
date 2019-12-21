@@ -3,6 +3,7 @@ package com.tes.theengineeringsolutions.Fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +14,20 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.chip.Chip;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.tes.theengineeringsolutions.Adapters.RecyclerViewAdapter;
 import com.tes.theengineeringsolutions.Models.QuizContract;
 import com.tes.theengineeringsolutions.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,6 +70,7 @@ public class TestFragment extends Fragment {
 
         initializeFields(view);
         init_recyclerView();
+        setProgress();
         recyclerViewAdapter.notifyDataSetChanged();
 
         reloadBtn.setOnClickListener(v -> {
@@ -74,10 +79,56 @@ public class TestFragment extends Fragment {
         return view;
     }
 
+    private void setProgress() {
+        Map<String, Object> header = new HashMap<>();
+        Map<String, Integer> data = new HashMap<>();
+        int countpass = 0;
+        String stringDate = "Sat-21-07-2019";
+        DocumentReference reference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
+        reference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                if (documentSnapshot.exists()) {
+                    Map<String, Object> data1 = documentSnapshot.getData();
+                    if (data1 != null) {
+                        if (data1.containsKey("test_progress")) {
+                            if (((Map<String, Object>) data1.get("test_progress")).containsKey(stringDate.substring(7))) {
+                                long number = (Long) ((Map<String, Object>) data1.get("test_progress")).get(stringDate.substring(7));
+                                data.put(stringDate.substring(7), ((int) number + 1));
+                                header.put("test_progress", data);
+                                reference.set(header, SetOptions.merge());
+                                Toast.makeText(getActivity(), "progress upgraded", Toast.LENGTH_SHORT).show();
+                            }else {
+                                data.put(stringDate.substring(7), 0);
+                                header.put("test_progress", data);
+                                reference.set(header, SetOptions.merge());
+                                Toast.makeText(getActivity(), "progress set", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            data.put(stringDate.substring(7), 0);
+                            header.put("test_progress", data);
+                            reference.set(header, SetOptions.merge());
+                            Toast.makeText(getActivity(), "progress set", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            } else {
+                String e = task.getException().getMessage();
+                Log.e("TESTFRAGMENT", e);
+                Toast.makeText(getActivity(), "failed to set progress", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("TESTFRAGMENT", e.getMessage());
+            }
+        });
+    }
+
     private void reload() {
         testList.clear();
         recyclerViewAdapter.notifyDataSetChanged();
-        new Handler().postDelayed(()-> {
+        new Handler().postDelayed(() -> {
             populateTestList();
             recyclerViewAdapter.notifyDataSetChanged();
         }, 1500);
@@ -103,14 +154,15 @@ public class TestFragment extends Fragment {
                     if (snapshot.exists()) {
                         Map<String, Object> data = snapshot.getData();
                         Map<String, Boolean> rootMap = (Map<String, Boolean>) data.get("test_completed");
-
                         firebaseFirestore.collection("Admin").addSnapshotListener((queryDocumentSnapshots, e) -> {
                             assert queryDocumentSnapshots != null;
                             for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                                 QuizContract quizContract = doc.getDocument().toObject(QuizContract.class);
-                                if (rootMap.containsKey(quizContract.getSubject_code())) {
-                                    if (!rootMap.get(quizContract.getSubject_code())) {
-                                        testList.add(quizContract);
+                                if (rootMap != null) {
+                                    if (rootMap.containsKey(quizContract.getSubject_code())) {
+                                        if (!rootMap.get(quizContract.getSubject_code())) {
+                                            testList.add(quizContract);
+                                        }
                                     }
                                 }
                                 recyclerViewAdapter.notifyDataSetChanged();

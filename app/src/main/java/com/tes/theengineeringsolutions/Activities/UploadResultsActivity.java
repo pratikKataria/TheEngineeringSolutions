@@ -21,6 +21,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.tes.theengineeringsolutions.Models.ConnectivityReceiver;
@@ -42,6 +43,9 @@ import static com.tes.theengineeringsolutions.Models.ConnectivityReceiver.isConn
 public class UploadResultsActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     private static Map<Integer, String> colors = new HashMap<>();
+    private final Date date = new Date();
+    HashMap<Integer, Integer> questionAnswered;
+    List<LocalTestDatabase> questionList;
     private int[] keys = {
             R.color.orange,
             R.color.green,
@@ -56,11 +60,6 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
             R.color.chipWrongColor,
             R.color.lightGreenMaterial,
     };
-
-
-    private final Date date = new Date();
-    HashMap<Integer, Integer> questionAnswered;
-    List<LocalTestDatabase> questionList;
     private FirebaseFirestore firebaseFirestore;
     private ProgressBar progressBar;
     private MaterialButton materialButton;
@@ -83,18 +82,18 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         stringDate = new SimpleDateFormat("EE").format(date) + "-" + new SimpleDateFormat("dd").format(date) + "-" + new SimpleDateFormat("MM").format(date) + "-" + new SimpleDateFormat("YYYY").format(date);
 
 
-        colors.put(R.color.orange,    "#E97939");
-        colors.put(R.color.green,     "#607F55");
+        colors.put(R.color.orange, "#E97939");
+        colors.put(R.color.green, "#607F55");
         colors.put(R.color.darkBrown, "#3C3B1D");
         colors.put(R.color.lightGrey, "#596164");
         colors.put(R.color.greyMaterial, "#838294");
         colors.put(R.color.darkMaterial, "#252831");
 
-        colors.put(R.color.skin,      "#F8C9B5");
-        colors.put(R.color.blue,      "#79CBE8");
-        colors.put(R.color.dullSkin,  "#D1A38B");
+        colors.put(R.color.skin, "#F8C9B5");
+        colors.put(R.color.blue, "#79CBE8");
+        colors.put(R.color.dullSkin, "#D1A38B");
         colors.put(R.color.AliceBlue, "#B4DDF6");
-        colors.put(R.color.chipWrongColor,     "#FFD8D8");
+        colors.put(R.color.chipWrongColor, "#FFD8D8");
         colors.put(R.color.lightGreenMaterial, "#BDD8AF");
 
         populateMap();
@@ -153,6 +152,7 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
             if (task.isSuccessful()) {
                 Toast.makeText(UploadResultsActivity.this, "result uploaded", Toast.LENGTH_SHORT).show();
                 Toast.makeText(UploadResultsActivity.this, "wait files getting ready", Toast.LENGTH_SHORT).show();
+                setProgress();
                 new Handler().postDelayed(() -> {
                     Intent intent = new Intent(UploadResultsActivity.this, QuizResult.class);
                     intent.putExtra("QUESTION_ANSWERED", questionAnswered);
@@ -185,6 +185,40 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
             }
         }
         return decisions;
+    }
+
+    private void setProgress() {
+        Map<String, Object> header = new HashMap<>();
+        Map<String, Integer> data = new HashMap<>();
+        int countpass = 0;
+
+        DocumentReference reference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
+        reference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot documentSnapshot = reference.get().getResult();
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    Map<String, Object> data1 = (Map<String, Object>) documentSnapshot.getData();
+                    if (data1.containsKey("test_progress")) {
+                        long number = (Long) ((Map<String, Object>) data1.get("test_progress")).get(stringDate.substring(3));
+                        data.put(stringDate.substring(3), ((int) number + 1));
+                        header.put("test_progress", data);
+                        reference.set(header, SetOptions.merge());
+                        Toast.makeText(this, "progress upgraded", Toast.LENGTH_SHORT).show();
+                    } else  {
+                        data.put(stringDate.substring(3), 0);
+                        header.put("test_progress", data);
+                        reference.set(data);
+                        Toast.makeText(this, "progress set", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } else {
+                Toast.makeText(this, "failed to set progress", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        data.put(stringDate.substring(3), countpass);
+        header.put("progress", data);
     }
 
     private void populateTestList() {
