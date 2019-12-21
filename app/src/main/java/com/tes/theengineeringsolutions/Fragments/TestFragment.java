@@ -73,7 +73,6 @@ public class TestFragment extends Fragment {
 
         initializeFields(view);
         init_recyclerView();
-        getProgress();
         recyclerViewAdapter.notifyDataSetChanged();
 
         reloadBtn.setOnClickListener(v -> {
@@ -83,33 +82,6 @@ public class TestFragment extends Fragment {
     }
 
 
-    private void getProgress() {
-        DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
-        documentReference.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot snapshot = task.getResult();
-                if (snapshot != null && snapshot.exists()) {
-                    Map<String, Object> data = snapshot.getData();
-                    if (data != null && data.containsKey("test_progress")) {
-                        Map<String, Object> month1 = (Map<String, Object>) data.get("test_progress");
-                        String temp = "";
-                        for (int i = -6; i < 1; i++) {
-                            Calendar cal = Calendar.getInstance();
-                            cal.add(Calendar.MONTH, i);
-                            int month = cal.get(Calendar.MONTH);
-                            int year = cal.get(Calendar.YEAR);
-                            String stringDate = (month + 1) + "-" + year;
-                            if (month1.containsKey(stringDate)) {
-                                Log.e("TESTFRAGMENT" , "DATE " + stringDate +" pass " + month1.get(stringDate) + " i " + i);
-                                temp += month1.get(stringDate);
-                            }
-                        }
-                        textView.setText(temp);
-                    }
-                }
-            }
-        });
-    }
     private void reload() {
         testList.clear();
         recyclerViewAdapter.notifyDataSetChanged();

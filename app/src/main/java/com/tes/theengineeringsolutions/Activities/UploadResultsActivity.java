@@ -233,48 +233,49 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
     }
 
     private void setProgress(boolean isPass) {
-        Map<String, Object> header = new HashMap<>();
-        Map<String, Integer> data = new HashMap<>();
-        int countpass = 0;
-        String stringDate = "Sat-21-07-2019";
-        DocumentReference reference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
-        reference.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot documentSnapshot = task.getResult();
-                if (documentSnapshot.exists()) {
-                    Map<String, Object> data1 = documentSnapshot.getData();
-
-                    if (data1 != null && data1.containsKey("test_progress")) {
-                        if (((Map<String, Object>) data1.get("test_progress")).containsKey(stringDate.substring(7))) {
-                            long number = (Long) ((Map<String, Object>) data1.get("test_progress")).get(stringDate.substring(7));
-                            data.put(stringDate.substring(7), ((int) number + 1));
-                            header.put("test_progress", data);
-                            reference.set(header, SetOptions.merge());
-                            Toast.makeText(this, "progress upgraded", Toast.LENGTH_SHORT).show();
+        if (isPass) {
+            Map<String, Object> header = new HashMap<>();
+            Map<String, Integer> data = new HashMap<>();
+            DocumentReference reference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
+            reference.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    if (documentSnapshot.exists()) {
+                        Map<String, Object> data1 = documentSnapshot.getData();
+                        if (data1 != null && data1.containsKey("test_progress")) {
+                            if (((Map<String, Object>) data1.get("test_progress")).containsKey(stringDate.substring(7))) {
+                                long number = (Long) ((Map<String, Object>) data1.get("test_progress")).get(stringDate.substring(7));
+                                data.put(stringDate.substring(7), ((int) number + 1));
+                                header.put("test_progress", data);
+                                reference.set(header, SetOptions.merge());
+                                Toast.makeText(this, "progress upgraded", Toast.LENGTH_SHORT).show();
+                            } else {
+                                data.put(stringDate.substring(7), 0);
+                                header.put("test_progress", data);
+                                reference.set(header, SetOptions.merge());
+                                Toast.makeText(this, "progress set", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             data.put(stringDate.substring(7), 0);
                             header.put("test_progress", data);
                             reference.set(header, SetOptions.merge());
                             Toast.makeText(this, "progress set", Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        data.put(stringDate.substring(7), 0);
-                        header.put("test_progress", data);
-                        reference.set(header, SetOptions.merge());
-                        Toast.makeText(this, "progress set", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    String e = task.getException().getMessage();
+                    Log.e("TESTFRAGMENT", e);
+                    Toast.makeText(this, "failed to set progress", Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                String e = task.getException().getMessage();
-                Log.e("TESTFRAGMENT", e);
-                Toast.makeText(this, "failed to set progress", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("TESTFRAGMENT", e.getMessage());
-            }
-        });
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("TESTFRAGMENT", e.getMessage());
+                }
+            });
+        } else {
+            Toast.makeText(this, "fail in test", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void checkConnection() {
