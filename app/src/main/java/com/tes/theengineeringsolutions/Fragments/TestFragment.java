@@ -6,13 +6,14 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.chip.Chip;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -36,6 +37,7 @@ public class TestFragment extends Fragment {
     private RecyclerView testRecyclerView;
     private List<QuizContract> testList;
     private RecyclerViewAdapter recyclerViewAdapter;
+    private Chip reloadBtn;
 
 //    private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -50,6 +52,7 @@ public class TestFragment extends Fragment {
         testRecyclerView = view.findViewById(R.id.fragTest_rv);
         testList = new ArrayList<>();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        reloadBtn = view.findViewById(R.id.fragmentTest_reload_btn);
 //        swipeRefreshLayout = view.findViewById(R.id.swipeToRefresh);
 
         populateTestList();
@@ -63,10 +66,22 @@ public class TestFragment extends Fragment {
 
         initializeFields(view);
         init_recyclerView();
-//        init_swipeRefresh();
         recyclerViewAdapter.notifyDataSetChanged();
 
+        reloadBtn.setOnClickListener(v -> {
+            reload();
+        });
         return view;
+    }
+
+    private void reload() {
+        testList.clear();
+        recyclerViewAdapter.notifyDataSetChanged();
+        new Handler().postDelayed(()-> {
+            populateTestList();
+            recyclerViewAdapter.notifyDataSetChanged();
+        }, 1500);
+        Toast.makeText(getActivity(), "clicked", Toast.LENGTH_SHORT).show();
     }
 
     private void init_recyclerView() {
@@ -77,17 +92,6 @@ public class TestFragment extends Fragment {
         testRecyclerView.setLayoutManager(layoutManager);
         testRecyclerView.setAdapter(recyclerViewAdapter);
     }
-
-//    private void init_swipeRefresh() {
-//        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-//        swipeRefreshLayout.setOnRefreshListener(() -> {
-//            testList.clear();
-//            new Handler().postDelayed(() -> {
-//                populateTestList();
-//                swipeRefreshLayout.setRefreshing(false);
-//            }, 1500);
-//        });
-//    }
 
     private void populateTestList() {
         if (FirebaseAuth.getInstance().getUid() != null) {
