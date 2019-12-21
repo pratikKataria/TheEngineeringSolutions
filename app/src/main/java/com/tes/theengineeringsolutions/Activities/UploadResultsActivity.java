@@ -13,9 +13,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -67,6 +69,7 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
     private String subject;
     private String stringDate;
     private int totalQuestion;
+    private boolean isPass = false;
 
 
     private void init_fields() {
@@ -112,6 +115,7 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
 
         int[] answers = checkAnswers(questionAnswered);
         float percent = ((((float) answers[0]) / totalQuestion)) * 100;
+        if (percent > 25) isPass = true;
 
         Random random = new Random();
 
@@ -137,7 +141,7 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         fields.put("questions_unanswered", (totalQuestions - questionAnswered) + "");
         fields.put("color", color + "");
         fields.put("badge", badge);
-        if (percent > 20) fields.put("result", "pass");
+        if (percent > 25) fields.put("result", "pass");
         else fields.put("result", "fail");
 
         if (percent > 0 && percent < 10) fields.put("percentage", "0" + ((int) percent));
@@ -152,7 +156,7 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
             if (task.isSuccessful()) {
                 Toast.makeText(UploadResultsActivity.this, "result uploaded", Toast.LENGTH_SHORT).show();
                 Toast.makeText(UploadResultsActivity.this, "wait files getting ready", Toast.LENGTH_SHORT).show();
-                setProgress();
+                setProgress(isPass);
                 new Handler().postDelayed(() -> {
                     Intent intent = new Intent(UploadResultsActivity.this, QuizResult.class);
                     intent.putExtra("QUESTION_ANSWERED", questionAnswered);
@@ -185,40 +189,6 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
             }
         }
         return decisions;
-    }
-
-    private void setProgress() {
-        Map<String, Object> header = new HashMap<>();
-        Map<String, Integer> data = new HashMap<>();
-        int countpass = 0;
-
-        DocumentReference reference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
-        reference.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot documentSnapshot = reference.get().getResult();
-                if (documentSnapshot != null && documentSnapshot.exists()) {
-                    Map<String, Object> data1 = (Map<String, Object>) documentSnapshot.getData();
-                    if (data1.containsKey("test_progress")) {
-                        long number = (Long) ((Map<String, Object>) data1.get("test_progress")).get(stringDate.substring(3));
-                        data.put(stringDate.substring(3), ((int) number + 1));
-                        header.put("test_progress", data);
-                        reference.set(header, SetOptions.merge());
-                        Toast.makeText(this, "progress upgraded", Toast.LENGTH_SHORT).show();
-                    } else  {
-                        data.put(stringDate.substring(3), 0);
-                        header.put("test_progress", data);
-                        reference.set(data);
-                        Toast.makeText(this, "progress set", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            } else {
-                Toast.makeText(this, "failed to set progress", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-        data.put(stringDate.substring(3), countpass);
-        header.put("progress", data);
     }
 
     private void populateTestList() {
@@ -260,6 +230,51 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         linearLayout.startAnimation(animation);
         linearLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void setProgress(boolean isPass) {
+        Map<String, Object> header = new HashMap<>();
+        Map<String, Integer> data = new HashMap<>();
+        int countpass = 0;
+        String stringDate = "Sat-21-07-2019";
+        DocumentReference reference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
+        reference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                if (documentSnapshot.exists()) {
+                    Map<String, Object> data1 = documentSnapshot.getData();
+
+                    if (data1 != null && data1.containsKey("test_progress")) {
+                        if (((Map<String, Object>) data1.get("test_progress")).containsKey(stringDate.substring(7))) {
+                            long number = (Long) ((Map<String, Object>) data1.get("test_progress")).get(stringDate.substring(7));
+                            data.put(stringDate.substring(7), ((int) number + 1));
+                            header.put("test_progress", data);
+                            reference.set(header, SetOptions.merge());
+                            Toast.makeText(this, "progress upgraded", Toast.LENGTH_SHORT).show();
+                        } else {
+                            data.put(stringDate.substring(7), 0);
+                            header.put("test_progress", data);
+                            reference.set(header, SetOptions.merge());
+                            Toast.makeText(this, "progress set", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        data.put(stringDate.substring(7), 0);
+                        header.put("test_progress", data);
+                        reference.set(header, SetOptions.merge());
+                        Toast.makeText(this, "progress set", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } else {
+                String e = task.getException().getMessage();
+                Log.e("TESTFRAGMENT", e);
+                Toast.makeText(this, "failed to set progress", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("TESTFRAGMENT", e.getMessage());
+            }
+        });
     }
 
     private void checkConnection() {

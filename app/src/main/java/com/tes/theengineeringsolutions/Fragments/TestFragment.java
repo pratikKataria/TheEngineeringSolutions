@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ import com.tes.theengineeringsolutions.Models.QuizContract;
 import com.tes.theengineeringsolutions.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +44,7 @@ public class TestFragment extends Fragment {
     private List<QuizContract> testList;
     private RecyclerViewAdapter recyclerViewAdapter;
     private Chip reloadBtn;
-
+    private TextView textView;
 //    private SwipeRefreshLayout swipeRefreshLayout;
 
     private FirebaseFirestore firebaseFirestore;
@@ -57,6 +59,7 @@ public class TestFragment extends Fragment {
         testList = new ArrayList<>();
         firebaseFirestore = FirebaseFirestore.getInstance();
         reloadBtn = view.findViewById(R.id.fragmentTest_reload_btn);
+        textView = view.findViewById(R.id.textviewFORTEST);
 //        swipeRefreshLayout = view.findViewById(R.id.swipeToRefresh);
 
         populateTestList();
@@ -70,7 +73,7 @@ public class TestFragment extends Fragment {
 
         initializeFields(view);
         init_recyclerView();
-        setProgress();
+        getProgress();
         recyclerViewAdapter.notifyDataSetChanged();
 
         reloadBtn.setOnClickListener(v -> {
@@ -79,52 +82,34 @@ public class TestFragment extends Fragment {
         return view;
     }
 
-    private void setProgress() {
-        Map<String, Object> header = new HashMap<>();
-        Map<String, Integer> data = new HashMap<>();
-        int countpass = 0;
-        String stringDate = "Sat-21-07-2019";
-        DocumentReference reference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
-        reference.get().addOnCompleteListener(task -> {
+
+    private void getProgress() {
+        DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
+        documentReference.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                DocumentSnapshot documentSnapshot = task.getResult();
-                if (documentSnapshot.exists()) {
-                    Map<String, Object> data1 = documentSnapshot.getData();
-                    if (data1 != null) {
-                        if (data1.containsKey("test_progress")) {
-                            if (((Map<String, Object>) data1.get("test_progress")).containsKey(stringDate.substring(7))) {
-                                long number = (Long) ((Map<String, Object>) data1.get("test_progress")).get(stringDate.substring(7));
-                                data.put(stringDate.substring(7), ((int) number + 1));
-                                header.put("test_progress", data);
-                                reference.set(header, SetOptions.merge());
-                                Toast.makeText(getActivity(), "progress upgraded", Toast.LENGTH_SHORT).show();
-                            }else {
-                                data.put(stringDate.substring(7), 0);
-                                header.put("test_progress", data);
-                                reference.set(header, SetOptions.merge());
-                                Toast.makeText(getActivity(), "progress set", Toast.LENGTH_SHORT).show();
+                DocumentSnapshot snapshot = task.getResult();
+                if (snapshot != null && snapshot.exists()) {
+                    Map<String, Object> data = snapshot.getData();
+                    if (data != null && data.containsKey("test_progress")) {
+                        Map<String, Object> month1 = (Map<String, Object>) data.get("test_progress");
+                        String temp = "";
+                        for (int i = -6; i < 1; i++) {
+                            Calendar cal = Calendar.getInstance();
+                            cal.add(Calendar.MONTH, i);
+                            int month = cal.get(Calendar.MONTH);
+                            int year = cal.get(Calendar.YEAR);
+                            String stringDate = (month + 1) + "-" + year;
+                            if (month1.containsKey(stringDate)) {
+                                Log.e("TESTFRAGMENT" , "DATE " + stringDate +" pass " + month1.get(stringDate) + " i " + i);
+                                temp += month1.get(stringDate);
                             }
-                        } else {
-                            data.put(stringDate.substring(7), 0);
-                            header.put("test_progress", data);
-                            reference.set(header, SetOptions.merge());
-                            Toast.makeText(getActivity(), "progress set", Toast.LENGTH_SHORT).show();
                         }
+                        textView.setText(temp);
                     }
                 }
-            } else {
-                String e = task.getException().getMessage();
-                Log.e("TESTFRAGMENT", e);
-                Toast.makeText(getActivity(), "failed to set progress", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("TESTFRAGMENT", e.getMessage());
             }
         });
     }
-
     private void reload() {
         testList.clear();
         recyclerViewAdapter.notifyDataSetChanged();

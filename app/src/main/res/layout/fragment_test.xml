@@ -21,6 +21,7 @@
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
             <TextView
+                android:id="@+id/textviewFORTEST"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

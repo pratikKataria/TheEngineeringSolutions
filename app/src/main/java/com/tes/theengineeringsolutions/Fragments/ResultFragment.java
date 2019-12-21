@@ -25,7 +25,8 @@ import com.tes.theengineeringsolutions.Models.QuizContract;
 import com.tes.theengineeringsolutions.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +48,7 @@ public class ResultFragment extends Fragment {
 
     public void initFields(View view) {
         resultRecyclerView = view.findViewById(R.id.result_recycler_view);
-        chartProgressBar =  view.findViewById(R.id.ChartProgressBar);
+        chartProgressBar = view.findViewById(R.id.ChartProgressBar);
         resultList = new ArrayList<>();
         chartView();
         populateList();
@@ -81,15 +82,15 @@ public class ResultFragment extends Fragment {
                     Log.e("RESULT FRAGMENT", subData.get("subject") + "/n" + subData.get("percentage"));
                     QuizContract quizContract1 = new QuizContract(
                             subData.get("subject") + "",
-                            subData.get("subject_code")+"",
+                            subData.get("subject_code") + "",
                             subData.get("date") + "",
                             subData.get("result") + "",
                             subData.get("percentage") + "",
                             subData.get("question_correct") + "",
-                            subData.get("questions_incorrect")+"",
-                            subData.get("total_questions")+"",
-                            subData.get("color")+"",
-                                   subData.get("badge")+"");
+                            subData.get("questions_incorrect") + "",
+                            subData.get("total_questions") + "",
+                            subData.get("color") + "",
+                            subData.get("badge") + "");
                     resultList.add(quizContract1);
                     recyclerViewAdapter.notifyDataSetChanged();
                     Log.e(TAG, "list size " + resultList.size());
@@ -122,4 +123,6 @@ public class ResultFragment extends Fragment {
         chartProgressBar.setDataList(dataList);
         chartProgressBar.build();
     }
+
+
 }
