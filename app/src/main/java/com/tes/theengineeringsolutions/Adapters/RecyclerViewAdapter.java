@@ -199,9 +199,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public class TestCardViewHolder extends RecyclerView.ViewHolder {
         //views of the card view
         private TextView textViewDisplayName;
-        private TextView mDate;
-        private TextView mNoOfQuestion;
-        private TextView mTestDuration;
+        private TextView texViewDate;
+        private TextView textViewNoOfQuestion;
+        private TextView textViewDuration;
         private TextView textViewSubjectCode;
         private ImageButton mLockBtn;
         private ImageButton mDownloadBtn;
@@ -212,9 +212,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(itemView);
             //linking the view with ids
             textViewDisplayName = itemView.findViewById(R.id.card_tv_test_name);
-            mDate = itemView.findViewById(R.id.card_tv_test_date);
-            mNoOfQuestion = itemView.findViewById(R.id.card_tv_no_of_question);
-            mTestDuration = itemView.findViewById(R.id.card_tv_duration);
+            texViewDate = itemView.findViewById(R.id.card_tv_test_date);
+            textViewNoOfQuestion = itemView.findViewById(R.id.card_tv_no_of_question);
+            textViewDuration = itemView.findViewById(R.id.card_tv_duration);
             mLockBtn = itemView.findViewById(R.id.card_ib_lock);
             mDownloadBtn = itemView.findViewById(R.id.card_ib_download_test_file);
             progressBar = itemView.findViewById(R.id.card_pb_progress);
@@ -225,9 +225,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void setCardView(String testTitle, String uniqueName, String date, String noOfQuestion, String testDuration) {
             textViewDisplayName.setText(testTitle);//set testTile with firestor
             textViewSubjectCode.setText(uniqueName);// e
-            mDate.setText(date);//set date fetched form firestore
-            mNoOfQuestion.setText(noOfQuestion);//set no questions
-            mTestDuration.setText(testDuration);//set testDuration
+            texViewDate.setText(date);//set date fetched form firestore
+            textViewNoOfQuestion.setText(noOfQuestion);//set no questions
+            textViewDuration.setText(testDuration);//set testDuration
         }
 
         void setCardColor(String color) {
@@ -236,9 +236,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 materialCardView.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(color)));
                 if (colorMap.containsKey(color)) {
                     textViewDisplayName.setTextColor(context.getColor(R.color.black));
-                    mDate.setTextColor(context.getColor(R.color.black));
-                    mNoOfQuestion.setTextColor(context.getColor(R.color.black));
-                    mTestDuration.setTextColor(context.getColor(R.color.black));
+                    texViewDate.setTextColor(context.getColor(R.color.black));
+                    textViewNoOfQuestion.setTextColor(context.getColor(R.color.black));
+                    textViewDuration.setTextColor(context.getColor(R.color.black));
                     textViewSubjectCode.setTextColor(context.getColor(R.color.black));
                 }
             }
@@ -382,6 +382,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             Intent intent = new Intent(context, QuizActivity.class);
             intent.putExtra("TEST_NAME", textViewDisplayName.getText().toString());
             intent.putExtra("TEST_CODE", textViewSubjectCode.getText().toString());
+            intent.putExtra("TEST_DURATION", textViewDuration.getText().toString());
+            intent.putExtra("TEST_TOTAL_QUESTION", textViewNoOfQuestion.getText().toString());
             context.startActivity(intent);
         }
 

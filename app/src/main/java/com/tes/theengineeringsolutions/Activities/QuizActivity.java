@@ -32,6 +32,7 @@ public class QuizActivity extends AppCompatActivity {
     private TextView testViewTestName;
     private TextView testViewTestCode;
     private TextView testViewQuestions;
+    private TextView textViewTime;
     private TextView textViewQuestionAnswered;
     private TextView textViewQuestionRemaining;
     private TextView textViewQuestionCount;
@@ -57,9 +58,11 @@ public class QuizActivity extends AppCompatActivity {
         textViewQuestionRemaining = findViewById(R.id.quizActivity_tv_remaining);
         testViewTestName = findViewById(R.id.testSession_tv_test_name);
         testViewTestCode = findViewById(R.id.testSession_tv_test_code);
+        textViewTime = findViewById(R.id.textView_time);
 
         testViewTestName.setText(getIntent().getStringExtra("TEST_NAME"));
         testViewTestCode.setText(getIntent().getStringExtra("TEST_CODE"));
+        textViewTime.setText(getIntent().getStringExtra("TEST_TOTAL_QUESTION").substring(0,2)+"  \u2022  "+ getIntent().getStringExtra("TEST_DURATION").substring(0,2) +" MINS");
 
         testcode = getIntent().getStringExtra("TEST_CODE");
 
