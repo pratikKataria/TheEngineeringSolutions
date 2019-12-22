@@ -8,5 +8,5 @@
     <dimen name="cardTitleFont">22dp</dimen>
     <dimen name="cardDescFonts">18dp</dimen>
     <dimen name="cardEelevation">5dp</dimen>
-    <dimen name="navigationFontSize">21dp</dimen>
+    <dimen name="navigationFontSize">18dp</dimen>
 </resources>

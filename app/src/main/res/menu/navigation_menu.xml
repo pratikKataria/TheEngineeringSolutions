@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
-        <item android:id="@+id/students"
-             android:title="STUDENTS">
-        </item>
-        <item android:id="@+id/setting"
-            android:title="SETTINGS">
-        </item>
+        <item
+            android:id="@+id/students"
+            android:title="Home"/>
+        <item
+            android:id="@+id/about"
+            android:title="About"/>
+        <item
+            android:id="@+id/setting"
+            android:title="Developer"/>
     </group>
 </menu>

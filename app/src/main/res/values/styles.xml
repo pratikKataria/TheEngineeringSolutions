@@ -63,4 +63,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--custom text navigation design-->
+    <style name="NavDrawerTextStyle" parent="Base.TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/nunito_semi_bold</item>
+        <item name="android:textSize">@dimen/navigationFontSize</item>
+    </style>
+
+
 </resources>

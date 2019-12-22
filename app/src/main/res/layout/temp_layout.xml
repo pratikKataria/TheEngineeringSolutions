@@ -8,84 +8,52 @@
     android:orientation="vertical"
     tools:context=".Fragments.HomeFragment">
 
-    <com.gigamole.navigationtabstrip.NavigationTabStrip
-        android:id="@+id/nv_tab_strip"
-        android:layout_width="293dp"
-        android:layout_height="76dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/menu"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:nts_active_color="@color/colorPrimary"
-        app:nts_color="@color/colorPrimary"
-        app:nts_factor="2"
-        app:nts_gravity="bottom"
-        app:nts_inactive_color="#707070"
-        app:nts_size="22sp"
-        app:nts_titles="@array/titles"
-        app:nts_type="point"
-        app:nts_typeface="fonts/nunito_bold.ttf"
-        app:nts_weight="4dp" />
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/frag_home_vp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nv_tab_strip"
-        app:layout_constraintVertical_bias="0.0">
-
-    </androidx.viewpager.widget.ViewPager>
-
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/menu"
-        style="@style/MenuButtonsStyle"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:menu_animationDelayPerItem="50"
-        app:menu_buttonSpacing="3dp"
-        app:menu_labels_colorNormal="@color/colorAccent"
-        app:menu_labels_colorPressed="@color/colorAccent"
-        app:menu_labels_colorRipple="@color/white"
-        app:menu_labels_customFont="fonts/nunito_bold.ttf"
-        app:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
-        app:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
-        app:menu_labels_textColor="@color/black">
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/insta_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_insta"/>
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fragHome_fab_upload_doc"
-            style="@style/MenuButtonsStyle"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:src="@drawable/ic_file_upload_black_24dp"
-            app:fab_label="UPLOAD FILE"
-            app:fab_size="mini" />
+        <ImageButton
+            android:id="@+id/linkedin_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_linkedin" />
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fragHome_fab_post"
-            style="@style/MenuButtonsStyle"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:src="@drawable/ic_local_post_office_black_24dp"
-            app:fab_label="SEND MESSAGE"
-            app:fab_size="mini" />
+        <ImageButton
+            android:id="@+id/dribbble_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_dribbble" />
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fragHome_fab_upload_test"
-            style="@style/MenuButtonsStyle"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:src="@drawable/ic_test"
-            app:fab_label="UPLOAD TEST"
-            app:fab_size="mini" />
-    </com.github.clans.fab.FloatingActionMenu>
+        <ImageButton
+            android:id="@+id/snapchat_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_snapchat" />
+
+        <ImageButton
+            android:id="@+id/facebook_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_facebook"
+            app:layout_constraintEnd_toEndOf="@+id/textView_Bio"/>
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

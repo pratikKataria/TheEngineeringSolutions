@@ -14,4 +14,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="profile_bio">UI Designer\nAndroid App Developer\nBlogger at Medium Publication\nGoogle professional IT Certificate\nObject Oriented Programing in java from UC
+    </string>
 </resources>
