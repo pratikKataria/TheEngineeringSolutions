@@ -80,25 +80,25 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
         // sets the Toolbar to act as the ActionBar for this Fragment window
         //Make sure the toolbar exists in the activity and is not null
-//        setSupportActionBar(mToolbar);
+        setSupportActionBar(mToolbar);
 
         //Putting ToolBar into ActionBar
         //then used to set icon in the toolbar
-//        final ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
 
         //Display icon in the toolbar
-//        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
-//        actionBarDrawerToggle = new ActionBarDrawerToggle(this, //host activity
-//                mDrawerLayout,/*Drawer layout object*/
-//                mToolbar,/*top tool bar icon animation*/
-//                R.string.Open,/*open drawer description fo accessibility*/
-//                R.string.Close/*close drawer description for accessibility*/);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, //host activity
+                mDrawerLayout,/*Drawer layout object*/
+                mToolbar,/*top tool bar icon animation*/
+                R.string.Open,/*open drawer description fo accessibility*/
+                R.string.Close/*close drawer description for accessibility*/);
 
         // Setup toggle to display hamburger icon with nice animation
-//        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_yellow);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_yellow);
         //user to animate the hamburger icon
-//        actionBarDrawerToggle.syncState();
+        actionBarDrawerToggle.syncState();
 
         //Tie Drawer events to the ActionBarToggle
 //        mDrawerLayout.addDrawerListener(actionBarDrawerToggle);

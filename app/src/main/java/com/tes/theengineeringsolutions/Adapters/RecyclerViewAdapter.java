@@ -124,8 +124,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         testList.get(position).getNumber_of_questions() + " questions",
                         testList.get(position).getTest_duration() + " mins");
 
-                testCardViewHolder.setCardColor(testList.get(position).getColor());
-
                 testCardViewHolder.mLockBtn.setOnClickListener(v -> {
                     testCardViewHolder.clearDataBase();
                     if (testCardViewHolder.isFileExist())
@@ -228,20 +226,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             texViewDate.setText(date);//set date fetched form firestore
             textViewNoOfQuestion.setText(noOfQuestion);//set no questions
             textViewDuration.setText(testDuration);//set testDuration
-        }
-
-        void setCardColor(String color) {
-            if (color != null) {
-                Log.e(TAG, color + "test card view color");
-                materialCardView.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(color)));
-                if (colorMap.containsKey(color)) {
-                    textViewDisplayName.setTextColor(context.getColor(R.color.black));
-                    texViewDate.setTextColor(context.getColor(R.color.black));
-                    textViewNoOfQuestion.setTextColor(context.getColor(R.color.black));
-                    textViewDuration.setTextColor(context.getColor(R.color.black));
-                    textViewSubjectCode.setTextColor(context.getColor(R.color.black));
-                }
-            }
         }
 
         void downloadFile(String url) {

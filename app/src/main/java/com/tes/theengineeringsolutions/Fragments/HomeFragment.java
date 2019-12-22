@@ -6,13 +6,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 import com.github.clans.fab.FloatingActionButton;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.tabs.TabLayout;
 import com.tes.theengineeringsolutions.Activities.UploadTestFile;
 import com.tes.theengineeringsolutions.CustomViewPager.SectionsPagerAdapter;
 import com.tes.theengineeringsolutions.R;
@@ -23,7 +27,7 @@ import com.tes.theengineeringsolutions.R;
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
     //ui for tab layout
-    private NavigationTabStrip mNavigationTabStrip;
+    private TabLayout mNavigationTabStrip;
     //tab view holder
     private ViewPager viewPager;
 
@@ -33,7 +37,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private FloatingActionButton mPost;
     //fab for uploading document
     private FloatingActionButton mUploadDoc;
-
 
     private void initializeFields(View view) {
         //find page holder in fragment layout
@@ -67,6 +70,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         initializeFields(view);
 
 
+
+
         //custom view pager for tab layout into fragment
         // NOTE: must use use getChildFragmentManager inside a fragment to avoid ui collision
         final SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getActivity(), getChildFragmentManager());
@@ -74,7 +79,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         viewPager.setAdapter(sectionsPagerAdapter);
         //setting slide animation when tab is switched
         // set up tab Layout with viewPager and tab value
-        mNavigationTabStrip.setViewPager(viewPager, 2);
+        mNavigationTabStrip.setupWithViewPager(viewPager);
         //data change to tabs is notified
         sectionsPagerAdapter.notifyDataSetChanged();
 

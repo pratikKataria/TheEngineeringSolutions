@@ -12,6 +12,7 @@
         android:layout_marginStart="22dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="22dp"
+        android:backgroundTint="@color/darkGrey"
         app:cardCornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,9 +41,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/nunito_bold"
-                android:text="Tommorow"
+                android:text="Maths-M349-T01"
                 android:textColor="@color/white"
-
                 app:layout_constraintStart_toStartOf="@+id/card_tv_test_name"
                 app:layout_constraintTop_toBottomOf="@+id/card_tv_test_name" />
 
@@ -133,6 +133,11 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/card_ib_lock"
                 app:layout_constraintTop_toBottomOf="@+id/card_ib_lock" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/round_rect_shape" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
