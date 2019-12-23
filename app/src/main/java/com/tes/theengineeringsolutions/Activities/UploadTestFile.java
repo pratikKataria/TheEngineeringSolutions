@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,6 +33,7 @@ import com.tes.theengineeringsolutions.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -297,7 +299,7 @@ public class UploadTestFile extends AppCompatActivity {
 
                             Random random = new Random();
 
-                            Map<String, String> quizDetails = new HashMap<>();
+                            Map<String, Object> quizDetails = new HashMap<>();
                             quizDetails.put("display_name", editTextDisplayName.getText().toString());
                             quizDetails.put("file_uri", uri.toString());
                             quizDetails.put("file_name", queryName(fileUri));
@@ -308,7 +310,7 @@ public class UploadTestFile extends AppCompatActivity {
                                     editTextSubjectCode.getText().toString() +"-"+
                                     editTextTestCounter.getText().toString());
                             quizDetails.put("date", mDateSelector.getText().toString());
-                            quizDetails.put("color", colors.get(keys[random.nextInt(11)]));
+                            quizDetails.put("created", new Date());
 
                             uploadTestDetails(quizDetails);
 
@@ -321,7 +323,7 @@ public class UploadTestFile extends AppCompatActivity {
         }
     }
 
-    private void uploadTestDetails(Map<String, String> quizContract) {
+    private void uploadTestDetails(Map<String, Object> quizContract) {
         String subjectCode = editTextSubject.getText().toString() + "-" + editTextSubjectCode.getText().toString() + "-" + editTextTestCounter.getText().toString();
 
         firebaseFirestore.collection("Admin").document(subjectCode).set(quizContract).addOnCompleteListener(task1 -> {

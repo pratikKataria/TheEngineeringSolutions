@@ -6,20 +6,27 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toolbar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.gigamole.navigationtabstrip.NavigationTabStrip;
 import com.github.clans.fab.FloatingActionButton;
-import com.google.android.material.button.MaterialButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.tes.theengineeringsolutions.Activities.UploadTestFile;
 import com.tes.theengineeringsolutions.CustomViewPager.SectionsPagerAdapter;
 import com.tes.theengineeringsolutions.R;
+
+import org.w3c.dom.Text;
+
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +45,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     //fab for uploading document
     private FloatingActionButton mUploadDoc;
 
+    private TextView textViewUsername;
+
+    public HomeFragment() {
+        // Required empty public constructor
+    }
+
     private void initializeFields(View view) {
         //find page holder in fragment layout
         viewPager = view.findViewById(R.id.frag_home_vp);
@@ -46,19 +59,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         //find fab in layout
         mUploadTest = view.findViewById(R.id.fragHome_fab_upload_test);
-        mUploadDoc  = view.findViewById(R.id.fragHome_fab_upload_doc);
+        mUploadDoc = view.findViewById(R.id.fragHome_fab_upload_doc);
         mPost = view.findViewById(R.id.fragHome_fab_post);
+        textViewUsername = view.findViewById(R.id.textViewUsername);
 
         //set click event in each fab button
         mUploadDoc.setOnClickListener(this);
         mUploadTest.setOnClickListener(this);
         mPost.setOnClickListener(this);
     }
-
-    public HomeFragment() {
-        // Required empty public constructor
-    }
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -69,9 +78,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         //bind button and view all fields
         initializeFields(view);
 
-
-
-
+        setUsername();
         //custom view pager for tab layout into fragment
         // NOTE: must use use getChildFragmentManager inside a fragment to avoid ui collision
         final SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getActivity(), getChildFragmentManager());
@@ -84,6 +91,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         sectionsPagerAdapter.notifyDataSetChanged();
 
         return view;
+    }
+
+    private void setUsername() {
+        if (FirebaseAuth.getInstance().getUid() != null) {
+            DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
+            documentReference.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot snapshot = task.getResult();
+                    if (snapshot != null && snapshot.exists() && snapshot.getData() != null && snapshot.getData().containsKey("user_info")) {
+                        Map<String, String > data = (Map<String, String>) snapshot.getData().get("user_info");
+                        if (data != null && FirebaseAuth.getInstance().getCurrentUser() != null) {
+                            textViewUsername.setText("\u2022  "+data.get("user_name") +" \u2022" + "  \n " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                        }
+                    }
+                }
+            });
+        }
     }
 
     //defining click events

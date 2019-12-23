@@ -1,5 +1,9 @@
 package com.tes.theengineeringsolutions.Models;
 
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
+
 public class QuizContract {
 
     private String display_name, file_uri, file_name, date, password, number_of_questions, test_duration, subject_code;
@@ -8,13 +12,15 @@ public class QuizContract {
     private String correct;
     private String incorrect;
     private String color;
+    private @ServerTimestamp
+    Date timeStamp;
     private String badge;
 
     public QuizContract() {
         //required
     }
 
-    public QuizContract(String display_name, String file_uri, String file_name, String password, String number_of_questions, String test_duration, String subject_code, String date, String color) {
+    public QuizContract(String display_name, String file_uri, String file_name, String password, String number_of_questions, String test_duration, String subject_code, String date, Date timeStamp) {
         this.display_name = display_name;
         this.file_uri = file_uri;
         this.file_name = file_name;
@@ -23,7 +29,7 @@ public class QuizContract {
         this.test_duration = test_duration;
         this.subject_code = subject_code;
         this.date = date;
-        this.color = color;
+        this.timeStamp = timeStamp;
     }
 
     public QuizContract(String display_name, String subject_code, String date, String result, String percentage, String correct, String incorrect, String number_of_questions, String color, String badge) {
@@ -122,5 +128,13 @@ public class QuizContract {
 
     public void setBadge(String badge) {
         this.badge = badge;
+    }
+
+    public Date getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(Date timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }

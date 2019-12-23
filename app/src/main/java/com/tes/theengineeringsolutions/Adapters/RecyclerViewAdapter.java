@@ -204,6 +204,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private ImageButton mDownloadBtn;
         private ProgressBar progressBar;
         private MaterialCardView materialCardView;
+        private AlertDialog alertDialog;
 
         public TestCardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -300,7 +301,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             alert.setView(alertLayout);
             alert.setCancelable(false);
 
-            AlertDialog dialog = alert.create();
+            alertDialog = alert.create();
 
 
             continueBtn.setOnClickListener(v -> {
@@ -317,7 +318,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         Map<String, Object> data = documentSnapshot.getData();
                         if (data.get("password").equals(mPassEditText.getText().toString())) {
                             setTestCompleted();
-                            dialog.cancel();
                         } else {
                             progressBar.setVisibility(View.GONE);
                             Toast.makeText(context, "wrong password", Toast.LENGTH_SHORT).show();
@@ -325,8 +325,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                 });
             });
-            cancelBtn.setOnClickListener(v -> dialog.dismiss());
-            dialog.show();
+            cancelBtn.setOnClickListener(v -> alertDialog.dismiss());
+            alertDialog.show();
         }
 
         void setTestCompleted() {
@@ -340,6 +340,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     documentReference.set(header, SetOptions.merge()).addOnCompleteListener(task1 -> {
                         if (task.isSuccessful()) {
                             isTableCreate();
+                            alertDialog.cancel();
                             startIntent();
                         } else {
                             Toast.makeText(context, "check your internet connection", Toast.LENGTH_SHORT).show();

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.chip.Chip;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.tes.theengineeringsolutions.Adapters.RecyclerViewAdapter;
 import com.tes.theengineeringsolutions.Models.LocalTestDatabase;
 import com.tes.theengineeringsolutions.Models.QuizContract;
@@ -94,7 +95,7 @@ public class TestFragment extends Fragment {
             populateTestList();
             recyclerViewAdapter.notifyDataSetChanged();
         }, 1500);
-        Toast.makeText(getActivity(), "clicked", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "reloading...", Toast.LENGTH_SHORT).show();
     }
 
     private void init_recyclerView() {
@@ -108,7 +109,8 @@ public class TestFragment extends Fragment {
 
     private void populateTestList() {
         Log.e(TAG, "populate test list ");
-        firebaseFirestore.collection("Admin").addSnapshotListener((queryDocumentSnapshots, e) -> {
+        Query firstQuery = firebaseFirestore.collection("Admin").orderBy("created", Query.Direction.DESCENDING);
+        firstQuery.addSnapshotListener((queryDocumentSnapshots, e) -> {
             if (queryDocumentSnapshots != null) {
                 for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                     QuizContract quizContract = doc.getDocument().toObject(QuizContract.class);
