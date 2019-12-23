@@ -2,12 +2,14 @@ package com.tes.theengineeringsolutions.Fragments;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +47,7 @@ public class ResultFragment extends Fragment {
     private ArrayList<BarData> progressList;
     private ImageButton reloadBtn;
 
+
     public ResultFragment() {
         // Required empty public constructor
     }
@@ -53,11 +56,13 @@ public class ResultFragment extends Fragment {
         resultRecyclerView = view.findViewById(R.id.result_recycler_view);
         chartProgressBar = view.findViewById(R.id.ChartProgressBar);
         reloadBtn = view.findViewById(R.id.reload_bar_btn);
+
         resultList = new ArrayList<>();
         progressList = new ArrayList<>();
         getProgress();
         chartView();
         populateList();
+
         recyclerViewAdapter = new RecyclerViewAdapter(getContext(), resultList, 2);
     }
 
@@ -69,7 +74,7 @@ public class ResultFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_result, container, false);
 
         initFields(view);
-        recyclerViewAdapter.notifyDataSetChanged();
+        inti_recyclerView();
 
         reloadBtn.setOnClickListener(v -> {
             progressList.clear();
@@ -77,11 +82,7 @@ public class ResultFragment extends Fragment {
             chartView();
         });
 
-        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
-        SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(23);
-        resultRecyclerView.addItemDecoration(spacesItemDecoration);
-        resultRecyclerView.setLayoutManager(staggeredGridLayoutManager);
-        resultRecyclerView.setAdapter(recyclerViewAdapter);
+
         return view;
     }
 
@@ -146,6 +147,14 @@ public class ResultFragment extends Fragment {
         });
     }
 
+    private void inti_recyclerView() {
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(23);
+        resultRecyclerView.addItemDecoration(spacesItemDecoration);
+        resultRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+        resultRecyclerView.setAdapter(recyclerViewAdapter);
+    }
+
     private void chartView() {
         if (progressList.size() > 0) {
             chartProgressBar.setDataList(progressList);
@@ -159,11 +168,12 @@ public class ResultFragment extends Fragment {
                 int year = cal.get(Calendar.YEAR);
                 String stringDate = (month + 1) + "-" + year;
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM");
-                BarData emptyBar = new BarData(simpleDateFormat.format(cal.getTime()) + " " + year, 1,   "0 passed");
+                BarData emptyBar = new BarData(simpleDateFormat.format(cal.getTime()) + " " + year, 1, "0 passed");
                 emptyProgress.add(emptyBar);
             }
             chartProgressBar.setDataList(emptyProgress);
             chartProgressBar.build();
         }
     }
+
 }

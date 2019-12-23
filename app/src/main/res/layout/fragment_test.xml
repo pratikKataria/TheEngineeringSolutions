@@ -25,14 +25,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:fontFamily="@font/nunito_bold"
-                android:text="Test"
                 android:layout_marginTop="130dp"
                 android:layout_marginBottom="8dp"
+                android:fontFamily="@font/nunito_bold"
+                android:text="Test"
                 android:textColor="@color/white"
                 android:textSize="32dp"
                 app:layout_collapseMode="parallax"
-                app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap"/>
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <androidx.appcompat.widget.Toolbar
@@ -42,12 +42,66 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_anchor="@+id/fragmentTest_reload_btn"
+            app:layout_anchorGravity="bottom|center">
+
+            <ImageView
+                android:id="@+id/no_test_image"
+                android:layout_width="wrap_content"
+                android:layout_height="242dp"
+                android:layout_gravity="center"
+                android:layout_margin="40dp"
+                android:src="@drawable/no_test_present"
+                android:visibility="visible"
+                app:layout_anchor="@+id/appbar"
+                app:layout_anchorGravity="bottom|center" />
+
+            <TextView
+                android:id="@+id/no_test_text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:text="Empty list!"
+                android:textSize="24dp"
+                android:visibility="visible"
+                app:layout_anchor="@+id/no_test_image"
+                app:layout_anchorGravity="bottom|center" />
+
+            <TextView
+                android:id="@+id/no_test_text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:text="All the test is completed. wait for newer test to arrive"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:visibility="visible"
+                app:layout_anchor="@+id/no_test_image"
+                app:layout_anchorGravity="bottom|center" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragTest_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="16dp"
         android:scrollbars="vertical"
+        android:visibility="visible"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
 
     <com.google.android.material.chip.Chip

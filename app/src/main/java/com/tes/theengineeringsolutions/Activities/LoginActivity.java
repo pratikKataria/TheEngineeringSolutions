@@ -14,15 +14,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.tes.theengineeringsolutions.R;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,6 +84,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activityLogin_mbtn_login:
+                if (mEmailAdd.getText().toString().isEmpty()) {
+                    mEmailAdd.setError("should not be empty");
+                    mEmailAdd.requestFocus();
+                    return;
+                }
+
+                if (mPass.getText().toString().isEmpty()) {
+                    mPass.setError("should not be empty");
+                    mPass.requestFocus();
+                    return;
+                }
+
                 signInUser();
                 break;
             case R.id.activityLogin_tv_forget_pass:

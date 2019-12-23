@@ -125,14 +125,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/mainTitle"
         android:drawableStart="@drawable/ic_text_fields"
         android:drawablePadding="5dp"
         android:fontFamily="@font/nunito_semi_bold"
         android:hint="Test display name"
         android:singleLine="true"
         android:inputType="textCapWords"
-        android:textColor="@color/mainTitle"
         app:layout_constraintStart_toStartOf="@+id/constraintLayout2"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
 
@@ -163,41 +161,44 @@
             android:id="@+id/activityTestFile_et_test_subject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/subTitle"
             android:drawableStart="@drawable/ic_subject"
             android:drawablePadding="5dp"
             android:fontFamily="@font/nunito_semi_bold"
             android:hint="Subject"
             android:inputType="textCapWords"
-            android:singleLine="true"
-            android:textColor="@color/subTitle" />
+            android:singleLine="true" />
 
         <EditText
             android:id="@+id/activityTestFile_et_test_subcode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:backgroundTint="@color/subTitle"
             android:fontFamily="@font/nunito_semi_bold"
             android:hint="subject-code"
-            android:inputType="text"
+            android:inputType="textCapWords"
             android:maxLength="6"
-            android:singleLine="true"
-            android:textColor="@color/subTitle" />
+            android:singleLine="true" />
 
         <EditText
             android:id="@+id/activityTestFile_et_test_series"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:backgroundTint="@color/subTitle"
-            android:clickable="false"
+            android:enabled="false"
             android:fontFamily="@font/nunito_semi_bold"
             android:hint="series"
             android:inputType="number"
             android:maxLength="4"
-            android:singleLine="true"
-            android:textColor="@color/subTitle" />
+            android:singleLine="true" />
+
+        <ImageButton
+            android:id="@+id/activityTestFile_ib_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_refresh_black_24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
     </LinearLayout>
 
     <LinearLayout
@@ -215,7 +216,6 @@
             android:id="@+id/activityTestFile_et_test_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/subTitle"
             android:drawableStart="@drawable/ic_lock_black"
             android:drawablePadding="5dp"
             android:fontFamily="@font/nunito_semi_bold_italic"
@@ -227,7 +227,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:backgroundTint="@color/subTitle"
             android:drawableStart="@drawable/ic_timer_black_24dp"
             android:drawablePadding="5dp"
             android:fontFamily="@font/nunito_semi_bold_italic"
@@ -243,7 +242,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:backgroundTint="@color/subTitle"
             android:drawablePadding="5dp"
             android:fontFamily="@font/nunito_semi_bold_italic"
             android:hint="Q. count"

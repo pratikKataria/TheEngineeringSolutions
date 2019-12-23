@@ -1,9 +1,9 @@
 package com.tes.theengineeringsolutions.Fragments;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -42,7 +44,7 @@ public class TestFragment extends Fragment {
     private RecyclerViewAdapter recyclerViewAdapter;
     private Chip reloadBtn;
     private TextView textView;
-//    private SwipeRefreshLayout swipeRefreshLayout;
+    private NestedScrollView nestedScrollView;
 
     private FirebaseFirestore firebaseFirestore;
 
@@ -51,15 +53,20 @@ public class TestFragment extends Fragment {
     }
 
 
-    private void initializeFields(View view) {
+    private void init_fields(View view) {
         testRecyclerView = view.findViewById(R.id.fragTest_rv);
         testList = new ArrayList<>();
         firebaseFirestore = FirebaseFirestore.getInstance();
         reloadBtn = view.findViewById(R.id.fragmentTest_reload_btn);
         textView = view.findViewById(R.id.textviewFORTEST);
-//        swipeRefreshLayout = view.findViewById(R.id.swipeToRefresh);
+        nestedScrollView = view.findViewById(R.id.nestedScrollView);
 
         populateTestList();
+        new Handler().postDelayed(() -> {
+            if (testList.size() == 0) {
+                hideList();
+            }
+        }, 2000);
     }
 
     @Override
@@ -68,12 +75,16 @@ public class TestFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_test, container, false);
         LocalTestDatabase.deleteAll(LocalTestDatabase.class);
-        initializeFields(view);
+
+        init_fields(view);
         init_recyclerView();
+
         recyclerViewAdapter.notifyDataSetChanged();
+
 
         reloadBtn.setOnClickListener(v -> {
             reload();
+            showList();
         });
         return view;
     }
@@ -121,10 +132,24 @@ public class TestFragment extends Fragment {
                                 }
                                 recyclerViewAdapter.notifyDataSetChanged();
                             }
+                            if (testList.size() == 0)
+                                new Handler().postDelayed(this::hideList, 1500);
+                            else
+                                showList();
                         });
                     }
                 }
             });
         }
+    }
+
+    private void hideList() {
+        nestedScrollView.setVisibility(View.VISIBLE);
+        testRecyclerView.setVisibility(View.GONE);
+    }
+
+    private void showList() {
+        nestedScrollView.setVisibility(View.GONE);
+        testRecyclerView.setVisibility(View.VISIBLE);
     }
 }

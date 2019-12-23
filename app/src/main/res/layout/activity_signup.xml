@@ -68,7 +68,7 @@
                 android:id="@+id/signupActivity_et_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/username"/>
+                style="@style/email"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -76,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:counterEnabled="true"
-            app:counterMaxLength="10"
+            app:counterMaxLength="12"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -91,7 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:counterEnabled="true"
-            app:counterMaxLength="10"
+            app:counterMaxLength="12"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText

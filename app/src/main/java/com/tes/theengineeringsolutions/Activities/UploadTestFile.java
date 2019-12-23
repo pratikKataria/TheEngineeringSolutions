@@ -10,6 +10,7 @@ import android.provider.OpenableColumns;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +56,7 @@ public class UploadTestFile extends AppCompatActivity {
     ProgressBar progressBar; //show progress of file being upload
     MaterialButton mUploadBtn; //upload button
     MaterialButton mSelectFileBtn; //select file button
+    ImageButton imageButtonRefresh;
     Uri fileUri; //uri address of the file in internal storage
     ChipGroup chipGroup;//chip holder group
     Chip chip = null;//chips in group
@@ -95,6 +97,7 @@ public class UploadTestFile extends AppCompatActivity {
         editTextPassword = findViewById(R.id.activityTestFile_et_test_password);
         editTextNumberOfQuestions = findViewById(R.id.activityTestFile_et_no_of_question);
         editTextDuration = findViewById(R.id.activityTestFile_et_test_duration);
+        imageButtonRefresh = findViewById(R.id.activityTestFile_ib_refresh);
 
         firebaseFirestore = FirebaseFirestore.getInstance(); //instance of firestore database
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -148,6 +151,11 @@ public class UploadTestFile extends AppCompatActivity {
                 return;
             }
 
+            if (editTextTestCounter.getText().toString().equals("")) {
+                editTextTestCounter.setError("refresh test counter");
+                return;
+            }
+
             if (editTextPassword.getText().toString().equals("")) {
                 editTextPassword.setError("should not be empty");
                 editTextPassword.requestFocus();
@@ -168,6 +176,8 @@ public class UploadTestFile extends AppCompatActivity {
 
             uploadFile();
         });
+
+        imageButtonRefresh.setOnClickListener(v-> setTestSeriesValue());
 
         //chip on click listener
         if (chip != null)

@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:transitionName="editTextTransition"
                 android:drawableStart="@drawable/ic_email_black"
-                style="@style/username"/>
+                style="@style/email"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             app:counterEnabled="true"
-            app:counterMaxLength="10"
+            app:counterMaxLength="12"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText

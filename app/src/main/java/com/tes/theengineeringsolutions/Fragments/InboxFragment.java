@@ -34,7 +34,7 @@ public class InboxFragment extends Fragment {
     private void init_fields(View view) {
         list = new ArrayList<>();
         recyclerView = view.findViewById(R.id.recyclerView);
-        populateList();
+//        populateList();
         init_recyclerView();
     }
 

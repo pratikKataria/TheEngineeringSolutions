@@ -6,10 +6,13 @@
     android:layout_height="match_parent">
 
     <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_layer_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:lottie_loop="true"
         app:lottie_autoPlay="true"
+        android:visibility="visible"
         app:lottie_fileName="list_loading.json"/>
+
 
 </LinearLayout>

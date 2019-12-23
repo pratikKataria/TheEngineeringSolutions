@@ -107,7 +107,6 @@ public class SignupActivity extends AppCompatActivity {
                 return;
             }
 
-            String username = mUsername.getText().toString();
             String password = mPassword.getText().toString();
             String email = mEmail.getText().toString();
 
@@ -127,7 +126,7 @@ public class SignupActivity extends AppCompatActivity {
                         Toast.makeText(this, "SINGED UP SUCCESSFULLY", Toast.LENGTH_SHORT).show();
                         mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
-                                setUIDS();
+                                setUIDS(email);
                                 createUserDocument();
                             } else {
                                 Toast.makeText(this, "LOGIN ERROR", Toast.LENGTH_SHORT).show();
@@ -143,6 +142,7 @@ public class SignupActivity extends AppCompatActivity {
                             mProgressBar.setVisibility(View.GONE);
                         } catch (FirebaseAuthInvalidCredentialsException malformedException) {
                             Toast.makeText(this, "check your email Address", Toast.LENGTH_SHORT).show();
+                            mProgressBar.setVisibility(View.GONE);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -150,17 +150,18 @@ public class SignupActivity extends AppCompatActivity {
                 });//createUserWithEmailAndPassword
     }
 
-    public void setUIDS() {
+    public void setUIDS(String email) {
         if (mFirebaseAuth.getUid() != null) {
             String uidString = mFirebaseAuth.getUid();
             Map<String, String> map = new HashMap<>();
-            map.put(uidString, uidString);
+            map.put(email, uidString);
             DocumentReference documentReference = firebaseFirestore.collection("Admin").document("UIDS");
             documentReference.set(map, SetOptions.merge()).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                    createUserDocument();
                     Toast.makeText(SignupActivity.this, "uid SET", Toast.LENGTH_SHORT).show();
                 } else {
+                    mProgressBar.setVisibility(View.GONE);
                     Toast.makeText(SignupActivity.this, "Unable to set uid", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -182,6 +183,8 @@ public class SignupActivity extends AppCompatActivity {
             DocumentReference documentReference = firebaseFirestore.collection("User").document(mFirebaseAuth.getUid());
             documentReference.set(rootMap).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
+                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                    finish();
                     Toast.makeText(SignupActivity.this, "document uploaded successfully", Toast.LENGTH_LONG).show();
                 } else
                     Toast.makeText(SignupActivity.this, "fail to upload documents", Toast.LENGTH_LONG).show();

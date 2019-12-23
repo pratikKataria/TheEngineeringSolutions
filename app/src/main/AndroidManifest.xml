@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.Developer"></activity>
+        <activity android:name=".Activities.About"></activity>
+        <activity android:name=".Activities.Developer" />
         <activity android:name=".Activities.UploadResultsActivity" />
         <activity android:name=".Activities.QuizResult" />
 

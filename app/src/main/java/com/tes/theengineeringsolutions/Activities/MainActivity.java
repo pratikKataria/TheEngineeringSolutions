@@ -132,17 +132,25 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             return false;
         });
 
+        mNavigationView.getMenu().getItem(0).setChecked(true);
+
         mNavigationView.setNavigationItemSelectedListener(menuItem -> {
-         switch (menuItem.getItemId()) {
-             case R.id.home:
-                 startActivity(new Intent(this, MainActivity.class));
-                 break;
-             case R.id.about:
-                 startActivity(new Intent(this, Developer.class));
-                 break;
-         }
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-         return true;
+            switch (menuItem.getItemId()) {
+                case R.id.home:
+                    startActivity(new Intent(this, MainActivity.class));
+                    break;
+                case R.id.developer:
+                    startActivity(new Intent(this, Developer.class));
+                    break;
+                case R.id.about:
+                    startActivity(new Intent(this, About.class));
+                    break;
+                case R.id.logout:
+                    logoutUser();
+                    break;
+            }
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+            return true;
         });
     }
 
@@ -154,12 +162,9 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     }
 
     private void logoutUser() {
-        //        mMaterialButton = findViewById(R.id.mainActivity_btn_logout);
-//        mMaterialButton.setOnClickListener(v -> {
-//            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//            firebaseAuth.signOut();
-//            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//        });
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.signOut();
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
     }
 
 
@@ -192,18 +197,13 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         snackbar.setBehavior(new NoSwipeBehavior());
         snackbar.show();
     }
-    class NoSwipeBehavior extends BaseTransientBottomBar.Behavior {
-        @Override
-        public boolean canSwipeDismissView(View child) {
-            return false;
-        }
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
         checkConnection();
         // register connection status listener
+        mNavigationView.getMenu().getItem(0).setChecked(true);
         MyApplication.getInstance().setConnectivityListener(this);
     }
 
@@ -221,6 +221,13 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         showSnack(isConnected);
+    }
+
+    class NoSwipeBehavior extends BaseTransientBottomBar.Behavior {
+        @Override
+        public boolean canSwipeDismissView(View child) {
+            return false;
+        }
     }
 
 
