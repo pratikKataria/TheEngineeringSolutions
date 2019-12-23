@@ -256,7 +256,7 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
                                 Toast.makeText(this, "progress set", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            data.put(stringDate.substring(7), 0);
+                            data.put(stringDate.substring(7), 1);
                             header.put("test_progress", data);
                             reference.set(header, SetOptions.merge());
                             Toast.makeText(this, "progress set", Toast.LENGTH_SHORT).show();

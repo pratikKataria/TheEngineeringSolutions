@@ -2,14 +2,12 @@ package com.tes.theengineeringsolutions.Fragments;
 
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -87,64 +85,70 @@ public class ResultFragment extends Fragment {
     }
 
     private void populateList() {
-        FirebaseFirestore.getInstance().collection("Results").addSnapshotListener((queryDocumentSnapshots, e) -> {
-            for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-                Map<String, Object> quizContract = doc.getDocument().getData();
-                for (Object object : quizContract.keySet()) {
-                    Map<String, String> subData = (Map<String, String>) quizContract.get(object);
-                    Log.e("RESULT FRAGMENT", subData.get("subject") + "/n" + subData.get("percentage"));
-                    QuizContract quizContract1 = new QuizContract(
-                            subData.get("subject") + "",
-                            subData.get("subject_code") + "",
-                            subData.get("date") + "",
-                            subData.get("result") + "",
-                            subData.get("percentage") + "",
-                            subData.get("question_correct") + "",
-                            subData.get("questions_incorrect") + "",
-                            subData.get("total_questions") + "",
-                            subData.get("color") + "",
-                            subData.get("badge") + "");
-                    resultList.add(quizContract1);
-                    recyclerViewAdapter.notifyDataSetChanged();
-                    Log.e(TAG, "list size " + resultList.size());
+        if (FirebaseAuth.getInstance() != null) {
+            FirebaseFirestore.getInstance().collection("Results").addSnapshotListener((queryDocumentSnapshots, e) -> {
+                if (queryDocumentSnapshots != null) {
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                        Map<String, Object> quizContract = doc.getDocument().getData();
+                        for (Object object : quizContract.keySet()) {
+                            Map<String, String> subData = (Map<String, String>) quizContract.get(object);
+                            Log.e("RESULT FRAGMENT", subData.get("subject") + "/n" + subData.get("percentage"));
+                            QuizContract quizContract1 = new QuizContract(
+                                    subData.get("subject") + "",
+                                    subData.get("subject_code") + "",
+                                    subData.get("date") + "",
+                                    subData.get("result") + "",
+                                    subData.get("percentage") + "",
+                                    subData.get("question_correct") + "",
+                                    subData.get("questions_incorrect") + "",
+                                    subData.get("total_questions") + "",
+                                    subData.get("color") + "",
+                                    subData.get("badge") + "");
+                            resultList.add(quizContract1);
+                            recyclerViewAdapter.notifyDataSetChanged();
+                            Log.e(TAG, "list size " + resultList.size());
+                        }
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void getProgress() {
-        DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
-        documentReference.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot snapshot = task.getResult();
-                if (snapshot != null && snapshot.exists()) {
-                    Map<String, Object> data = snapshot.getData();
-                    if (data != null && data.containsKey("test_progress")) {
-                        Map<String, Object> month1 = (Map<String, Object>) data.get("test_progress");
-                        for (int i = -6; i < 1; i++) {
-                            Calendar cal = Calendar.getInstance();
-                            cal.add(Calendar.MONTH, i);
-                            int month = cal.get(Calendar.MONTH);
-                            int year = cal.get(Calendar.YEAR);
-                            String stringDate = (month + 1) + "-" + year;
-                            if (month1.containsKey(stringDate)) {
-                                Log.e("TESTFRAGMENT", "DATE " + stringDate + " pass " + month1.get(stringDate) + " i " + i);
-                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM");
-                                float val = (float) (((long) month1.get(stringDate)));
-                                BarData barData;
-                                if (val > 30) {
-                                    barData = new BarData(simpleDateFormat.format(cal.getTime()) + " " + year, 49, month1.get(stringDate) + " passed");
-                                } else {
-                                    barData = new BarData(simpleDateFormat.format(cal.getTime()) + " " + year, val, month1.get(stringDate) + " passed");
+        if (FirebaseAuth.getInstance().getUid() != null) {
+            DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
+            documentReference.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot snapshot = task.getResult();
+                    if (snapshot != null && snapshot.exists()) {
+                        Map<String, Object> data = snapshot.getData();
+                        if (data != null && data.containsKey("test_progress")) {
+                            Map<String, Object> month1 = (Map<String, Object>) data.get("test_progress");
+                            for (int i = -6; i < 1; i++) {
+                                Calendar cal = Calendar.getInstance();
+                                cal.add(Calendar.MONTH, i);
+                                int month = cal.get(Calendar.MONTH);
+                                int year = cal.get(Calendar.YEAR);
+                                String stringDate = (month + 1) + "-" + year;
+                                if (month1.containsKey(stringDate)) {
+                                    Log.e("TESTFRAGMENT", "DATE " + stringDate + " pass " + month1.get(stringDate) + " i " + i);
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM");
+                                    float val = (float) (((long) month1.get(stringDate)));
+                                    BarData barData;
+                                    if (val > 30) {
+                                        barData = new BarData(simpleDateFormat.format(cal.getTime()) + " " + year, 49, month1.get(stringDate) + " passed");
+                                    } else {
+                                        barData = new BarData(simpleDateFormat.format(cal.getTime()) + " " + year, val, month1.get(stringDate) + " passed");
+                                    }
+                                    progressList.add(barData);
                                 }
-                                progressList.add(barData);
                             }
+                            chartView();
                         }
-                        chartView();
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void inti_recyclerView() {

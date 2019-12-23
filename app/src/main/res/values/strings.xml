@@ -17,5 +17,5 @@
 
     <string name="profile_bio">UI Designer\nAndroid App Developer\nBlogger at Medium Publication\nGoogle professional IT Certificate\nObject Oriented Programing in java from UC</string>
     <string name="aboutBio">The Graduate Aptitude test in Engineering, commonly known as GATE, opens doors to infinite opportunities for students from a technical background. GATE is a prominent entrance exam for admission into prestigious IITs and IISc colleges. Since 2009, the importance of GATE has increased as most of the top PSUs have started their recruitments based on the scores of candidates in the entrance exam.</string>
-    <string name="documentAlert">document uploading failed during signup if that\'s not the case contact Admin WITHOUT DOCUMENT YOU WILL NOT RECIVE TESTS </string>
+    <string name="documentAlert">document uploading failed during signup\n if that\'s not the case contact Admin \nWITHOUT DOCUMENT YOU WILL NOT RECEIVE TESTS </string>
 </resources>

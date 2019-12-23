@@ -1,41 +1,26 @@
 package com.tes.theengineeringsolutions.Activities;
 
-import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.transition.ChangeBounds;
 import android.transition.Transition;
 import android.util.Pair;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.basgeekball.awesomevalidation.AwesomeValidation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.tes.theengineeringsolutions.Models.Encryption;
 import com.tes.theengineeringsolutions.R;
-
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.basgeekball.awesomevalidation.ValidationStyle.BASIC;
-import static com.basgeekball.awesomevalidation.ValidationStyle.TEXT_INPUT_LAYOUT;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -49,6 +34,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private ProgressBar mProgressBar;
     private FirebaseAuth mFirebaseAuth;
 
+
+
     private void initializeField() {
         mEmailAdd = findViewById(R.id.activityLogin_et_email);
         mLoginBtn = findViewById(R.id.activityLogin_mbtn_login);
@@ -57,6 +44,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mProgressBar = findViewById(R.id.activityLogin_progressBar);
         mRegister = findViewById(R.id.activityLogin_tv_register);
         mFirebaseAuth = FirebaseAuth.getInstance();
+
+
     }
 
     //check correct format of email address
@@ -150,12 +139,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     // If sign in fails, display a message to the user. If sign in succeeds
                     // the auth state listener will be notified and logic to handle the
                     // signed in user can be handled in the listener.
-                    mProgressBar.setVisibility(View.GONE);
                     if (task.isSuccessful()) {
+                        mProgressBar.setVisibility(View.GONE);
+                        storePass(password);
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         finish();
                     } else {
                         try {
+                            mProgressBar.setVisibility(View.GONE);
                             throw  task.getException();
                         } catch (FirebaseAuthInvalidCredentialsException fic) {
                             Toast.makeText(this, "incorrect credentials", Toast.LENGTH_SHORT).show();
@@ -166,6 +157,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Toast.makeText(this, "Authentication Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void storePass(String pass) {
+        SharedPreferences sharedPreferences = getSharedPreferences("DOCUMENT_VERIFICATION", 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("5f4dcc3b5aa765d61d8327deb882cf99", new Encryption().encrypt(pass, "5f4dcc3b5aa765d61d8327deb882cf99"));
+        editor.commit();
     }
 
     private Transition enterTransition() {

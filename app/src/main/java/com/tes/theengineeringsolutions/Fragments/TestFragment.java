@@ -1,7 +1,6 @@
 package com.tes.theengineeringsolutions.Fragments;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -116,21 +114,22 @@ public class TestFragment extends Fragment {
                 if (task.isSuccessful()) {
                     DocumentSnapshot snapshot = task.getResult();
                     assert snapshot != null;
-                    if (snapshot.exists()) {
+                   if (snapshot != null) {
                         Map<String, Object> data = snapshot.getData();
                         Map<String, Boolean> rootMap = (Map<String, Boolean>) data.get("test_completed");
                         firebaseFirestore.collection("Admin").addSnapshotListener((queryDocumentSnapshots, e) -> {
-                            assert queryDocumentSnapshots != null;
-                            for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-                                QuizContract quizContract = doc.getDocument().toObject(QuizContract.class);
-                                if (rootMap != null) {
-                                    if (rootMap.containsKey(quizContract.getSubject_code())) {
-                                        if (!rootMap.get(quizContract.getSubject_code())) {
-                                            testList.add(quizContract);
+                            if (queryDocumentSnapshots != null) {
+                                for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                                    QuizContract quizContract = doc.getDocument().toObject(QuizContract.class);
+                                    if (rootMap != null) {
+                                        if (rootMap.containsKey(quizContract.getSubject_code())) {
+                                            if (!rootMap.get(quizContract.getSubject_code())) {
+                                                testList.add(quizContract);
+                                            }
                                         }
                                     }
+                                    recyclerViewAdapter.notifyDataSetChanged();
                                 }
-                                recyclerViewAdapter.notifyDataSetChanged();
                             }
                             if (testList.size() == 0)
                                 new Handler().postDelayed(this::hideList, 1500);
