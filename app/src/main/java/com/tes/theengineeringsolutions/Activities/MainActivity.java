@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -23,13 +26,20 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.tes.theengineeringsolutions.Fragments.HomeFragment;
 import com.tes.theengineeringsolutions.Fragments.ResultFragment;
 import com.tes.theengineeringsolutions.Fragments.TestFragment;
 import com.tes.theengineeringsolutions.Models.ConnectivityReceiver;
 import com.tes.theengineeringsolutions.R;
-
+import java.util.HashMap;
+import java.util.Map;
 import static com.tes.theengineeringsolutions.Models.ConnectivityReceiver.isConnected;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 
 public class MainActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
@@ -40,12 +50,17 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     private ActionBarDrawerToggle actionBarDrawerToggle;//  actionbar
     private BottomNavigationView bottomNavigationView;//bottom navigation bar
     private Toolbar mToolbar;// top toolbar in activity
+
+    private SharedPreferences sharedPreferences;
+    private Editor editor;
+
     //Fragments Classes
     private HomeFragment homeFragment;
     private TestFragment testFragment;
     private ResultFragment resultFragment;
 
     private void initializeFields() {
+
         //find the toolbar view inside the activity layout
         mToolbar = findViewById(R.id.activityMain_toolbar);
         //find the drawer view inside the activity layout
@@ -57,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
         //home fragment instance
         homeFragment = new HomeFragment();
+
+        sharedPreferences = getSharedPreferences("DOCUMENT_VERIFICATION", 0);
+        editor = sharedPreferences.edit();
     }
 
     //onStart check for  firebase Auth instance
@@ -68,6 +86,10 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         if (mFirebaseUser.getCurrentUser() == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
+        } else {
+            if (sharedPreferences.getBoolean("isVerified", false)) {
+                check_if_document_present();
+            }
         }
     }
 
@@ -76,9 +98,13 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         checkConnection();
 
         initializeFields();
+
+
+        check_if_document_present();
 
         // sets the Toolbar to act as the ActionBar for this Fragment window
         //Make sure the toolbar exists in the activity and is not null
@@ -154,6 +180,8 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         });
     }
 
+
+
     private void loadFragment(Fragment fragment) {
         // get fragment manger
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -197,6 +225,12 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         snackbar.setBehavior(new NoSwipeBehavior());
         snackbar.show();
     }
+    class NoSwipeBehavior extends BaseTransientBottomBar.Behavior {
+        @Override
+        public boolean canSwipeDismissView(View child) {
+            return false;
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -217,18 +251,114 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
      * Callback will be triggered when there is change in
      * network connection
      */
-
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         showSnack(isConnected);
     }
 
-    class NoSwipeBehavior extends BaseTransientBottomBar.Behavior {
-        @Override
-        public boolean canSwipeDismissView(View child) {
-            return false;
-        }
+    private void check_if_document_present() {
+        String fireUID = FirebaseAuth.getInstance().getUid();
+        Log.d(TAG, fireUID+"fireuid");
+        DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(fireUID);
+        documentReference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                if (documentSnapshot.exists()) {
+                    Toast.makeText(this, "Document Verified", Toast.LENGTH_SHORT).show();
+                } else {
+                    showAlertDialog();
+                }
+            }
+        });
     }
 
+    void showAlertDialog() {
+        View alertLayout = getLayoutInflater().inflate(R.layout.alert_dialog_document_varification, null);
+        final EditText userNameEditText = alertLayout.findViewById(R.id.username);
+        final EditText email = alertLayout.findViewById(R.id.email);
+        final EditText mPassEditText = alertLayout.findViewById(R.id.password);
+        final MaterialButton continueBtn = alertLayout.findViewById(R.id.alert_dialog_mb_continue);
+        final ProgressBar progressBar = alertLayout.findViewById(R.id.progressbar);
 
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setView(alertLayout);
+        alert.setCancelable(false);
+
+        AlertDialog dialog = alert.create();
+
+
+        continueBtn.setOnClickListener(v -> {
+            Toast.makeText(this, "continue clicked", Toast.LENGTH_SHORT).show();
+
+            if (userNameEditText.getText().toString().isEmpty()) {
+                userNameEditText.setError("should not be empty");
+                userNameEditText.requestFocus();
+                return;
+            }
+            if (email.getText().toString().isEmpty()) {
+                email.setError("should not be empty");
+                email.requestFocus();
+                return;
+            }
+            if (mPassEditText.getText().toString().isEmpty()) {
+                mPassEditText.setError("should not be empty");
+                mPassEditText.requestFocus();
+                return;
+            }
+            if (mPassEditText.getText().toString().length() > 6) {
+                mPassEditText.setError("should not be less then 6");
+                mPassEditText.requestFocus();
+                return;
+            }
+
+            String emailString = email.getText().toString();
+            String passString = mPassEditText.getText().toString();
+            String usernameString = userNameEditText.getText().toString();
+            String currentUid = FirebaseAuth.getInstance().getUid();
+            String fireBaseEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+            progressBar.setVisibility(View.VISIBLE);
+
+            if (emailString.equals(fireBaseEmail)) {
+                if (FirebaseAuth.getInstance().getUid() != null) {
+                    Map<String, String> userIDS = new HashMap<>();
+                    userIDS.put(emailString, currentUid);
+                    Map<String, Object> userDocuments = new HashMap<>();
+                    userDocuments.put("user_id", currentUid);
+                    userDocuments.put("user_name", usernameString);
+                    userDocuments.put("email_address", emailString);
+                    userDocuments.put("password", passString);
+                    userDocuments.put("Branch", "nd");
+                    userDocuments.put("user_address", "nd");
+                    userDocuments.put("gender", "nd");
+                    Log.e(TAG, "document Reference firebase email  " +  FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                    DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(currentUid);
+                    documentReference.set(userDocuments).addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            Log.e(TAG, "document Reference");
+                            FirebaseFirestore.getInstance().collection("Admin").document("UIDS").set(userIDS, SetOptions.merge()).addOnCompleteListener(task2 -> {
+                                if (task2.isSuccessful()) {
+                                    dialog.dismiss();
+                                    progressBar.setVisibility(View.GONE);
+                                    editor.putBoolean("isVerified", true);
+                                    editor.commit();
+                                    Toast.makeText(this, "Admin permission granted", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    progressBar.setVisibility(View.GONE);
+                                    Toast.makeText(this, "fail to get Admin permision", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(MainActivity.this, "Document uploaded sucessfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(MainActivity.this, "fail to upload document", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
+        dialog.show();
+    }
 }

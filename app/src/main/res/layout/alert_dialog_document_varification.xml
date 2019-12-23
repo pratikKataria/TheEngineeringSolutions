@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/ic_rectangle"
-    android:backgroundTint="@color/darkGrey">
+    android:background="@drawable/ic_rectangle">
 
     <TextView
         android:id="@+id/text1"
@@ -14,7 +14,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/nunito_bold"
-        android:text="Document varification"
+        android:text="Document verification"
         android:textAllCaps="true"
         android:textSize="18dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
-        android:fontFamily="@font/nunito_light"
+        android:fontFamily="@font/nunito_regular"
         android:text="@string/documentAlert"
         android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -80,31 +80,17 @@
         android:visibility="gone"
         tools:layout_editor_absoluteX="0dp" />
 
-    <LinearLayout
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/alert_dialog_mb_continue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="8dp"
+        android:text="continue"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/alert_dialog_mb_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="@color/transparent"
-            android:text="cancel"
-            android:textColor="@color/colorAccent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/alert_dialog_mb_continue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="continue"
-            android:textColor="@color/black" />
-    </LinearLayout>
-
+        app:layout_constraintTop_toBottomOf="@+id/password" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
