@@ -258,10 +258,15 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             documentReference.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot documentSnapshot = task.getResult();
-                    if (documentSnapshot.exists()) {
-                        editor.putBoolean("isVerified", true);
-                        editor.commit();
-                        Toast.makeText(this, "Document Verified", Toast.LENGTH_SHORT).show();
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        Map<String, Object> header = documentSnapshot.getData();
+                        if (header != null && header.containsKey("user_info")) {
+                            editor.putBoolean("isVerified", true);
+                            editor.commit();
+                            Toast.makeText(this, "Document Verified", Toast.LENGTH_SHORT).show();
+                        } else {
+                            showAlertDialog();
+                        }
                     } else {
                         showAlertDialog();
                     }
@@ -324,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                     if (FirebaseAuth.getInstance().getUid() != null) {
                         Map<String, String> userIDS = new HashMap<>();
                         userIDS.put(emailString, currentUid);
-                        Map<String, Object> userDocuments = new HashMap<>();
+                        Map<String, String> userDocuments = new HashMap<>();
                         userDocuments.put("user_id", currentUid);
                         userDocuments.put("user_name", usernameString);
                         userDocuments.put("email_address", emailString);
@@ -334,7 +339,9 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                         userDocuments.put("gender", "nd");
                         Log.e(TAG, "document Reference firebase email  " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
                         DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(currentUid);
-                        documentReference.set(userDocuments).addOnCompleteListener(task1 -> {
+                        Map<String, Object> header = new HashMap<>();
+                        header.put("user_info",userDocuments);
+                        documentReference.set(header, SetOptions.merge()).addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
                                 Log.e(TAG, "document Reference");
                                 FirebaseFirestore.getInstance().collection("Admin").document("UIDS").set(userIDS, SetOptions.merge()).addOnCompleteListener(task2 -> {
@@ -357,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                             }
                         });
                     }
-                }else {
+                } else {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(this, "wrong password", Toast.LENGTH_SHORT).show();
                 }

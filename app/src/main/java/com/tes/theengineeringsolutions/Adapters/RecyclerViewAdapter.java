@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Handler;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -266,14 +265,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if (snapshot.exists()) {
                             Map<String, Object> header = snapshot.getData();
                             Map<String, Boolean> data = (Map<String, Boolean>) header.get("test_completed");
-                            Log.e(TAG, "data.get () - " + data.get(textViewSubjectCode.getText().toString()));
-                            if (data.get(textViewSubjectCode.getText().toString())) {
-                                progressBar.setVisibility(View.GONE);
-                                Toast.makeText(context, "test already completed", Toast.LENGTH_SHORT).show();
+                            if (data != null) {
+                                Log.e(TAG, "data.get () - " + data.get(textViewSubjectCode.getText().toString()));
+                                if (data.containsKey(textViewSubjectCode.getText().toString()) && data.get(textViewSubjectCode.getText().toString())) {
+                                    progressBar.setVisibility(View.GONE);
+                                    Toast.makeText(context, "test already completed", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    showAlertDialog();
+                                    progressBar.setVisibility(View.GONE);
+                                    Toast.makeText(context, "enter password", Toast.LENGTH_SHORT).show();
+                                }
                             } else {
                                 showAlertDialog();
                                 progressBar.setVisibility(View.GONE);
-                                Toast.makeText(context, "dialog showed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "enter password", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }

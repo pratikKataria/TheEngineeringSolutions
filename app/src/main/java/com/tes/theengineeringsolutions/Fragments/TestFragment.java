@@ -3,6 +3,7 @@ package com.tes.theengineeringsolutions.Fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.tes.theengineeringsolutions.Adapters.RecyclerViewAdapter;
 import com.tes.theengineeringsolutions.Models.LocalTestDatabase;
@@ -28,7 +26,6 @@ import com.tes.theengineeringsolutions.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +42,8 @@ public class TestFragment extends Fragment {
     private NestedScrollView nestedScrollView;
 
     private FirebaseFirestore firebaseFirestore;
+
+    private String TAG = "TEST FRAGMENT";
 
     public TestFragment() {
         // Required empty public constructor
@@ -108,38 +107,17 @@ public class TestFragment extends Fragment {
     }
 
     private void populateTestList() {
-        if (FirebaseAuth.getInstance().getUid() != null) {
-            DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
-            documentReference.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot snapshot = task.getResult();
-                    assert snapshot != null;
-                   if (snapshot != null) {
-                        Map<String, Object> data = snapshot.getData();
-                        Map<String, Boolean> rootMap = (Map<String, Boolean>) data.get("test_completed");
-                        firebaseFirestore.collection("Admin").addSnapshotListener((queryDocumentSnapshots, e) -> {
-                            if (queryDocumentSnapshots != null) {
-                                for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-                                    QuizContract quizContract = doc.getDocument().toObject(QuizContract.class);
-                                    if (rootMap != null) {
-                                        if (rootMap.containsKey(quizContract.getSubject_code())) {
-                                            if (!rootMap.get(quizContract.getSubject_code())) {
-                                                testList.add(quizContract);
-                                            }
-                                        }
-                                    }
-                                    recyclerViewAdapter.notifyDataSetChanged();
-                                }
-                            }
-                            if (testList.size() == 0)
-                                new Handler().postDelayed(this::hideList, 1500);
-                            else
-                                showList();
-                        });
-                    }
+        Log.e(TAG, "populate test list ");
+        firebaseFirestore.collection("Admin").addSnapshotListener((queryDocumentSnapshots, e) -> {
+            if (queryDocumentSnapshots != null) {
+                for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                    QuizContract quizContract = doc.getDocument().toObject(QuizContract.class);
+                    if (quizContract.getSubject_code() != null)
+                        testList.add(quizContract);
+                    recyclerViewAdapter.notifyDataSetChanged();
                 }
-            });
-        }
+            }
+        });
     }
 
     private void hideList() {

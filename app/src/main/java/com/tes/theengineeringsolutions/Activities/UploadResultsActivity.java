@@ -240,7 +240,7 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
             reference.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot documentSnapshot = task.getResult();
-                    if (documentSnapshot.exists()) {
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
                         Map<String, Object> data1 = documentSnapshot.getData();
                         if (data1 != null && data1.containsKey("test_progress")) {
                             if (((Map<String, Object>) data1.get("test_progress")).containsKey(stringDate.substring(7))) {
