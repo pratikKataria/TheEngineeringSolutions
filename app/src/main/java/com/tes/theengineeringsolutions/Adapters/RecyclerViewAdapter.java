@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -52,15 +53,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int VIEW_TYPE_EMPTY = 0;
     //where 2 is for result card view in result fragment
     private static final int VIEW_TYPE_RESULTVIEW = 2;
+
     private static final String TAG = "RECYLER VIEW ADAPER";
+
     public static HashMap<String, Boolean> colorMap = new HashMap<>();
+
     private FirebaseStorage firebaseStorage;
     private LayoutInflater inflater;
     private int currentView;
     //context
     private Context context;
+
     //list of list to show in recycler view
     private List<QuizContract> testList;
+
+    public RecyclerViewAdapter() {
+
+    }
 
     //constructor to populate list and context of Test Fragment
     public RecyclerViewAdapter(Context context, List<QuizContract> testList, int currentView) {
@@ -122,6 +131,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         testList.get(position).getDate() + "",
                         testList.get(position).getNumber_of_questions() + " questions",
                         testList.get(position).getTest_duration() + " mins");
+
+                testCardViewHolder.setTextViewIsCompleted();
 
                 testCardViewHolder.mLockBtn.setOnClickListener(v -> {
                     testCardViewHolder.clearDataBase();
@@ -200,11 +211,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private TextView textViewNoOfQuestion;
         private TextView textViewDuration;
         private TextView textViewSubjectCode;
+        private TextView textViewIsCompleted;
         private ImageButton mLockBtn;
         private ImageButton mDownloadBtn;
         private ProgressBar progressBar;
         private MaterialCardView materialCardView;
         private AlertDialog alertDialog;
+        private HashMap<String, Boolean> isCompleted;
 
         public TestCardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -212,16 +225,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textViewDisplayName = itemView.findViewById(R.id.card_tv_test_name);
             texViewDate = itemView.findViewById(R.id.card_tv_test_date);
             textViewNoOfQuestion = itemView.findViewById(R.id.card_tv_no_of_question);
+            textViewIsCompleted = itemView.findViewById(R.id.card_tv_isCompleted);
             textViewDuration = itemView.findViewById(R.id.card_tv_duration);
             mLockBtn = itemView.findViewById(R.id.card_ib_lock);
             mDownloadBtn = itemView.findViewById(R.id.card_ib_download_test_file);
             progressBar = itemView.findViewById(R.id.card_pb_progress);
             textViewSubjectCode = itemView.findViewById(R.id.card_tv_test_unique_name);
             materialCardView = itemView.findViewById(R.id.card_view);
+
         }
 
-        public void setCardView(String testTitle, String uniqueName, String date, String noOfQuestion, String testDuration) {
-            textViewDisplayName.setText(testTitle);//set testTile with firestor
+        void setCardView(String testTitle, String uniqueName, String date, String noOfQuestion, String testDuration) {
+            textViewDisplayName.setText(testTitle);//set testTile with firestore
             textViewSubjectCode.setText(uniqueName);// e
             texViewDate.setText(date);//set date fetched form firestore
             textViewNoOfQuestion.setText(noOfQuestion);//set no questions
@@ -254,6 +269,33 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     progressBar.setVisibility(View.GONE);
                 });
             }
+        }
+
+        void setTextViewIsCompleted() {
+            DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
+            documentReference.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot snapshot = task.getResult();
+                    if (snapshot != null) {
+                        if (snapshot.exists()) {
+                            Map<String, Object> header = snapshot.getData();
+                            Map<String, Boolean> data = (Map<String, Boolean>) header.get("test_completed");
+                            if (data != null) {
+                                Log.e(TAG, "data.get () - " + data.get(textViewSubjectCode.getText().toString()));
+                                if (data.containsKey(textViewSubjectCode.getText().toString()) && data.get(textViewSubjectCode.getText().toString())) {
+                                    textViewIsCompleted.setText("completed");
+                                } else {
+                                    textViewIsCompleted.setText("not completed");
+                                    textViewIsCompleted.setTextColor(context.getColor(R.color.CeriseRed));
+                                }
+                            } else {
+                               textViewIsCompleted.setText("not completed");
+                                textViewIsCompleted.setTextColor(context.getColor(R.color.CeriseRed));
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         void isTestCompleted() {
@@ -358,10 +400,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 String[] rec = null;
                 int questionNo = 1;
                 while ((rec = reader.readNext()) != null) {
-                    LocalTestDatabase emp = new LocalTestDatabase(questionNo++, rec[0], rec[1], rec[2], rec[3], rec[4], Integer.parseInt(rec[5]), false);
+//                    Log.e("CSVREADER", rec[0] + rec[1] + rec[2] + rec[3] + rec[4] + rec[5]);
+                    LocalTestDatabase emp = new LocalTestDatabase(questionNo++, rec[0]+"", rec[1]+"", rec[2]+"", rec[3]+"", rec[4]+"", Integer.parseInt(rec[5]), false);
                     emp.save();
                     tdb.add(emp);
-//                    Log.e("CSVREADER", rec[0] + rec[1] + rec[2] + rec[3] + rec[4] + rec[5]);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -412,6 +454,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textViewSubjectCode = itemView.findViewById(R.id.cardView_tv_subject_code);
             textViewDate = itemView.findViewById(R.id.cardView_tv_date);
             textViewResult = itemView.findViewById(R.id.cardView_tv_pass);
+
             textViewPercent = itemView.findViewById(R.id.cardView_tv_percentage);
             textViewPercent2 = itemView.findViewById(R.id.cardView_tv_percentage2);
             textViewQuestionCorrect = itemView.findViewById(R.id.cardView_tv_correct);

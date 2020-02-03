@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -9,11 +8,9 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="22dp"
+        android:layout_margin="22dp"
         android:backgroundTint="@color/darkGrey"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -21,7 +18,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="350dp">
 
             <TextView
                 android:id="@+id/card_tv_test_name"
@@ -30,6 +27,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/nunito_bold"
+                android:textSize="20sp"
                 android:text="Mathematics"
                 android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
@@ -39,10 +37,11 @@
                 android:id="@+id/card_tv_test_unique_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/nunito_bold"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/nunito_regular"
                 android:text="Maths-M349-T01"
                 android:textColor="@color/white"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@+id/card_tv_test_name"
                 app:layout_constraintTop_toBottomOf="@+id/card_tv_test_name" />
 
@@ -50,11 +49,11 @@
                 android:id="@+id/card_tv_test_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/nunito_bold"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/nunito_light"
                 android:text="Tommorow"
                 android:textColor="@color/white"
-
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@+id/card_tv_test_name"
                 app:layout_constraintTop_toBottomOf="@+id/card_tv_test_unique_name" />
 
@@ -63,16 +62,25 @@
                 android:id="@+id/card_tv_no_of_question"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="@font/nunito_bold"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/nunito_light"
                 android:text="20 quizContract"
                 android:textColor="@color/white"
-
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@+id/card_tv_test_date"
-                app:layout_constraintTop_toBottomOf="@+id/view"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintTop_toBottomOf="@+id/card_tv_test_date" />
+
+            <TextView
+                android:id="@+id/card_tv_isCompleted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/nunito_semi_bold"
+                android:text="completed"
+                android:textColor="@color/green"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/card_tv_test_date"
+                app:layout_constraintTop_toBottomOf="@+id/card_tv_no_of_question" />
 
             <ProgressBar
                 android:id="@+id/card_pb_progress"
@@ -86,58 +94,60 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:layout_editor_absoluteY="79dp" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/view"
-                android:layout_width="0dp"
-                android:layout_height="3dp"
-                android:layout_marginTop="24dp"
-                android:background="@color/black"
-                app:layout_constraintTop_toBottomOf="@+id/card_tv_test_date"
-                tools:layout_editor_absoluteX="0dp"></View>
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/ic_result_card_buttom"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView_tv_week_day"
+                app:layout_constraintVertical_bias="1.0"/>
 
             <TextView
                 android:id="@+id/card_tv_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:fontFamily="@font/nunito_bold"
                 android:text="20min"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="@+id/card_tv_no_of_question"
-                app:layout_constraintEnd_toStartOf="@+id/card_ib_lock"
-                app:layout_constraintTop_toTopOf="@+id/card_tv_no_of_question"
-                app:layout_constraintVertical_bias="0.0" />
+                android:textColor="@color/darkGrey"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-            <ImageButton
-                android:id="@+id/card_ib_lock"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:backgroundTint="@color/white"
-                android:src="@drawable/ic_lock_black"
-                app:layout_constraintBottom_toBottomOf="@+id/card_tv_test_name"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/card_tv_test_name" />
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view"
+                app:layout_constraintVertical_bias="1.0">
 
-            <ImageButton
-                android:id="@+id/card_ib_download_test_file"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_cloud_download"
-                app:layout_constraintEnd_toEndOf="@+id/card_ib_lock"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/card_ib_lock"
-                app:layout_constraintTop_toBottomOf="@+id/card_ib_lock" />
+                <ImageButton
+                    android:id="@+id/card_ib_lock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:backgroundTint="@color/white"
+                    android:src="@drawable/ic_lock_black" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/round_rect_shape" />
+                <ImageButton
+                    android:id="@+id/card_ib_download_test_file"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_cloud_download" />
+            </LinearLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,7 +14,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="350dp">
 
             <LinearLayout
                 android:id="@+id/cardView_linearLayout"
@@ -116,6 +116,7 @@
                     android:id="@+id/cardView_tv_incorrect"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/nunito_bold"
                     android:text="INCORRECT"
 
@@ -125,7 +126,7 @@
                     android:id="@+id/cardView_tv_answered"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/nunito_bold"
                     android:text="Answered"
                     android:textColor="@color/white" />
@@ -147,7 +148,7 @@
                 android:id="@+id/cardView_tv_week_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/nunito_bold"
                 android:text="DATE"
                 android:textColor="@color/white"

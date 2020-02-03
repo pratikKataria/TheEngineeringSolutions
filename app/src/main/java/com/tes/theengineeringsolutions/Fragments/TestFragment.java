@@ -15,17 +15,20 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.google.android.material.chip.Chip;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.tes.theengineeringsolutions.Adapters.RecyclerViewAdapter;
+import com.tes.theengineeringsolutions.Adapters.SpacesItemDecoration;
 import com.tes.theengineeringsolutions.Models.LocalTestDatabase;
 import com.tes.theengineeringsolutions.Models.QuizContract;
 import com.tes.theengineeringsolutions.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -33,6 +36,7 @@ import java.util.List;
  * created by pratik katariya
  * updated on 5/12/2019
  */
+
 public class TestFragment extends Fragment {
 
     private RecyclerView testRecyclerView;
@@ -45,6 +49,8 @@ public class TestFragment extends Fragment {
     private FirebaseFirestore firebaseFirestore;
 
     private String TAG = "TEST FRAGMENT";
+
+    private HashMap<String, Boolean> map;
 
     public TestFragment() {
         // Required empty public constructor
@@ -60,6 +66,7 @@ public class TestFragment extends Fragment {
         nestedScrollView = view.findViewById(R.id.nestedScrollView);
 
         populateTestList();
+
         new Handler().postDelayed(() -> {
             if (testList.size() == 0) {
                 hideList();
@@ -72,13 +79,16 @@ public class TestFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_test, container, false);
-        LocalTestDatabase.deleteAll(LocalTestDatabase.class);
+
 
         init_fields(view);
+
         init_recyclerView();
 
-        recyclerViewAdapter.notifyDataSetChanged();
 
+        LocalTestDatabase.deleteAll(LocalTestDatabase.class);
+
+        recyclerViewAdapter.notifyDataSetChanged();
 
         reloadBtn.setOnClickListener(v -> {
             reload();
@@ -98,14 +108,17 @@ public class TestFragment extends Fragment {
         Toast.makeText(getActivity(), "reloading...", Toast.LENGTH_SHORT).show();
     }
 
+
     private void init_recyclerView() {
         recyclerViewAdapter = new RecyclerViewAdapter(getContext(), testList, 1);
 
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(RecyclerView.VERTICAL);
-        testRecyclerView.setLayoutManager(layoutManager);
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(23);
+        testRecyclerView.addItemDecoration(spacesItemDecoration);
+        testRecyclerView.setLayoutManager(staggeredGridLayoutManager);
         testRecyclerView.setAdapter(recyclerViewAdapter);
     }
+
 
     private void populateTestList() {
         Log.e(TAG, "populate test list ");
@@ -114,13 +127,15 @@ public class TestFragment extends Fragment {
             if (queryDocumentSnapshots != null) {
                 for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                     QuizContract quizContract = doc.getDocument().toObject(QuizContract.class);
-                    if (quizContract.getSubject_code() != null)
+                    if (quizContract.getSubject_code() != null) {
                         testList.add(quizContract);
+                    }
                     recyclerViewAdapter.notifyDataSetChanged();
                 }
             }
         });
     }
+
 
     private void hideList() {
         nestedScrollView.setVisibility(View.VISIBLE);

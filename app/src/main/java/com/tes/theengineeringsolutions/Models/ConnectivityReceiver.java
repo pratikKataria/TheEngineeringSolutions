@@ -1,4 +1,5 @@
 package com.tes.theengineeringsolutions.Models;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +12,17 @@ public class ConnectivityReceiver extends BroadcastReceiver {
 
     public static ConnectivityReceiverListener connectivityReceiverListener;
 
-    public  ConnectivityReceiver() {
+    public ConnectivityReceiver() {
         super();
+    }
+
+    public static boolean isConnected() {
+        ConnectivityManager
+                cm = (ConnectivityManager) MyApplication.getInstance().getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null
+                && activeNetwork.isConnectedOrConnecting();
     }
 
     @Override
@@ -26,15 +36,6 @@ public class ConnectivityReceiver extends BroadcastReceiver {
         if (connectivityReceiverListener != null) {
             connectivityReceiverListener.onNetworkConnectionChanged(isConnected);
         }
-    }
-
-    public static boolean isConnected() {
-        ConnectivityManager
-                cm = (ConnectivityManager) MyApplication.getInstance().getApplicationContext()
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null
-                && activeNetwork.isConnectedOrConnecting();
     }
 
     public interface ConnectivityReceiverListener {

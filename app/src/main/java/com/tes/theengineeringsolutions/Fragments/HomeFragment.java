@@ -23,9 +23,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.tes.theengineeringsolutions.Activities.UploadTestFile;
 import com.tes.theengineeringsolutions.CustomViewPager.SectionsPagerAdapter;
 import com.tes.theengineeringsolutions.R;
-
-import org.w3c.dom.Text;
-
 import java.util.Map;
 
 /**
