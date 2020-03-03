@@ -36,6 +36,8 @@ public class InboxFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_inbox, container, false);
 
+        inboxList = new ArrayList<>();
+
         init_recyclerView(view);
         populateInboxList();
 
@@ -44,8 +46,8 @@ public class InboxFragment extends Fragment {
 
     private void init_recyclerView(View view) {
         inboxRecyclerView = view.findViewById(R.id.recyclerView);
-        inboxRecyclerViewAdapter = new InboxRecyclerViewAdapter();
-        LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        inboxRecyclerViewAdapter = new InboxRecyclerViewAdapter(getContext(), inboxList);
+        LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         inboxRecyclerView.setLayoutManager(verticalLayoutManager);
         inboxRecyclerView.setAdapter(inboxRecyclerViewAdapter);
     }
