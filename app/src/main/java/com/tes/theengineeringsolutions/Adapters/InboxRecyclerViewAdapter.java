@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class InboxRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-
+    public InboxRecyclerViewAdapter() {}
 
     @NonNull
     @Override
