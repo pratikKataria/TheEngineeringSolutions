@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         }
-
     }
 
     @Override

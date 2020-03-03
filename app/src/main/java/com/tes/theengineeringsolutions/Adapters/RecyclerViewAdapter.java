@@ -53,6 +53,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int VIEW_TYPE_EMPTY = 0;
     //where 2 is for result card view in result fragment
     private static final int VIEW_TYPE_RESULTVIEW = 2;
+    //where 3 is for inbox card view in home fragment
+    private static final int VIEW_TYPE_INBOXVIEW =3;
 
     private static final String TAG = "RECYLER VIEW ADAPER";
 
@@ -190,6 +192,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     return VIEW_TYPE_TESTVIEW;
                 case VIEW_TYPE_RESULTVIEW:
                     return VIEW_TYPE_RESULTVIEW;
+                case VIEW_TYPE_INBOXVIEW:
+                    return VIEW_TYPE_INBOXVIEW;
             }
         }
         return 0;

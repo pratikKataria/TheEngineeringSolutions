@@ -114,7 +114,7 @@ public class TestFragment extends Fragment {
 
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(23);
-        testRecyclerView.addItemDecoration(spacesItemDecoration);
+//        testRecyclerView.addItemDecoration(spacesItemDecoration);
         testRecyclerView.setLayoutManager(staggeredGridLayoutManager);
         testRecyclerView.setAdapter(recyclerViewAdapter);
     }
