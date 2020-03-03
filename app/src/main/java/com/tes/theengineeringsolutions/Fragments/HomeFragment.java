@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -21,8 +22,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.tes.theengineeringsolutions.Activities.UploadTestFile;
+import com.tes.theengineeringsolutions.Adapters.InboxRecyclerViewAdapter;
 import com.tes.theengineeringsolutions.CustomViewPager.SectionsPagerAdapter;
+import com.tes.theengineeringsolutions.Models.InboxModel;
 import com.tes.theengineeringsolutions.R;
+
+import java.util.ArrayList;
 import java.util.Map;
 
 /**

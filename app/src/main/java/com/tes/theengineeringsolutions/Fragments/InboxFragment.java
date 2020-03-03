@@ -23,19 +23,9 @@ import java.util.List;
  */
 public class InboxFragment extends Fragment {
 
-    List<QuizContract> list;
-    RecyclerView recyclerView;
-    RecyclerViewAdapter recyclerViewAdapter;
 
     public InboxFragment() {
         // Required empty public constructor
-    }
-
-    private void init_fields(View view) {
-        list = new ArrayList<>();
-        recyclerView = view.findViewById(R.id.recyclerView);
-//        populateList();
-        init_recyclerView();
     }
 
     @Override
@@ -43,45 +33,7 @@ public class InboxFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_inbox, container, false);
-        init_fields(view);
         return view;
-    }
-
-    private void init_recyclerView() {
-        recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), list, 1);
-        final  LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(RecyclerView.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(recyclerViewAdapter);
-    }
-
-//    private void init_recyclerView() {
-//        recyclerViewAdapter = new RecyclerViewAdapter(getContext(), testList, 1);
-//
-//        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-//        layoutManager.setOrientation(RecyclerView.VERTICAL);
-//        testRecyclerView.setLayoutManager(layoutManager);
-//        testRecyclerView.setAdapter(recyclerViewAdapter);
-//    }
-
-    private void populateList() {
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
-        list.add(new QuizContract());
     }
 
 }
