@@ -4,7 +4,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/darkGrey"
+    android:background="@color/notesBg"
+    android:backgroundTint="@color/black"
+    android:layout_margin="12dp"
     app:cardCornerRadius="12dp">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -27,16 +29,17 @@
                 android:background="@drawable/ic_file" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/notes_card_tv_file_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Physics"
                 android:layout_marginTop="8dp"
                 android:textColor="@color/white"
-                android:textSize="28sp" />
+                android:textSize="22sp" />
 
             <ImageButton
+                android:id="@+id/notes_card_ib_download_file"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -46,6 +49,7 @@
 
 
         <TextView
+            android:id="@+id/notes_card_tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
