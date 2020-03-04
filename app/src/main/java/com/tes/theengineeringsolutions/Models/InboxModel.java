@@ -5,31 +5,31 @@ import com.google.firebase.firestore.ServerTimestamp;
 import java.util.Date;
 
 public class InboxModel {
-    private String Heading;
-    private String Description;
+    private String heading;
+    private String description;
     private @ServerTimestamp
     Date timeStamp;
 
     public InboxModel(String heading, String description, Date timeStamp) {
-        Heading = heading;
-        Description = description;
+        this.heading = heading;
+        this.description = description;
         this.timeStamp = timeStamp;
     }
 
     public String getHeading() {
-        return Heading;
+        return heading;
     }
 
     public void setHeading(String heading) {
-        Heading = heading;
+        this.heading = heading;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public Date getTimeStamp() {
