@@ -8,12 +8,16 @@ public class InboxModel {
     private String heading;
     private String description;
     private @ServerTimestamp
-    Date timeStamp;
+    Date created;
 
-    public InboxModel(String heading, String description, Date timeStamp) {
+    public InboxModel() {
+
+    }
+
+    public InboxModel(String heading, String description, Date created) {
         this.heading = heading;
         this.description = description;
-        this.timeStamp = timeStamp;
+        this.created = created;
     }
 
     public String getHeading() {
@@ -32,12 +36,12 @@ public class InboxModel {
         this.description = description;
     }
 
-    public Date getTimeStamp() {
-        return timeStamp;
+    public Date getCreated() {
+        return created;
     }
 
-    public void setTimeStamp(Date timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
 }

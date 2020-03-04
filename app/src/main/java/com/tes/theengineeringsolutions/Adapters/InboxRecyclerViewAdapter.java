@@ -12,8 +12,6 @@ import android.widget.TextView;
 import com.tes.theengineeringsolutions.Models.InboxModel;
 import com.tes.theengineeringsolutions.R;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class InboxRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -59,7 +57,7 @@ public class InboxRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
                 viewHolder.setCard(
                         inboxModelList.get(position).getHeading(),
                         inboxModelList.get(position).getDescription(),
-                        inboxModelList.get(position).getTimeStamp().toString()
+                        inboxModelList.get(position).getCreated().toString()
                 );
 
 

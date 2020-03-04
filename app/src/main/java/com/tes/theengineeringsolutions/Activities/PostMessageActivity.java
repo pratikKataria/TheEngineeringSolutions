@@ -55,7 +55,7 @@ public class PostMessageActivity extends AppCompatActivity {
             Map<String, Object> postObject = new HashMap<>();
             postObject.put("heading", title);
             postObject.put("description", body);
-            postObject.put("Date", date);
+            postObject.put("created", date);
 
             DocumentReference documentReference = firebaseFirestore.collection("InboxPost").document(getSaltString());
             documentReference.set(postObject).addOnCompleteListener(task -> {
