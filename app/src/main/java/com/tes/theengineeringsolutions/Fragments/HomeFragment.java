@@ -22,6 +22,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.tes.theengineeringsolutions.Activities.PostMessageActivity;
+import com.tes.theengineeringsolutions.Activities.UploadNotesActivity;
 import com.tes.theengineeringsolutions.Activities.UploadTestFile;
 import com.tes.theengineeringsolutions.Adapters.InboxRecyclerViewAdapter;
 import com.tes.theengineeringsolutions.CustomViewPager.SectionsPagerAdapter;
@@ -125,6 +126,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(), PostMessageActivity.class));
                 break;
             case R.id.fragHome_fab_upload_doc:
+                startActivity(new Intent(getActivity(), UploadNotesActivity.class));
                 break;
         }
     }

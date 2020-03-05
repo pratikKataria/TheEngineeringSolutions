@@ -1,21 +1,19 @@
 package com.tes.theengineeringsolutions.Fragments;
 
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.tes.theengineeringsolutions.Adapters.DocumentRecyclerViewAdapter;
 import com.tes.theengineeringsolutions.Models.NotesModel;
 import com.tes.theengineeringsolutions.R;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -27,6 +25,8 @@ public class DocumentsFragment extends Fragment {
     private RecyclerView recyclerView;
     private DocumentRecyclerViewAdapter documentRecyclerViewAdapter;
     private ArrayList<NotesModel> notesList;
+
+    private Uri fileUri;
 
 
     public DocumentsFragment() {
@@ -75,5 +75,4 @@ public class DocumentsFragment extends Fragment {
 
         documentRecyclerViewAdapter.notifyDataSetChanged();
     }
-
 }
