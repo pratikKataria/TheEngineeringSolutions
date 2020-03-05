@@ -1,19 +1,24 @@
 package com.tes.theengineeringsolutions.Adapters;
 
+import android.content.Context;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import android.content.Context;
-import android.widget.ImageButton;
-import android.widget.TextView;
+
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.tes.theengineeringsolutions.Models.NotesModel;
 import com.tes.theengineeringsolutions.R;
 
-
-
+import java.io.File;
 import java.util.ArrayList;
 
 public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -32,7 +37,8 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public DocumentRecyclerViewAdapter() {}
+    public DocumentRecyclerViewAdapter() {
+    }
 
     @NonNull
     @Override
@@ -41,7 +47,7 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         RecyclerView.ViewHolder holder;
 
         if (viewType == INBOX_VIEW) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notes_card, parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_notes, parent, false);
             holder = new NotesViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_layout, parent, false);
@@ -61,6 +67,12 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                         inboxModelList.get(position).getCreated().toString()
                 );
 
+                viewHolder.imageButtonDownloadFile.setOnClickListener(
+                        v -> {
+                            viewHolder.downloadFile(inboxModelList.get(position).getFileUri(), inboxModelList.get(position).getNotesId(), inboxModelList.get(position).getFileExtension());
+                            Log.e("DocREcycler", inboxModelList.get(position).getFileName() + inboxModelList.get(position).getNotesId());
+                        }
+                );
 
                 break;
             case EMPTY_VIEW:
@@ -70,9 +82,9 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        if (inboxModelList.size() == 0 ) {
+        if (inboxModelList.size() == 0) {
             return EMPTY_VIEW;
-        }  else {
+        } else {
             return INBOX_VIEW;
         }
     }
@@ -97,7 +109,6 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
         TextView textviewFileName;
         TextView textViewDate;
-
         ImageButton imageButtonDownloadFile;
 
         public NotesViewHolder(@NonNull View itemView) {
@@ -110,6 +121,34 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         public void setCard(String fileName, String date) {
             textviewFileName.setText(fileName);
             textViewDate.setText(date);
+        }
+
+
+        void downloadFile(String fileUri, String postUid, String extension) {
+            FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+            Log.e("DocRecycler view Adapter", fileUri);
+            StorageReference storageReference = firebaseStorage.getReferenceFromUrl(fileUri);
+
+            File rootPath;
+            rootPath = new File(Environment.getExternalStorageDirectory(), "/Notes");
+
+            if (!rootPath.exists()) {
+                if (!rootPath.mkdirs())
+                    Log.d("App ", "Failed to create directory");
+                else
+                    rootPath.mkdirs();
+            }
+
+            final File localFile = new File(rootPath, textviewFileName.getText().toString() + postUid + "." + extension);
+            if (localFile.exists()) {
+                Toast.makeText(context, "file already present", Toast.LENGTH_SHORT).show();
+            } else {
+                storageReference.getFile(localFile).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(context, "file downloaded", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(e -> Toast.makeText(context, "failed to download file" + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
         }
     }
 

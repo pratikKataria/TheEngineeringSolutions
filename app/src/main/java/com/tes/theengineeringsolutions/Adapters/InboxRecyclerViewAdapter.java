@@ -39,7 +39,7 @@ public class InboxRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         RecyclerView.ViewHolder holder;
 
         if (viewType == INBOX_VIEW) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.inbox_card_layout, parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_inbox, parent,false);
             holder = new InboxViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_layout, parent, false);

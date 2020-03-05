@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ public class UploadNotesActivity extends AppCompatActivity {
     private MaterialButton uploadBtn;
     private MaterialButton addFilesBtn;
     private ProgressBar uploadProgressBar;
+    private ImageButton downloadNotesBtn;
     private TextView textViewSelectedFileName;
     private Uri fileUri;
     String postUID;
@@ -57,6 +59,8 @@ public class UploadNotesActivity extends AppCompatActivity {
         addFilesBtn = findViewById(R.id.activity_upload_notes_mb_add_file);
 
         uploadProgressBar = findViewById(R.id.activity_upload_notes_pb_upload_progress);
+
+        downloadNotesBtn = findViewById(R.id.notes_card_ib_download_file);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -117,7 +121,7 @@ public class UploadNotesActivity extends AppCompatActivity {
     private void uploadFile() {
         if (fileUri != null) {
             String exe = getFileExtension(fileUri);
-            if (exe.equals("doc") || exe.equals("pdf") || exe.equals("xls")) {
+            if (exe.equals("doc") || exe.equals("docx") || exe.equals("pdf") || exe.equals("xlsx")) {
                 uploadProgressBar.setVisibility(View.VISIBLE);
                 StorageReference storageReference = mStorageRef.child("Notes").child(editTextFileName.getText().toString()+postUID+"."+getFileExtension(fileUri));
                 storageReference.putFile(fileUri).addOnCompleteListener(task -> {
@@ -127,8 +131,9 @@ public class UploadNotesActivity extends AppCompatActivity {
                             Map<String, Object> notesDetails = new HashMap<>();
                             notesDetails.put("notesId", postUID);
                             notesDetails.put("fileName", editTextFileName.getText().toString());
-                            notesDetails.put("fileUri", fileUri.toString());
+                            notesDetails.put("fileUri", uri.toString());
                             notesDetails.put("created", new Date());
+                            notesDetails.put("fileExtension", exe);
 
                             uploadProgressBar.setVisibility(View.GONE);
                             uploadTestDetails(notesDetails);
