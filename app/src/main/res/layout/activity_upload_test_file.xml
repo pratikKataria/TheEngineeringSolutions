@@ -29,7 +29,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="upload Test \n!"
+                android:text="upload Test \n !"
+                android:fontFamily="@font/pacifico_regular"
                 android:textAlignment="center"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -64,10 +65,13 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/activityTestFile_mb_choose_File"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="choose file"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:iconGravity="textStart"
+            android:text="   choose file"
             android:textColor="@color/black"
             app:icon="@drawable/ic_select_form_folder_blue"
             app:iconTint="@color/black" />

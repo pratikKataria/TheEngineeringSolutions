@@ -94,7 +94,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:src="@drawable/ic_file_upload_black_24dp"
-            app:fab_label="UPLOAD FILE"
+            app:fab_label="Upload notes"
             app:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
@@ -103,7 +103,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:src="@drawable/ic_local_post_office_black_24dp"
-            app:fab_label="SEND MESSAGE"
+            app:fab_label="Send post"
             app:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
@@ -112,7 +112,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:src="@drawable/ic_test"
-            app:fab_label="UPLOAD TEST"
+            app:fab_label="Create test"
             app:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>
 

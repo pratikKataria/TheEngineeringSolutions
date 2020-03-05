@@ -30,5 +30,7 @@
         android:fontWeight="400">
     </font>
 
-    <font android:font="@font/pro_dev_v3"></font>
+    <font
+        android:font="@font/pacifico_regular"
+        android:fontWeight="400"/>
 </font-family>

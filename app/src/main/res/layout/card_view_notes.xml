@@ -67,16 +67,15 @@
                         android:textSize="10dp" />
 
                 </LinearLayout>
+                <ImageButton
+                    android:id="@+id/notes_card_ib_download_file"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_cloud_download" />
             </LinearLayout>
 
-
-            <ImageButton
-                android:id="@+id/notes_card_ib_download_file"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_cloud_download" />
         </LinearLayout>
 
 

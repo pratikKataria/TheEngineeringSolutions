@@ -23,8 +23,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Get Your work done\n with easy notes"
+                    android:text="Get Your work done\n with easy notes \n !"
                     android:textSize="18sp"
+                    android:padding="8dp"
+                    android:fontFamily="@font/pacifico_regular"
                     android:textAlignment="center"
                     android:layout_gravity="center"/>
             </LinearLayout>
