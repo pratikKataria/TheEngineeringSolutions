@@ -42,11 +42,6 @@ public class PostMessageActivity extends AppCompatActivity {
                 return;
             }
 
-            if (editTextDescription.getText().toString().isEmpty()) {
-                editTextDescription.setError("should not be empty");
-                editTextDescription.requestFocus();
-                return;
-            }
 
             String title = editTextHeading.getText().toString();
             String body = editTextDescription.getText().toString();
