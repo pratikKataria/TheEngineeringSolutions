@@ -65,6 +65,11 @@ public class UploadNotesActivity extends AppCompatActivity {
         addFilesBtn.setOnClickListener(v -> showFileChooser());
 
         uploadBtn.setOnClickListener(v -> {
+            if (editTextFileName.getText().toString().isEmpty()) {
+                editTextFileName.setError("should not be empty");
+                editTextFileName.requestFocus();
+                return;
+            }
             uploadFile();
         });
 
