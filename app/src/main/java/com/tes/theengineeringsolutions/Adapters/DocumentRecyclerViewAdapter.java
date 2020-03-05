@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +68,8 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             case INBOX_VIEW:
                 NotesViewHolder viewHolder = (NotesViewHolder) holder;
 
+                File file = new File(Environment.getExternalStorageDirectory(), "/Notes"+inboxModelList.get(position).getFileName()+ inboxModelList.get(position).getNotesId()+"."+inboxModelList.get(position).getFileExtension());
+
                 viewHolder.setCard(
                         inboxModelList.get(position).getFileName(),
                         inboxModelList.get(position).getCreated().toString()
@@ -84,9 +85,10 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 viewHolder.materialCardView.setOnClickListener(v -> {
                     Toast.makeText(context, "card is pressssed", Toast.LENGTH_SHORT).show();
                     try {
-                        viewHolder.checkForFile(inboxModelList.get(position).getFileName() +
-                                inboxModelList.get(position).getNotesId() + "." +
-                                inboxModelList.get(position).getFileExtension() , inboxModelList.get(position).getFileExtension());
+                        boolean isFilePresent = viewHolder.checkForFile(file);
+                        if (isFilePresent) {
+                            viewHolder.openFile(file, inboxModelList.get(position).getFileExtension());
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -127,6 +129,7 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
         TextView textviewFileName;
         TextView textViewDate;
+        TextView textViewShowFileLocation;
         ImageButton imageButtonDownloadFile;
         MaterialCardView materialCardView;
 
@@ -136,11 +139,14 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             textViewDate = itemView.findViewById(R.id.notes_card_tv_date);
             imageButtonDownloadFile = itemView.findViewById(R.id.notes_card_ib_download_file);
             materialCardView = itemView.findViewById(R.id.card_view_notes);
+            textViewShowFileLocation = itemView.findViewById(R.id.notes_card_tv_show_file_location);
         }
 
         public void setCard(String fileName, String date) {
             textviewFileName.setText(fileName);
             textViewDate.setText(date);
+
+            checkForFile();
         }
 
 
@@ -170,14 +176,13 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             }
         }
 
-        void checkForFile(String FileName, String extension) throws IOException {
-            File file = new File(Environment.getExternalStorageDirectory(), "/Notes/" + FileName);
-            textViewDate.setText(file.getCanonicalPath());
+        boolean checkForFile(File file) throws IOException {
             Log.e("DocumentRecyclerView Adapter", file.getCanonicalPath() + "");
             if (!file.exists()) {
                 Toast.makeText(context, "no file present download file", Toast.LENGTH_SHORT).show();
+                return false;
             } else {
-                openFile(file, extension);
+                return true;
             }
         }
 
@@ -187,11 +192,11 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-            switch(extension) {
+            switch (extension) {
                 case "doc":
                     intent.setDataAndType(uri, "application/msword");
                     break;
-                case "docx" :
+                case "docx":
                     intent.setDataAndType(uri, "application/msword");
                     break;
                 case "pdf":

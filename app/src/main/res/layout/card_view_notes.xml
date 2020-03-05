@@ -52,6 +52,14 @@
                     android:text="tap to open the file "
                     android:textSize="10dp" />
 
+                <TextView
+                    android:id="@+id/notes_card_tv_show_file_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10dp"
+                    android:layout_marginTop="8dp"
+                    android:text="file: internal/Notes/"/>
+
             </LinearLayout>
 
             <ImageButton
