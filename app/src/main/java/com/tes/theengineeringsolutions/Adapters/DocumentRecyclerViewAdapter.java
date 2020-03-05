@@ -1,24 +1,31 @@
 package com.tes.theengineeringsolutions.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.tes.theengineeringsolutions.BuildConfig;
 import com.tes.theengineeringsolutions.Models.NotesModel;
 import com.tes.theengineeringsolutions.R;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -74,6 +81,17 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                         }
                 );
 
+                viewHolder.materialCardView.setOnClickListener(v -> {
+                    Toast.makeText(context, "card is pressssed", Toast.LENGTH_SHORT).show();
+                    try {
+                        viewHolder.checkForFile(inboxModelList.get(position).getFileName() +
+                                inboxModelList.get(position).getNotesId() + "." +
+                                inboxModelList.get(position).getFileExtension() , inboxModelList.get(position).getFileExtension());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
                 break;
             case EMPTY_VIEW:
                 break;
@@ -110,12 +128,14 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         TextView textviewFileName;
         TextView textViewDate;
         ImageButton imageButtonDownloadFile;
+        MaterialCardView materialCardView;
 
         public NotesViewHolder(@NonNull View itemView) {
             super(itemView);
             textviewFileName = itemView.findViewById(R.id.notes_card_tv_file_name);
             textViewDate = itemView.findViewById(R.id.notes_card_tv_date);
             imageButtonDownloadFile = itemView.findViewById(R.id.notes_card_ib_download_file);
+            materialCardView = itemView.findViewById(R.id.card_view_notes);
         }
 
         public void setCard(String fileName, String date) {
@@ -131,7 +151,6 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
             File rootPath;
             rootPath = new File(Environment.getExternalStorageDirectory(), "/Notes");
-
             if (!rootPath.exists()) {
                 if (!rootPath.mkdirs())
                     Log.d("App ", "Failed to create directory");
@@ -149,6 +168,42 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                     }
                 }).addOnFailureListener(e -> Toast.makeText(context, "failed to download file" + e.getMessage(), Toast.LENGTH_SHORT).show());
             }
+        }
+
+        void checkForFile(String FileName, String extension) throws IOException {
+            File file = new File(Environment.getExternalStorageDirectory(), "/Notes/" + FileName);
+            textViewDate.setText(file.getCanonicalPath());
+            Log.e("DocumentRecyclerView Adapter", file.getCanonicalPath() + "");
+            if (!file.exists()) {
+                Toast.makeText(context, "no file present download file", Toast.LENGTH_SHORT).show();
+            } else {
+                openFile(file, extension);
+            }
+        }
+
+        void openFile(File file, String extension) {
+            final Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
+            context.grantUriPermission(context.getPackageName(), uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            switch(extension) {
+                case "doc":
+                    intent.setDataAndType(uri, "application/msword");
+                    break;
+                case "docx" :
+                    intent.setDataAndType(uri, "application/msword");
+                    break;
+                case "pdf":
+                    intent.setDataAndType(uri, "application/pdf");
+                    break;
+                case "xlsx":
+                    intent.setDataAndType(uri, "vnd.ms-excel");
+                    break;
+            }
+            intent.setDataAndType(uri, "application/pdf");
+
+            context.startActivity(intent);
         }
     }
 
