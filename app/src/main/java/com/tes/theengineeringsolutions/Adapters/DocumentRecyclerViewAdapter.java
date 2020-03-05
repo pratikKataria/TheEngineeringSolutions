@@ -57,8 +57,8 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 NotesViewHolder viewHolder = (NotesViewHolder) holder;
 
                 viewHolder.setCard(
-                        inboxModelList.get(position).getF_name(),
-                        inboxModelList.get(position).getDate().toString()
+                        inboxModelList.get(position).getFileName(),
+                        inboxModelList.get(position).getCreated().toString()
                 );
 
 

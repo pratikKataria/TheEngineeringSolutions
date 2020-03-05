@@ -5,38 +5,42 @@ import com.google.firebase.firestore.ServerTimestamp;
 import java.util.Date;
 
 public class NotesModel {
-    private String f_name;
-    private String f_uri;
+    private String fileName;
+    private String fileUri;
     @ServerTimestamp
-    private Date date;
+    private Date created;
 
-    public NotesModel(String f_name, String f_uri, Date date) {
-        this.f_name = f_name;
-        this.f_uri = f_uri;
-        this.date = date;
+    public NotesModel() {
+
     }
 
-    public String getF_name() {
-        return f_name;
+    public NotesModel(String fileName, String fileUri, Date created) {
+        this.fileName = fileName;
+        this.fileUri = fileUri;
+        this.created = created;
     }
 
-    public void setF_name(String f_name) {
-        this.f_name = f_name;
+    public String getFileName() {
+        return fileName;
     }
 
-    public String getF_uri() {
-        return f_uri;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
-    public void setF_uri(String f_uri) {
-        this.f_uri = f_uri;
+    public String getFileUri() {
+        return fileUri;
     }
 
-    public Date getDate() {
-        return date;
+    public void setFileUri(String fileUri) {
+        this.fileUri = fileUri;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 }

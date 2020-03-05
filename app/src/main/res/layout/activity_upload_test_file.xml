@@ -261,7 +261,7 @@
         android:drawableStart="@drawable/ic_date_range"
         android:drawablePadding="5dp"
         android:fontFamily="@font/nunito_semi_bold_italic"
-        android:text="tap to select date"
+        android:text="tap to select created"
         android:textAllCaps="true"
         android:textSize="18dp"
         app:layout_constraintStart_toStartOf="@+id/linearLayout2"

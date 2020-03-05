@@ -1,21 +1,24 @@
 package com.tes.theengineeringsolutions.Fragments;
 
 
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.tes.theengineeringsolutions.Adapters.DocumentRecyclerViewAdapter;
 import com.tes.theengineeringsolutions.Models.NotesModel;
 import com.tes.theengineeringsolutions.R;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,22 +60,19 @@ public class DocumentsFragment extends Fragment {
     }
 
     private void populateList() {
-        Date n = new Date();
-        NotesModel notesModel = new NotesModel("Physics", "uri" ,  n);
-        notesList.add(notesModel);
 
-        notesModel = new NotesModel("Chemistry", "uri" ,  n);
-        notesList.add(notesModel);
+        Query firstQuery = FirebaseFirestore.getInstance().collection("Notes").orderBy("created", Query.Direction.DESCENDING);
 
-        notesModel = new NotesModel("Maths", "uri" ,  n);
-        notesList.add(notesModel);
-
-        notesModel = new NotesModel("Biology", "uri" ,  n);
-        notesList.add(notesModel);
-
-        notesModel = new NotesModel("Electrical", "uri" ,  n);
-        notesList.add(notesModel);
-
-        documentRecyclerViewAdapter.notifyDataSetChanged();
+        firstQuery.addSnapshotListener((queryDocumentSnapshots, e) -> {
+            if (queryDocumentSnapshots != null) {
+                for (DocumentChange documentChange : queryDocumentSnapshots.getDocumentChanges()) {
+                    NotesModel notesModel = documentChange.getDocument().toObject(NotesModel.class);
+                    if (notesModel != null && notesModel.getCreated() != null) {
+                        notesList.add(notesModel);
+                        documentRecyclerViewAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
     }
 }
