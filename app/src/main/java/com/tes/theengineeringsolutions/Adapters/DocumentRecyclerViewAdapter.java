@@ -68,31 +68,34 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             case INBOX_VIEW:
                 NotesViewHolder viewHolder = (NotesViewHolder) holder;
 
-                File file = new File(Environment.getExternalStorageDirectory(), "/Notes"+inboxModelList.get(position).getFileName()+ inboxModelList.get(position).getNotesId()+"."+inboxModelList.get(position).getFileExtension());
+                String notesId = inboxModelList.get(position).getNotesId();
+                String fileName = inboxModelList.get(position).getFileName();
+                String fileExt = inboxModelList.get(position).getFileExtension();
+                String date = inboxModelList.get(position).getCreated().toString();
 
-                viewHolder.setCard(
-                        inboxModelList.get(position).getFileName(),
-                        inboxModelList.get(position).getCreated().toString()
-                );
+
+                File file = new File(Environment.getExternalStorageDirectory(), "/Notes/" + fileName + notesId + "." + fileExt);
+
+                viewHolder.setCard(fileName, date);
 
                 viewHolder.imageButtonDownloadFile.setOnClickListener(
-                        v -> {
-                            viewHolder.downloadFile(inboxModelList.get(position).getFileUri(), inboxModelList.get(position).getNotesId(), inboxModelList.get(position).getFileExtension());
-                            Log.e("DocREcycler", inboxModelList.get(position).getFileName() + inboxModelList.get(position).getNotesId());
-                        }
+                        v -> viewHolder.downloadFile(inboxModelList.get(position).getFileUri(), inboxModelList.get(position).getNotesId(), inboxModelList.get(position).getFileExtension())
                 );
 
                 viewHolder.materialCardView.setOnClickListener(v -> {
-                    Toast.makeText(context, "card is pressssed", Toast.LENGTH_SHORT).show();
-                    try {
-                        boolean isFilePresent = viewHolder.checkForFile(file);
-                        if (isFilePresent) {
-                            viewHolder.openFile(file, inboxModelList.get(position).getFileExtension());
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    Toast.makeText(context, "opening file ...", Toast.LENGTH_SHORT).show();
+
+                    boolean xd = viewHolder.checkFileExist(file);
+
+                    if (xd)
+                        viewHolder.openFile(file, inboxModelList.get(position).getFileExtension());
+                    else
+                        Toast.makeText(context, "no file present", Toast.LENGTH_SHORT).show();
+
                 });
+
+                if (file.exists())
+                 viewHolder.textViewShowFileLocation.setText("file: internal/Notes/" + fileName+notesId+"."+fileExt);
 
                 break;
             case EMPTY_VIEW:
@@ -145,14 +148,11 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         public void setCard(String fileName, String date) {
             textviewFileName.setText(fileName);
             textViewDate.setText(date);
-
-            checkForFile();
         }
 
 
         void downloadFile(String fileUri, String postUid, String extension) {
             FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-            Log.e("DocRecycler view Adapter", fileUri);
             StorageReference storageReference = firebaseStorage.getReferenceFromUrl(fileUri);
 
             File rootPath;
@@ -176,14 +176,8 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             }
         }
 
-        boolean checkForFile(File file) throws IOException {
-            Log.e("DocumentRecyclerView Adapter", file.getCanonicalPath() + "");
-            if (!file.exists()) {
-                Toast.makeText(context, "no file present download file", Toast.LENGTH_SHORT).show();
-                return false;
-            } else {
-                return true;
-            }
+        boolean checkFileExist(File file) {
+            return file.exists();
         }
 
         void openFile(File file, String extension) {
