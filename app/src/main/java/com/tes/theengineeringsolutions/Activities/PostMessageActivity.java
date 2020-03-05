@@ -22,6 +22,7 @@ import java.util.Random;
 public class PostMessageActivity extends AppCompatActivity {
 
     FirebaseFirestore firebaseFirestore;
+    private String postId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +52,14 @@ public class PostMessageActivity extends AppCompatActivity {
             String body = editTextDescription.getText().toString();
             Date date = new Date();
 
+            postId = getSaltString();
 
             Map<String, Object> postObject = new HashMap<>();
+            postObject.put("postId", postId);
             postObject.put("heading", title);
             postObject.put("description", body);
             postObject.put("created", date);
-
-            DocumentReference documentReference = firebaseFirestore.collection("InboxPost").document(getSaltString());
+            DocumentReference documentReference = firebaseFirestore.collection("InboxPost").document(postId);
             documentReference.set(postObject).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(PostMessageActivity.this, "post uplaoded successfully", Toast.LENGTH_SHORT).show();

@@ -5,19 +5,29 @@ import com.google.firebase.firestore.ServerTimestamp;
 import java.util.Date;
 
 public class NotesModel {
+    private String notesId;
     private String fileName;
     private String fileUri;
     @ServerTimestamp
     private Date created;
 
+    public NotesModel(String notesId, String fileName, String fileUri, Date created) {
+        this.notesId = notesId;
+        this.fileName = fileName;
+        this.fileUri = fileUri;
+        this.created = created;
+    }
+
     public NotesModel() {
 
     }
 
-    public NotesModel(String fileName, String fileUri, Date created) {
-        this.fileName = fileName;
-        this.fileUri = fileUri;
-        this.created = created;
+    public String getNotesId() {
+        return notesId;
+    }
+
+    public void setNotesId(String notesId) {
+        this.notesId = notesId;
     }
 
     public String getFileName() {

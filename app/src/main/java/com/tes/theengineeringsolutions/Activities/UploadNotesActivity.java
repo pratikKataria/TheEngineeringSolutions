@@ -113,6 +113,7 @@ public class UploadNotesActivity extends AppCompatActivity {
                         Task<Uri> file = task.getResult().getMetadata().getReference().getDownloadUrl();
                         file.addOnSuccessListener(uri -> {
                             Map<String, Object> notesDetails = new HashMap<>();
+                            notesDetails.put("notesId", postUID);
                             notesDetails.put("fileName", editTextFileName.getText().toString());
                             notesDetails.put("fileUri", fileUri.toString());
                             notesDetails.put("created", new Date());
@@ -128,14 +129,11 @@ public class UploadNotesActivity extends AppCompatActivity {
     }
 
     private void uploadTestDetails(Map<String, Object> notesDetails) {
-        firebaseFirestore.collection("Notes").document(editTextFileName.getText().toString() + postUID).set(notesDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(UploadNotesActivity.this, "upload successfully", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(UploadNotesActivity.this, "error while uploading ", Toast.LENGTH_SHORT).show();
-                }
+        firebaseFirestore.collection("Notes").document(postUID).set(notesDetails).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(UploadNotesActivity.this, "upload successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(UploadNotesActivity.this, "error while uploading ", Toast.LENGTH_SHORT).show();
             }
         });
     }
