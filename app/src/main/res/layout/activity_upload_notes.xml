@@ -73,6 +73,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_upload_notes_tv_selected_file">
 
+        <ProgressBar
+            android:id="@+id/activity_upload_notes_pb_upload_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/activity_upload_notes_mb_add_file"
             android:layout_width="match_parent"

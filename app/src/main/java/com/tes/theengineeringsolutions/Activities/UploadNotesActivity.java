@@ -7,8 +7,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.util.Log;
+import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,6 +38,7 @@ public class UploadNotesActivity extends AppCompatActivity {
     private EditText editTextFileName;
     private MaterialButton uploadBtn;
     private MaterialButton addFilesBtn;
+    private ProgressBar uploadProgressBar;
     private TextView textViewSelectedFileName;
     private Uri fileUri;
     String postUID;
@@ -51,6 +55,8 @@ public class UploadNotesActivity extends AppCompatActivity {
         uploadBtn = findViewById(R.id.activity_upload_notes_mb_upload_file);
         textViewSelectedFileName = findViewById(R.id.activity_upload_notes_tv_selected_file);
         addFilesBtn = findViewById(R.id.activity_upload_notes_mb_add_file);
+
+        uploadProgressBar = findViewById(R.id.activity_upload_notes_pb_upload_progress);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -107,6 +113,7 @@ public class UploadNotesActivity extends AppCompatActivity {
         if (fileUri != null) {
             String exe = getFileExtension(fileUri);
             if (exe.equals("doc") || exe.equals("pdf") || exe.equals("xls")) {
+                uploadProgressBar.setVisibility(View.VISIBLE);
                 StorageReference storageReference = mStorageRef.child("Notes").child(editTextFileName.getText().toString()+postUID+"."+getFileExtension(fileUri));
                 storageReference.putFile(fileUri).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -118,11 +125,17 @@ public class UploadNotesActivity extends AppCompatActivity {
                             notesDetails.put("fileUri", fileUri.toString());
                             notesDetails.put("created", new Date());
 
+                            uploadProgressBar.setVisibility(View.GONE);
                             uploadTestDetails(notesDetails);
+
                         });
                     }
+                }) .addOnFailureListener(e -> {
+                    uploadProgressBar.setVisibility(View.GONE);
+                    Toast.makeText(UploadNotesActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
             } else {
+                uploadProgressBar.setVisibility(View.GONE);
                 Toast.makeText(this, "only doc can be used to upload", Toast.LENGTH_SHORT).show();
             }
         }
@@ -132,7 +145,9 @@ public class UploadNotesActivity extends AppCompatActivity {
         firebaseFirestore.collection("Notes").document(postUID).set(notesDetails).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(UploadNotesActivity.this, "upload successfully", Toast.LENGTH_SHORT).show();
+                finish();
             } else {
+                uploadProgressBar.setVisibility(View.GONE);
                 Toast.makeText(UploadNotesActivity.this, "error while uploading ", Toast.LENGTH_SHORT).show();
             }
         });
