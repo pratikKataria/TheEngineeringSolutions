@@ -90,37 +90,34 @@ public class ResultFragment extends Fragment {
     private void populateList() {
         if (FirebaseAuth.getInstance().getUid() != null) {
             DocumentReference documentReference = FirebaseFirestore.getInstance().collection("Results").document(FirebaseAuth.getInstance().getUid());
-            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        if (documentSnapshot != null && documentSnapshot.exists()) {
-                            Map<String, Object> header = documentSnapshot.getData();
-                            if (header != null) {
+            documentReference.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        Map<String, Object> header = documentSnapshot.getData();
+                        if (header != null) {
 //                            Log.e(TAG, "header" + header.keySet().toString());
-                                for (Object object : header.keySet()) {
-                                    Map<String, String> subData = (Map<String, String>) header.get(object);
-                                    Log.e("RESULT FRAGMENT", subData.get("subject") + "/n" + subData.get("percentage"));
-                                    QuizContract quizContract1 = new QuizContract(
-                                            subData.get("subject") + "",
-                                            subData.get("subject_code") + "",
-                                            subData.get("date") + "",
-                                            subData.get("result") + "",
-                                            subData.get("percentage") + "",
-                                            subData.get("question_correct") + "",
-                                            subData.get("questions_incorrect") + "",
-                                            subData.get("total_questions") + "",
-                                            subData.get("color") + "",
-                                            subData.get("badge") + "");
-                                    resultList.add(quizContract1);
-                                    recyclerViewAdapter.notifyDataSetChanged();
-                                    Log.e(TAG, "list size " + resultList.size());
-                                }
+                            for (Object object : header.keySet()) {
+                                Map<String, String> subData = (Map<String, String>) header.get(object);
+                                Log.e("RESULT FRAGMENT", subData.get("subject") + "/n" + subData.get("percentage"));
+                                QuizContract quizContract1 = new QuizContract(
+                                        subData.get("subject") + "",
+                                        subData.get("subject_code") + "",
+                                        subData.get("date") + "",
+                                        subData.get("result") + "",
+                                        subData.get("percentage") + "",
+                                        subData.get("question_correct") + "",
+                                        subData.get("questions_incorrect") + "",
+                                        subData.get("total_questions") + "",
+                                        subData.get("color") + "",
+                                        subData.get("badge") + "");
+                                resultList.add(quizContract1);
+                                recyclerViewAdapter.notifyDataSetChanged();
+                                Log.e(TAG, "list size " + resultList.size());
                             }
-                        } else {
-                            Toast.makeText(getActivity(), "you do not given any test", Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Toast.makeText(getActivity(), "you do not given any test", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -138,16 +135,28 @@ public class ResultFragment extends Fragment {
                         Map<String, Object> data = snapshot.getData();
                         if (data != null && data.containsKey("test_progress")) {
                             Map<String, Object> month1 = (Map<String, Object>) data.get("test_progress");
+
+
                             for (int i = -6; i < 1; i++) {
                                 Calendar cal = Calendar.getInstance();
                                 cal.add(Calendar.MONTH, i);
                                 int month = cal.get(Calendar.MONTH);
                                 int year = cal.get(Calendar.YEAR);
-                                String stringDate = (month + 1) + "-" + year;
+                                String stringDate;
+
+                                if (month+1 < 10) {
+                                stringDate = 0 + "" +(month + 1) + "-" + year;
+                                } else  stringDate = (month + 1) + "-" + year;
+
+                                Log.e("RESULT FRAGMENT", stringDate);
                                 if (month1.containsKey(stringDate)) {
-                                    Log.e("TESTFRAGMENT", "DATE " + stringDate + " pass " + month1.get(stringDate) + " i " + i);
+
+                                    Log.e("RRRRRRRRRRRRRRRRRRRRREEEEEEEEEEEESSSSSSSSSSSSSSSSUUUUUUUUUUULLLLLLLLLLTTTTTTTT", month1.get(stringDate) +"" );
+
+
                                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM");
                                     float val = (float) (((long) month1.get(stringDate)));
+
                                     BarData barData;
                                     if (val > 30) {
                                         barData = new BarData(simpleDateFormat.format(cal.getTime()) + " " + year, 49, month1.get(stringDate) + " passed");
@@ -157,6 +166,7 @@ public class ResultFragment extends Fragment {
                                     progressList.add(barData);
                                 }
                             }
+
                             chartView();
                         }
                     }

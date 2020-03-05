@@ -404,7 +404,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 String[] rec = null;
                 int questionNo = 1;
                 while ((rec = reader.readNext()) != null) {
-//                    Log.e("CSVREADER", rec[0] + rec[1] + rec[2] + rec[3] + rec[4] + rec[5]);
+                    Log.e("CSVREADER", rec[0] + rec[1] + rec[2] + rec[3] + rec[4] + rec[5]);
                     LocalTestDatabase emp = new LocalTestDatabase(questionNo++, rec[0]+"", rec[1]+"", rec[2]+"", rec[3]+"", rec[4]+"", Integer.parseInt(rec[5]), false);
                     emp.save();
                     tdb.add(emp);
