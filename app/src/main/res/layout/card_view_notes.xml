@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-   android:id="@+id/card_view_notes"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_notes"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="12dp"
@@ -10,9 +10,10 @@
     android:orientation="vertical"
     app:cardCornerRadius="12dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/linearLayout5"
@@ -23,44 +24,51 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/imageView6"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/ic_file"
-                android:backgroundTint="@color/colorPrimary" />
-
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/notes_card_tv_file_name"
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/ic_file"
+                    android:backgroundTint="@color/colorPrimary" />
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Physics"
-                    android:textColor="@color/white"
-                    android:textSize="22sp" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="tap to open the file "
-                    android:textSize="10dp" />
+                    <TextView
+                        android:id="@+id/notes_card_tv_file_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Physics"
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
 
-                <TextView
-                    android:id="@+id/notes_card_tv_show_file_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="10dp"
-                    android:layout_marginTop="8dp"
-                    android:text="file: internal/Notes/"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="tap to open the file "
+                        android:textSize="10dp" />
 
+                    <TextView
+                        android:id="@+id/notes_card_tv_show_file_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="file: internal/Notes/"
+                        android:textSize="10dp" />
+
+                </LinearLayout>
             </LinearLayout>
+
 
             <ImageButton
                 android:id="@+id/notes_card_ib_download_file"
@@ -76,11 +84,9 @@
             android:id="@+id/notes_card_tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="12dp"
-            android:text="15-48-214"
-            app:layout_constraintStart_toStartOf="@+id/linearLayout5"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
+            android:layout_marginStart="18dp"
+            android:text="15-48-214"/>
 
         <View
             android:id="@+id/view2"
@@ -90,10 +96,6 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
-            android:background="@color/greyMaterial"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/notes_card_tv_date" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:background="@color/greyMaterial"/>
+    </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
