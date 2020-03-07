@@ -173,6 +173,9 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                 case R.id.logout:
                     logoutUser();
                     break;
+                case R.id.result:
+                    startActivity(new Intent(this, StudentsResults.class));
+                    break;
             }
             mDrawerLayout.closeDrawer(GravityCompat.START);
             return true;
