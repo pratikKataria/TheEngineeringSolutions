@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
@@ -29,19 +32,24 @@ public class InboxFragment extends Fragment {
 
     InboxRecyclerViewAdapter adapter;
     private RecyclerView inboxRecyclerView;
+    private LinearLayout linearLayout;
     private InboxRecyclerViewAdapter inboxRecyclerViewAdapter;
     private ArrayList<InboxModel> inboxList;
+
     // This is the interface declared inside your adapter.
-    InboxRecyclerViewAdapter.InfoAdapterInterface adapterInterface = new InboxRecyclerViewAdapter.InfoAdapterInterface() {
+    InboxRecyclerViewAdapter.InboxAdapterListener listener = new InboxRecyclerViewAdapter.InboxAdapterListener() {
         @Override
-        public void OnItemClicked(int item_id) {
-            inboxList.remove(item_id);
-            inboxList.clear();
-            adapter.notifyDataSetChanged();
-//            populateInboxList();
-            // Do whatever you wants to do with this data that is coming from your adapter
+        public void onEmptyStateListener(boolean isEmpty) {
+            if (isEmpty) {
+                inboxRecyclerView.setVisibility(View.GONE);
+                linearLayout.setVisibility(View.VISIBLE);
+            } else {
+                inboxRecyclerView.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.GONE);
+            }
         }
     };
+
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private CollectionReference inboxRef;
 
@@ -61,13 +69,17 @@ public class InboxFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_inbox, container, false);
+        linearLayout = view.findViewById(R.id.fragment_inbox_ll_empty_view);
+        inboxRecyclerView = view.findViewById(R.id.recyclerView);
+
         firebaseFirestore = FirebaseFirestore.getInstance();
         inboxRef = firebaseFirestore.collection("InboxPost");
         inboxList = new ArrayList<>();
 
 //        init_recyclerView(view);
         setUpRecyclerView(view);
-        populateInboxList();
+//        populateInboxList();
+
 
         return view;
     }
@@ -82,14 +94,43 @@ public class InboxFragment extends Fragment {
 //        inboxRecyclerView.setAdapter(adapter);
 //    }
 
+
     private void setUpRecyclerView(View view) {
         Query query = inboxRef.orderBy("created", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<InboxModel> options = new FirestoreRecyclerOptions.Builder<InboxModel>().setQuery(query, InboxModel.class).build();
 
-        adapter = new InboxRecyclerViewAdapter(options, getContext());
 
-        inboxRecyclerView = view.findViewById(R.id.recyclerView);
+        adapter = new InboxRecyclerViewAdapter(options, getContext() , listener);
+
+        FirestoreRecyclerAdapter<InboxModel, InboxRecyclerViewAdapter.InboxViewHolder> fh =
+                new FirestoreRecyclerAdapter<InboxModel, InboxRecyclerViewAdapter.InboxViewHolder>(options) {
+                    @Override
+                    protected void onBindViewHolder(@NonNull InboxRecyclerViewAdapter.InboxViewHolder holder, int position, @NonNull InboxModel model) {
+
+                    }
+
+                    @NonNull
+                    @Override
+                    public InboxRecyclerViewAdapter.InboxViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        return null;
+                    }
+                };
+
+
+
+//        Toast.makeText(getContext(), "items " + adapter.getItemCount() + "snap sort size " + options.getSnapshots().size(), Toast.LENGTH_SHORT).show();
+//
+//        if (adapter.getItemCount() == 0) {
+//            inboxRecyclerView.setVisibility(View.GONE);
+//            linearLayout.setVisibility(View.VISIBLE);
+//        } else {
+//            inboxRecyclerView.setVisibility(View.VISIBLE);
+//            linearLayout.setVisibility(View.GONE);
+//        }
+
+
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         inboxRecyclerView.setLayoutManager(layoutManager);
         inboxRecyclerView.setAdapter(adapter);
@@ -112,6 +153,7 @@ public class InboxFragment extends Fragment {
         super.onResume();
         adapter.startListening();
     }
+
 
     private void populateInboxList() {
         Query firstQuery = firebaseFirestore.collection("InboxPost").orderBy("created", Query.Direction.DESCENDING);
