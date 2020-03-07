@@ -17,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -27,106 +29,65 @@ import com.tes.theengineeringsolutions.R;
 import java.io.File;
 import java.util.ArrayList;
 
-public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    private static final int EMPTY_VIEW = 0;
-    private static final int INBOX_VIEW = 1;
+public class DocumentRecyclerViewAdapter extends FirestoreRecyclerAdapter<NotesModel, DocumentRecyclerViewAdapter.NotesViewHolder> {
 
     ArrayList<NotesModel> inboxModelList;
-    LayoutInflater inflater;
     Context context;
 
-    public DocumentRecyclerViewAdapter(Context context, ArrayList<NotesModel> inboxModelList) {
+    public DocumentRecyclerViewAdapter(Context context, FirestoreRecyclerOptions<NotesModel> options) {
+        super(options);
         this.context = context;
-        this.inboxModelList = inboxModelList;
-
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
-
-    public DocumentRecyclerViewAdapter() {
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public NotesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        RecyclerView.ViewHolder holder;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_notes, parent, false);
+        return new NotesViewHolder(view);
 
-        if (viewType == INBOX_VIEW) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_notes, parent, false);
-            holder = new NotesViewHolder(view);
-        } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_layout, parent, false);
-            holder = new EmptyView(view);
-        }
-        return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        switch (holder.getItemViewType()) {
-            case INBOX_VIEW:
-                NotesViewHolder viewHolder = (NotesViewHolder) holder;
+    public void onBindViewHolder(@NonNull NotesViewHolder holder, int position, @NonNull NotesModel model) {
 
-                String notesId = inboxModelList.get(position).getNotesId();
-                String fileName = inboxModelList.get(position).getFileName();
-                String fileExt = inboxModelList.get(position).getFileExtension();
-                String date = inboxModelList.get(position).getCreated().toString();
+        NotesViewHolder viewHolder = holder;
+
+        holder.setCard(
+                model.getFileName(),
+                model.getCreated().toString()
+        );
 
 
-                File file = new File(Environment.getExternalStorageDirectory(), "/Notes/" + fileName + notesId + "." + fileExt);
+        String notesId = model.getNotesId();
+        String fileName = model.getFileName();
+        String fileExt = model.getFileExtension();
+        String date = model.getCreated().toString();
+        String fileUri = model.getFileUri();
 
-                viewHolder.setCard(fileName, date);
 
-                viewHolder.imageButtonDownloadFile.setOnClickListener(
-                        v -> viewHolder.downloadFile(inboxModelList.get(position).getFileUri(), inboxModelList.get(position).getNotesId(), inboxModelList.get(position).getFileExtension())
-                );
+        File file = new File(Environment.getExternalStorageDirectory(), "/Notes/" + fileName + notesId + "." + fileExt);
 
-                viewHolder.materialCardView.setOnClickListener(v -> {
-                    Toast.makeText(context, "opening file ...", Toast.LENGTH_SHORT).show();
+        viewHolder.setCard(fileName, date);
 
-                    boolean xd = viewHolder.checkFileExist(file);
+        viewHolder.imageButtonDownloadFile.setOnClickListener(
+                v -> viewHolder.downloadFile(fileUri, notesId, fileExt)
+        );
 
-                    if (xd)
-                        viewHolder.openFile(file, inboxModelList.get(position).getFileExtension());
-                    else
-                        Toast.makeText(context, "no file present", Toast.LENGTH_SHORT).show();
+        viewHolder.materialCardView.setOnClickListener(v -> {
+            Toast.makeText(context, "opening file ...", Toast.LENGTH_SHORT).show();
 
-                });
+            if (viewHolder.checkFileExist(file))
+                viewHolder.openFile(file, fileExt);
+            else
+                Toast.makeText(context, "no file present", Toast.LENGTH_SHORT).show();
 
-                if (file.exists())
-                    viewHolder.textViewShowFileLocation.setText("file: internal/Notes/" + fileName + notesId + "." + fileExt);
+        });
 
-                break;
-            case EMPTY_VIEW:
-                break;
-        }
+        if (file.exists())
+            viewHolder.textViewShowFileLocation.setText("file: internal/Notes/" + fileName + notesId + "." + fileExt);
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (inboxModelList.size() == 0) {
-            return EMPTY_VIEW;
-        } else {
-            return INBOX_VIEW;
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        if (inboxModelList.size() == 0) {
-            return 1;
-        } else {
-            return inboxModelList.size();
-        }
-    }
-
-    public class EmptyView extends RecyclerView.ViewHolder {
-
-        public EmptyView(@NonNull View itemView) {
-            super(itemView);
-        }
-    }
 
     public class NotesViewHolder extends RecyclerView.ViewHolder {
 
