@@ -180,12 +180,14 @@ public class InboxRecyclerViewAdapter extends  FirestoreRecyclerAdapter<InboxMod
         }
 
         void deleteDocument(String docID) {
-            DocumentReference seletedDoc = FirebaseFirestore.getInstance().collection("InboxPost").document(docID);
-            if (seletedDoc != null) {
-                seletedDoc.delete().addOnSuccessListener(aVoid -> {
-                    Toast.makeText(context, "post deleted", Toast.LENGTH_SHORT).show();
-                }).addOnFailureListener(e -> Toast.makeText(context, "failed to delete post", Toast.LENGTH_SHORT).show());
-            }
+//            DocumentReference seletedDoc = FirebaseFirestore.getInstance().collection("InboxPost").document(docID);
+//            if (seletedDoc != null) {
+//                seletedDoc.delete().addOnSuccessListener(aVoid -> {
+//                    Toast.makeText(context, "post deleted", Toast.LENGTH_SHORT).show();
+//                }).addOnFailureListener(e -> Toast.makeText(context, "failed to delete post", Toast.LENGTH_SHORT).show());
+//            }
+
+            getSnapshots().getSnapshot(getAdapterPosition()).getReference().delete();
         }
     }
 

@@ -6,11 +6,17 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.tes.theengineeringsolutions.Models.InboxModel;
 import com.tes.theengineeringsolutions.R;
 
 import java.util.Date;
@@ -33,7 +39,7 @@ public class PostMessageActivity extends AppCompatActivity {
         EditText editTextHeading = findViewById(R.id.activity_post_message_et_heading);
         EditText editTextDescription = findViewById(R.id.activity_post_message_et_description);
         MaterialButton materialButton = findViewById(R.id.activity_post_message_mb_post);
-        ProgressBar progressBar = findViewById(R.id.progressbar);
+        ProgressBar progressBar = findViewById(R.id.activity_post_message_pb_progress);
 
 
         materialButton.setOnClickListener(v -> {
@@ -43,6 +49,7 @@ public class PostMessageActivity extends AppCompatActivity {
                 return;
             }
 
+            progressBar.setVisibility(View.VISIBLE);
 
             String title = editTextHeading.getText().toString();
             String body = editTextDescription.getText().toString();
@@ -55,9 +62,14 @@ public class PostMessageActivity extends AppCompatActivity {
             postObject.put("heading", title);
             postObject.put("description", body);
             postObject.put("created", date);
-            DocumentReference documentReference = firebaseFirestore.collection("InboxPost").document(postId);
-            documentReference.set(postObject).addOnCompleteListener(task -> {
-                progressBar.setVisibility(View.VISIBLE);
+            CollectionReference inboxRef = FirebaseFirestore.getInstance().collection("InboxPost");
+
+            inboxRef.add(new InboxModel(
+                    postId,
+                    title,
+                    body,
+                    date
+            )).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(PostMessageActivity.this, "post uplaoded successfully", Toast.LENGTH_SHORT).show();
@@ -66,7 +78,21 @@ public class PostMessageActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(PostMessageActivity.this, "failed to upload", Toast.LENGTH_SHORT).show();
                 }
+            }).addOnFailureListener(e -> {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(PostMessageActivity.this, "failed to upload", Toast.LENGTH_SHORT).show();
             });
+//            DocumentReference documentReference = firebaseFirestore.collection("InboxPost").document(postId);
+//            documentReference.set(postObject).addOnCompleteListener(task -> {
+//                if (task.isSuccessful()) {
+//                    progressBar.setVisibility(View.GONE);
+//                    Toast.makeText(PostMessageActivity.this, "post uplaoded successfully", Toast.LENGTH_SHORT).show();
+//                    finish();
+//                } else {
+//                    progressBar.setVisibility(View.GONE);
+//                    Toast.makeText(PostMessageActivity.this, "failed to upload", Toast.LENGTH_SHORT).show();
+//                }
+//            });
         });
 
     }
