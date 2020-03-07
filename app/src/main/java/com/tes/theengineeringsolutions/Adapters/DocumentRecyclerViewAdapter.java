@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +25,6 @@ import com.tes.theengineeringsolutions.Models.NotesModel;
 import com.tes.theengineeringsolutions.R;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -95,7 +95,7 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 });
 
                 if (file.exists())
-                 viewHolder.textViewShowFileLocation.setText("file: internal/Notes/" + fileName+notesId+"."+fileExt);
+                    viewHolder.textViewShowFileLocation.setText("file: internal/Notes/" + fileName + notesId + "." + fileExt);
 
                 break;
             case EMPTY_VIEW:
@@ -135,6 +135,7 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         TextView textViewShowFileLocation;
         ImageButton imageButtonDownloadFile;
         MaterialCardView materialCardView;
+        ProgressBar progressBar;
 
         public NotesViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -143,6 +144,7 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             imageButtonDownloadFile = itemView.findViewById(R.id.notes_card_ib_download_file);
             materialCardView = itemView.findViewById(R.id.card_view_notes);
             textViewShowFileLocation = itemView.findViewById(R.id.notes_card_tv_show_file_location);
+            progressBar = itemView.findViewById(R.id.notes_card_pb_download_progress);
         }
 
         public void setCard(String fileName, String date) {
@@ -168,11 +170,19 @@ public class DocumentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             if (localFile.exists()) {
                 Toast.makeText(context, "file already present", Toast.LENGTH_SHORT).show();
             } else {
+                progressBar.setVisibility(View.VISIBLE);
                 storageReference.getFile(localFile).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        progressBar.setVisibility(View.GONE);
                         Toast.makeText(context, "file downloaded", Toast.LENGTH_SHORT).show();
+                    } else {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(context, "failed to download : not defined", Toast.LENGTH_SHORT).show();
                     }
-                }).addOnFailureListener(e -> Toast.makeText(context, "failed to download file" + e.getMessage(), Toast.LENGTH_SHORT).show());
+                }).addOnFailureListener(e -> {
+                    progressBar.setVisibility(View.VISIBLE);
+                    Toast.makeText(context, "failed to download file" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
             }
         }
 

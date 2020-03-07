@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,13 +52,8 @@ public class InboxRecyclerViewAdapter extends FirestoreRecyclerAdapter<InboxMode
                 model.getDescription(),
                 model.getCreated().toString()
         );
-        holder.imageButtonDeleteBtn.setOnClickListener(
-                v -> {
-                    holder.deleteDocument();
 
-                    Toast.makeText(context, "item : " + getItemCount(), Toast.LENGTH_SHORT).show();
-                }
-        );
+        holder.imageButtonDeleteBtn.setOnClickListener (v -> holder.deleteDocument());
     }
 
     public interface InboxAdapterListener {
