@@ -55,6 +55,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <ImageButton
+                android:id="@+id/inbox_card_layout_ib_delete_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
