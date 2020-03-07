@@ -27,11 +27,9 @@ import com.tes.theengineeringsolutions.Models.NotesModel;
 import com.tes.theengineeringsolutions.R;
 
 import java.io.File;
-import java.util.ArrayList;
 
 public class DocumentRecyclerViewAdapter extends FirestoreRecyclerAdapter<NotesModel, DocumentRecyclerViewAdapter.NotesViewHolder> {
 
-    ArrayList<NotesModel> inboxModelList;
     Context context;
 
     public DocumentRecyclerViewAdapter(Context context, FirestoreRecyclerOptions<NotesModel> options) {
@@ -86,6 +84,15 @@ public class DocumentRecyclerViewAdapter extends FirestoreRecyclerAdapter<NotesM
 
         if (file.exists())
             viewHolder.textViewShowFileLocation.setText("file: internal/Notes/" + fileName + notesId + "." + fileExt);
+
+        viewHolder.imageButtonDeleteFile.setOnClickListener(
+                v -> {
+                    String tempAdd = model.getFileUri();
+//                    viewHolder.deleteFile(model.getFileName() +model.getNotesId() + "."+ model.getFileExtension());
+                    viewHolder.deleteDocument();
+                    viewHolder.deleteFile(tempAdd);
+                }
+        );
     }
 
 
@@ -95,6 +102,7 @@ public class DocumentRecyclerViewAdapter extends FirestoreRecyclerAdapter<NotesM
         TextView textViewDate;
         TextView textViewShowFileLocation;
         ImageButton imageButtonDownloadFile;
+        ImageButton imageButtonDeleteFile;
         MaterialCardView materialCardView;
         ProgressBar progressBar;
 
@@ -103,6 +111,7 @@ public class DocumentRecyclerViewAdapter extends FirestoreRecyclerAdapter<NotesM
             textviewFileName = itemView.findViewById(R.id.notes_card_tv_file_name);
             textViewDate = itemView.findViewById(R.id.notes_card_tv_date);
             imageButtonDownloadFile = itemView.findViewById(R.id.notes_card_ib_download_file);
+            imageButtonDeleteFile = itemView.findViewById(R.id.notes_card_ib_delete_file);
             materialCardView = itemView.findViewById(R.id.card_view_notes);
             textViewShowFileLocation = itemView.findViewById(R.id.notes_card_tv_show_file_location);
             progressBar = itemView.findViewById(R.id.notes_card_pb_download_progress);
@@ -174,6 +183,20 @@ public class DocumentRecyclerViewAdapter extends FirestoreRecyclerAdapter<NotesM
             intent.setDataAndType(uri, "application/pdf");
 
             context.startActivity(intent);
+        }
+
+        void deleteDocument() {
+            getSnapshots().getSnapshot(getAdapterPosition()).getReference().delete();
+        }
+
+        void deleteFile(String path) {
+//            if (path != null) {
+            Log.e("Doucment rEcyclerae r fadsasd", path);
+                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(path);
+                storageReference.delete()
+                        .addOnSuccessListener(aVoid -> Toast.makeText(context, "file deleted", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Toast.makeText(context, "faild to delete file", Toast.LENGTH_SHORT).show());
+//            }
         }
     }
 

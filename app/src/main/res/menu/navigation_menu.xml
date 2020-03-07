@@ -11,8 +11,13 @@
             android:id="@+id/developer"
             android:title="Developer"/>
         <item
+            android:id="@+id/results"
+            android:title="All Results">
+        </item>
+        <item
             android:id="@+id/logout"
             android:title="Logout">
         </item>
+
     </group>
 </menu>

@@ -132,6 +132,7 @@ public class UploadNotesActivity extends AppCompatActivity {
                             notesDetails.put("notesId", postUID);
                             notesDetails.put("fileName", editTextFileName.getText().toString());
                             notesDetails.put("fileUri", uri.toString());
+                            notesDetails.put("fileUrl", task.getResult().getMetadata().getReference().getDownloadUrl().toString());
                             notesDetails.put("created", new Date());
                             notesDetails.put("fileExtension", exe);
 
