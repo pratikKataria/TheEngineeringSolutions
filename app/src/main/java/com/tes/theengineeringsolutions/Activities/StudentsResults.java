@@ -38,11 +38,11 @@ public class StudentsResults extends AppCompatActivity {
             UserDataModel dataModel = dataModels.get(position);
             Intent intent = new Intent(this, ViewStudentResultActivity.class);
             intent.putExtra("USER_ID", dataModels.get(position).getUserId());
+            intent.putExtra("USER_NAME", dataModels.get(position).getName());
+
             Toast.makeText(StudentsResults.this, "getting information .... " + dataModel.getName(), Toast.LENGTH_SHORT).show();
 
-            new Handler().postDelayed(() -> {
-                startActivity(intent);
-            },800);
+            new Handler().postDelayed(() -> startActivity(intent),800);
         });
 
     }
