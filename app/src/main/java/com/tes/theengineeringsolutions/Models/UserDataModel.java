@@ -4,11 +4,21 @@ public class UserDataModel {
     private String name;
     private String email;
     private String password;
+    private String userId;
 
-    public UserDataModel(String name, String email, String password) {
+    public UserDataModel(String name, String email, String password, String userId) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getPassword() {

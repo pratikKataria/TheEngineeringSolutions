@@ -1,6 +1,7 @@
 package com.tes.theengineeringsolutions.Activities;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import com.tes.theengineeringsolutions.R;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import android.content.Intent;
 
 public class StudentsResults extends AppCompatActivity {
 
@@ -34,7 +36,13 @@ public class StudentsResults extends AppCompatActivity {
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
             UserDataModel dataModel = dataModels.get(position);
-            Toast.makeText(StudentsResults.this, "items clicked " + dataModel.getName(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, ViewStudentResultActivity.class);
+            intent.putExtra("USER_ID", dataModels.get(position).getUserId());
+            Toast.makeText(StudentsResults.this, "getting information .... " + dataModel.getName(), Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(() -> {
+                startActivity(intent);
+            },800);
         });
 
     }
@@ -64,7 +72,7 @@ public class StudentsResults extends AppCompatActivity {
 //        });
 
         FirebaseFirestore.getInstance().collection("User").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+            if (task.isSuccessful() && task.getResult() != null) {
                 List<DocumentSnapshot> documentSnapshotList = task.getResult().getDocuments();
                 for (DocumentSnapshot documentSnapshot : documentSnapshotList) {
                     if (documentSnapshot.exists()) {
@@ -72,7 +80,7 @@ public class StudentsResults extends AppCompatActivity {
                         if (root != null && root.containsKey("user_info")) {
                             Map<String, String> data = (Map<String, String>) root.get("user_info");
                             if (data != null) {
-                                dataModels.add(new UserDataModel("Name : "+data.get("user_name"), "email : "+data.get("email_address"), "password : " + data.get("password")));
+                                dataModels.add(new UserDataModel("Name : "+data.get("user_name"), "email : "+data.get("email_address"), "password : " + data.get("password"), data.get("user_id")));
                                 listCustomAdapter.notifyDataSetChanged();
                             }
                         }
