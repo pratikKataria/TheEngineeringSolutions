@@ -2,7 +2,9 @@ package com.tes.theengineeringsolutions.Activities;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -20,6 +22,7 @@ public class StudentsResults extends AppCompatActivity {
     ArrayList<UserDataModel> dataModels;
     private ListView listView;
     private ListCustomAdapter listCustomAdapter;
+    private ProgressBar progressBar;
 
 
     @Override
@@ -28,6 +31,8 @@ public class StudentsResults extends AppCompatActivity {
         setContentView(R.layout.activity_students_results);
 
         dataModels = new ArrayList<>();
+
+        progressBar = findViewById(R.id.students_result_activity_pb);
 
         populateList();
 
@@ -70,9 +75,10 @@ public class StudentsResults extends AppCompatActivity {
 //                }
 //            }
 //        });
-
+        progressBar.setVisibility(View.VISIBLE);
         FirebaseFirestore.getInstance().collection("User").get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
+                progressBar.setVisibility(View.GONE);
                 List<DocumentSnapshot> documentSnapshotList = task.getResult().getDocuments();
                 for (DocumentSnapshot documentSnapshot : documentSnapshotList) {
                     if (documentSnapshot.exists()) {
@@ -86,6 +92,8 @@ public class StudentsResults extends AppCompatActivity {
                         }
                     }
                 }
+            } else {
+                progressBar.setVisibility(View.GONE);
             }
         });
 

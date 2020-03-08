@@ -26,9 +26,11 @@ public class ViewStudentResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_student_result);
 
         textViewRestult = findViewById(R.id.view_student_result_activity_tv_data);
+        textViewUserName = findViewById(R.id.view_student_result_activity_tv_username);
+        textViewUserId  = findViewById(R.id.view_student_result_activity_tv_user_id);
 
         String uid = getIntent().getStringExtra("USER_ID") != null ? getIntent().getStringExtra("USER_ID") : "-1";
-        String uName = getIntent().getStringExtra("USER_NAME") != null ? getIntent().getStringExtra("USER_ID") : "-1";
+        String uName = getIntent().getStringExtra("USER_NAME") != null ? getIntent().getStringExtra("USER_NAME") : "-1";
 
         textViewUserName.setText(uName);
         textViewUserId.setText(uid);
