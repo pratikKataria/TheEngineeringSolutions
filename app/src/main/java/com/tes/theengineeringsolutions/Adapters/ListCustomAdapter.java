@@ -6,13 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
-import com.airbnb.lottie.L;
 import com.tes.theengineeringsolutions.Models.UserDataModel;
 import com.tes.theengineeringsolutions.R;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +36,12 @@ public class ListCustomAdapter extends ArrayAdapter<UserDataModel> {
         View view = layoutInflater.inflate(resource, null, false);
 
         TextView itemName = view.findViewById(R.id.list_item_tv_user_name);
+        TextView itemEmail = view.findViewById(R.id.list_item_tv_email);
+        TextView itemPass = view.findViewById(R.id.list_item_tv_password);
 
         itemName.setText(userDataModels.get(position).getName());
+        itemEmail.setText(userDataModels.get(position).getEmail());
+        itemPass.setText(userDataModels.get(position).getPassword());
 
         return view;
     }

@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                 case R.id.side_nav_logout:
                     logoutUser();
                     break;
-                case R.id.result:
+                case R.id.side_nav_result:
                     startActivity(new Intent(this, StudentsResults.class));
                     break;
             }
