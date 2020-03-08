@@ -1,22 +1,14 @@
 package com.tes.theengineeringsolutions.Activities;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.tes.theengineeringsolutions.Adapters.ListCustomAdapter;
 import com.tes.theengineeringsolutions.Models.UserDataModel;
 import com.tes.theengineeringsolutions.R;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -89,12 +81,5 @@ public class StudentsResults extends AppCompatActivity {
             }
         });
 
-//        dataModels.add(new UserDataModel("pratik ", "@gmail.com"));
-//        dataModels.add(new UserDataModel("pratik 2", "@gmail.com"));
-//        dataModels.add(new UserDataModel("pratik 3", "@gmail.com"));
-//        dataModels.add(new UserDataModel("pratik 4", "@gmail.com"));
-//        dataModels.add(new UserDataModel("pratik 5", "@gmail.com"));
-//        dataModels.add(new UserDataModel("pratik 6", "@gmail.com"));
-//        dataModels.add(new UserDataModel("pratik 7", "@gmail.com"));
     }
 }
