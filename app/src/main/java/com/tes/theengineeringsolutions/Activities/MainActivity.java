@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         checkConnection();
         initializeFields();
 
