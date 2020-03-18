@@ -1,6 +1,9 @@
 package com.tes.theengineeringsolutions.Activities;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +21,7 @@ public class ViewStudentResultActivity extends AppCompatActivity {
     private TextView textViewUserName;
     private TextView textViewUserId;
 
-    private String bigData = "";
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,8 @@ public class ViewStudentResultActivity extends AppCompatActivity {
         textViewRestult = findViewById(R.id.view_student_result_activity_tv_data);
         textViewUserName = findViewById(R.id.view_student_result_activity_tv_username);
         textViewUserId  = findViewById(R.id.view_student_result_activity_tv_user_id);
+
+        progressBar = findViewById(R.id.view_student_result_activity_pb);
 
         String uid = getIntent().getStringExtra("USER_ID") != null ? getIntent().getStringExtra("USER_ID") : "-1";
         String uName = getIntent().getStringExtra("USER_NAME") != null ? getIntent().getStringExtra("USER_NAME") : "-1";
@@ -39,9 +44,15 @@ public class ViewStudentResultActivity extends AppCompatActivity {
 
     private void loadData(String uid) {
         if (uid != null) {
+            progressBar.setVisibility(View.VISIBLE);
             DocumentReference documentReference = FirebaseFirestore.getInstance().collection("Results").document(uid);
             documentReference.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful() && task.getResult() != null) {
+
+                    new Handler().postDelayed(() -> {
+                        progressBar.setVisibility(View.GONE);
+                    }, 2000);
+
                     DocumentSnapshot snapshot = task.getResult();
                     if (snapshot != null && snapshot.exists()) {
                         Map<String, Object> rootMap = snapshot.getData();
@@ -63,6 +74,10 @@ public class ViewStudentResultActivity extends AppCompatActivity {
                             textViewRestult.setText(builder.toString());
                         }
                     }
+                } else {
+                    new Handler().postDelayed(() -> {
+                        progressBar.setVisibility(View.GONE);
+                    }, 2000);
                 }
             });
         }

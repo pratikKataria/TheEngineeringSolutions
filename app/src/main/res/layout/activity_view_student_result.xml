@@ -40,6 +40,15 @@
                         android:textSize="18sp" />
                 </LinearLayout>
 
+                <ProgressBar
+                    android:id="@+id/view_student_result_activity_pb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
+
                 <TextView
                     android:id="@+id/view_student_result_activity_tv_username"
                     android:layout_width="wrap_content"
