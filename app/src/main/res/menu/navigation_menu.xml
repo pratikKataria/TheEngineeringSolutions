@@ -5,14 +5,19 @@
             android:id="@+id/students"
             android:title="Home"/>
         <item
-            android:id="@+id/about"
+            android:id="@+id/side_nav_about"
             android:title="About"/>
         <item
-            android:id="@+id/developer"
+            android:id="@+id/side_nav_developer"
             android:title="Developer"/>
         <item
-            android:id="@+id/logout"
+            android:id="@+id/side_nav_result"
+            android:title="All Results">
+        </item>
+        <item
+            android:id="@+id/side_nav_logout"
             android:title="Logout">
         </item>
+
     </group>
 </menu>

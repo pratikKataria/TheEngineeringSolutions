@@ -16,7 +16,7 @@ import com.tes.theengineeringsolutions.R;
 public class SplashActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
-    int i =0;
+    int i = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

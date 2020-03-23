@@ -69,9 +69,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     //list of list to show in recycler view
     private List<QuizContract> testList;
 
-    public RecyclerViewAdapter() {
-
-    }
+    public RecyclerViewAdapter() {}
 
     //constructor to populate list and context of Test Fragment
     public RecyclerViewAdapter(Context context, List<QuizContract> testList, int currentView) {

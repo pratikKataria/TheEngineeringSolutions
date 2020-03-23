@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         checkConnection();
         initializeFields();
 
@@ -164,14 +163,17 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                 case R.id.home:
                     startActivity(new Intent(this, MainActivity.class));
                     break;
-                case R.id.developer:
+                case R.id.side_nav_developer:
                     startActivity(new Intent(this, Developer.class));
                     break;
-                case R.id.about:
+                case R.id.side_nav_about:
                     startActivity(new Intent(this, About.class));
                     break;
-                case R.id.logout:
+                case R.id.side_nav_logout:
                     logoutUser();
+                    break;
+                case R.id.side_nav_result:
+                    startActivity(new Intent(this, StudentsResults.class));
                     break;
             }
             mDrawerLayout.closeDrawer(GravityCompat.START);

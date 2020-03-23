@@ -1,95 +1,61 @@
 package com.tes.theengineeringsolutions.Adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.ImageButton;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import android.content.Context;
-import android.widget.TextView;
-
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.tes.theengineeringsolutions.Models.InboxModel;
 import com.tes.theengineeringsolutions.R;
 
-import java.util.ArrayList;
+public class InboxRecyclerViewAdapter extends FirestoreRecyclerAdapter<InboxModel, InboxRecyclerViewAdapter.InboxViewHolder> {
 
-public class InboxRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    private static final int EMPTY_VIEW = 0;
-    private static final int INBOX_VIEW = 1;
-
-    ArrayList<InboxModel> inboxModelList;
-    LayoutInflater inflater;
     Context context;
 
-    public InboxRecyclerViewAdapter(Context context, ArrayList<InboxModel> inboxModelList) {
+    // Interface Object
+    private InboxAdapterListener inboxAdapterListener;
+
+    public InboxRecyclerViewAdapter(FirestoreRecyclerOptions<InboxModel> options, Context context, InboxAdapterListener inboxAdapterListener) {
+        super(options);
         this.context = context;
-        this.inboxModelList = inboxModelList;
-
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.inboxAdapterListener = inboxAdapterListener;
     }
-
-    public InboxRecyclerViewAdapter() {}
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public InboxViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_inbox, parent, false);
+        return new InboxViewHolder(view);
+    }
 
-        RecyclerView.ViewHolder holder;
-
-        if (viewType == INBOX_VIEW) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_inbox, parent,false);
-            holder = new InboxViewHolder(view);
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        if (getItemCount() == 0) {
+            inboxAdapterListener.onEmptyStateListener(true);
         } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_layout, parent, false);
-            holder = new EmptyView(view);
-        }
-        return holder;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        switch (holder.getItemViewType()) {
-            case INBOX_VIEW:
-                InboxViewHolder viewHolder = (InboxViewHolder) holder;
-
-                viewHolder.setCard(
-                        inboxModelList.get(position).getHeading(),
-                        inboxModelList.get(position).getDescription(),
-                        inboxModelList.get(position).getCreated().toString()
-                );
-
-
-                break;
-            case EMPTY_VIEW:
-                break;
+            inboxAdapterListener.onEmptyStateListener(false);
         }
     }
 
     @Override
-    public int getItemViewType(int position) {
-        if (inboxModelList.size() == 0 ) {
-            return EMPTY_VIEW;
-        }  else {
-            return INBOX_VIEW;
-        }
+    protected void onBindViewHolder(@NonNull InboxViewHolder holder, int position, @NonNull InboxModel model) {
+        holder.setCard(
+                model.getHeading(),
+                model.getDescription(),
+                model.getCreated().toString()
+        );
+
+        holder.imageButtonDeleteBtn.setOnClickListener (v -> holder.deleteDocument());
     }
 
-    @Override
-    public int getItemCount() {
-        if (inboxModelList.size() == 0) {
-            return 1;
-        } else {
-            return inboxModelList.size();
-        }
-    }
-
-    public class EmptyView extends RecyclerView.ViewHolder {
-
-        public EmptyView(@NonNull View itemView) {
-            super(itemView);
-        }
+    public interface InboxAdapterListener {
+        void onEmptyStateListener(boolean isEmpty);
     }
 
     public class InboxViewHolder extends RecyclerView.ViewHolder {
@@ -97,6 +63,7 @@ public class InboxRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         TextView textViewHeading;
         TextView textViewDescription;
         TextView textViewDate;
+        ImageButton imageButtonDeleteBtn;
 
 
         public InboxViewHolder(@NonNull View itemView) {
@@ -104,6 +71,8 @@ public class InboxRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             textViewHeading = itemView.findViewById(R.id.inbox_card_layout_tv_heading);
             textViewDescription = itemView.findViewById(R.id.inbox_card_layout_tv_description);
             textViewDate = itemView.findViewById(R.id.inbox_card_layout_tv_date);
+
+            imageButtonDeleteBtn = itemView.findViewById(R.id.inbox_card_layout_ib_delete_btn);
         }
 
         public void setCard(String heading, String description, String date) {
@@ -111,6 +80,11 @@ public class InboxRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             textViewDescription.setText(description);
             textViewDate.setText(date);
         }
+
+        void deleteDocument() {
+            getSnapshots().getSnapshot(getAdapterPosition()).getReference().delete();
+        }
     }
+
 
 }

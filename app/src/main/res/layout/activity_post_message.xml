@@ -72,6 +72,15 @@
                     android:padding="8dp"
                     android:scrollbarAlwaysDrawVerticalTrack="true" />
 
+                <ProgressBar
+                    android:id="@+id/activity_post_message_pb_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/activity_post_message_mb_post"
                     android:layout_width="match_parent"

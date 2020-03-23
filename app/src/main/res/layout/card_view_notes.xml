@@ -67,25 +67,56 @@
                         android:textSize="10dp" />
 
                 </LinearLayout>
-                <ImageButton
-                    android:id="@+id/notes_card_ib_download_file"
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_cloud_download" />
-            </LinearLayout>
+                    android:orientation="vertical">
 
+                    <ImageButton
+                        android:id="@+id/notes_card_ib_download_file"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_cloud_download" />
+
+                    <ProgressBar
+                        android:id="@+id/notes_card_pb_download_progress"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:indeterminate="true" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/notes_card_tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="18dp"
-            android:text="15-48-214"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/notes_card_tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="18dp"
+                android:layout_weight="1"
+                android:text="15-48-214" />
+
+            <ImageButton
+                android:id="@+id/notes_card_ib_delete_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:src="@drawable/ic_delete" />
+        </LinearLayout>
+
 
         <View
             android:id="@+id/view2"
@@ -95,6 +126,6 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
-            android:background="@color/greyMaterial"/>
+            android:background="@color/greyMaterial" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
