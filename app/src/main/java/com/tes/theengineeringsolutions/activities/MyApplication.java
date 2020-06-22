@@ -1,4 +1,4 @@
-package com.tes.theengineeringsolutions.Activities;
+package com.tes.theengineeringsolutions.activities;
 
 import com.orm.SugarApp;
 import com.tes.theengineeringsolutions.Models.ConnectivityReceiver;

@@ -10,26 +10,20 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.github.clans.fab.FloatingActionButton;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.tes.theengineeringsolutions.Activities.PostMessageActivity;
-import com.tes.theengineeringsolutions.Activities.UploadNotesActivity;
-import com.tes.theengineeringsolutions.Activities.UploadTestFile;
-import com.tes.theengineeringsolutions.Adapters.InboxRecyclerViewAdapter;
+import com.tes.theengineeringsolutions.activities.admin.PostMessageActivity;
+import com.tes.theengineeringsolutions.activities.admin.UploadNotesActivity;
+import com.tes.theengineeringsolutions.activities.admin.UploadTestFile;
 import com.tes.theengineeringsolutions.CustomViewPager.SectionsPagerAdapter;
-import com.tes.theengineeringsolutions.Models.InboxModel;
 import com.tes.theengineeringsolutions.R;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 /**

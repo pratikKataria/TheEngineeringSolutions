@@ -1,4 +1,4 @@
-package com.tes.theengineeringsolutions.Activities;
+package com.tes.theengineeringsolutions.activities.auth;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.tes.theengineeringsolutions.R;
+import com.tes.theengineeringsolutions.activities.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;

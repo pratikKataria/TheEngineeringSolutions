@@ -1,4 +1,4 @@
-package com.tes.theengineeringsolutions.Activities;
+package com.tes.theengineeringsolutions.activities.quiz;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -29,6 +29,7 @@ import com.google.firebase.firestore.SetOptions;
 import com.tes.theengineeringsolutions.Models.ConnectivityReceiver;
 import com.tes.theengineeringsolutions.Models.LocalTestDatabase;
 import com.tes.theengineeringsolutions.R;
+import com.tes.theengineeringsolutions.activities.MyApplication;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

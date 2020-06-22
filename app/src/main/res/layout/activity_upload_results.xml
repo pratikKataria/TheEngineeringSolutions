@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/darkGrey"
-    tools:context=".Activities.UploadResultsActivity">
+    tools:context=".activities.quiz.UploadResultsActivity">
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieAnimationView3"

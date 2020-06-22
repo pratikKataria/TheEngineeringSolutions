@@ -1,4 +1,4 @@
-package com.tes.theengineeringsolutions.Activities;
+package com.tes.theengineeringsolutions.activities.auth;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.tes.theengineeringsolutions.activities.MainActivity;
 import com.tes.theengineeringsolutions.Models.Encryption;
 import com.tes.theengineeringsolutions.R;
 import java.util.regex.Matcher;
