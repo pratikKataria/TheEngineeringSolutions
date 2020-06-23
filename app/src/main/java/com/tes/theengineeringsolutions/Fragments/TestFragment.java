@@ -84,10 +84,7 @@ public class TestFragment extends Fragment {
 
         recyclerViewAdapter.notifyDataSetChanged();
 
-        reloadBtn.setOnClickListener(v -> {
-            reload();
-            showList();
-        });
+        reloadBtn.setOnClickListener(v -> reload());
         return view;
     }
 
@@ -95,10 +92,8 @@ public class TestFragment extends Fragment {
     private void reload() {
         testList.clear();
         recyclerViewAdapter.notifyDataSetChanged();
-        new Handler().postDelayed(() -> {
-            populateTestList();
-            recyclerViewAdapter.notifyDataSetChanged();
-        }, 1500);
+        hideList();
+        new Handler().postDelayed(this::populateTestList, 1000);
         Toast.makeText(getActivity(), "reloading...", Toast.LENGTH_SHORT).show();
     }
 
@@ -113,6 +108,13 @@ public class TestFragment extends Fragment {
 
 
     private void populateTestList() {
+
+        // if listener is already added
+        // then in case of reload the listener is removed first
+        if (listenerRegistration != null) {
+            listenerRegistration.remove();
+        }
+
         Query firstQuery = firebaseFirestore.collection("Admin").orderBy("created", Query.Direction.DESCENDING);
         firstQuery.limit(30);
         listenerRegistration = firstQuery.addSnapshotListener((queryDocumentSnapshots, e) -> {
@@ -121,6 +123,7 @@ public class TestFragment extends Fragment {
                     QuizContract quizContract = doc.getDocument().toObject(QuizContract.class);
                     if (quizContract.getSubject_code() != null) {
                         testList.add(quizContract);
+                        showList();
                         if (testList.size() == 1) {
                             recyclerViewAdapter.notifyDataSetChanged();
                         }else {
@@ -147,7 +150,11 @@ public class TestFragment extends Fragment {
     }
 
     private void showList() {
-        nestedScrollView.setVisibility(View.GONE);
-        testRecyclerView.setVisibility(View.VISIBLE);
+        // if test list is empty then don't show the scroll view
+        // still show the loading view
+        if (!testList.isEmpty() && testRecyclerView.getVisibility() == View.GONE) {
+            nestedScrollView.setVisibility(View.GONE);
+            testRecyclerView.setVisibility(View.VISIBLE);
+        }
     }
 }
