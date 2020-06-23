@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".activities.admin.UploadTestFile"
+    tools:context=".admin.UploadTestFile"
     tools:layout_editor_absoluteY="25dp">
 
     <LinearLayout

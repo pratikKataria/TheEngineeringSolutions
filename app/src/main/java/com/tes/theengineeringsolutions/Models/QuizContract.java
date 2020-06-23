@@ -1,5 +1,7 @@
 package com.tes.theengineeringsolutions.Models;
 
+import androidx.annotation.Nullable;
+
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
@@ -136,5 +138,15 @@ public class QuizContract {
 
     public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof QuizContract) {
+            QuizContract quizContract = (QuizContract) obj;
+            return  quizContract.getSubject_code().matches(subject_code);
+        } else {
+            return false;
+        }
     }
 }

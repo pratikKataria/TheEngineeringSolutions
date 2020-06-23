@@ -1,4 +1,4 @@
-package com.tes.theengineeringsolutions.activities.auth;
+package com.tes.theengineeringsolutions.auth;
 
 import android.Manifest;
 import android.content.DialogInterface;

@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,15 +19,14 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.google.android.material.chip.Chip;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.tes.theengineeringsolutions.Adapters.RecyclerViewAdapter;
-import com.tes.theengineeringsolutions.Adapters.SpacesItemDecoration;
 import com.tes.theengineeringsolutions.Models.LocalTestDatabase;
 import com.tes.theengineeringsolutions.Models.QuizContract;
 import com.tes.theengineeringsolutions.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -43,14 +41,11 @@ public class TestFragment extends Fragment {
     private List<QuizContract> testList;
     private RecyclerViewAdapter recyclerViewAdapter;
     private Chip reloadBtn;
-    private TextView textView;
     private NestedScrollView nestedScrollView;
 
     private FirebaseFirestore firebaseFirestore;
+    private ListenerRegistration listenerRegistration;
 
-    private String TAG = "TEST FRAGMENT";
-
-    private HashMap<String, Boolean> map;
 
     public TestFragment() {
         // Required empty public constructor
@@ -62,7 +57,6 @@ public class TestFragment extends Fragment {
         testList = new ArrayList<>();
         firebaseFirestore = FirebaseFirestore.getInstance();
         reloadBtn = view.findViewById(R.id.fragmentTest_reload_btn);
-        textView = view.findViewById(R.id.textviewFORTEST);
         nestedScrollView = view.findViewById(R.id.nestedScrollView);
 
         populateTestList();
@@ -110,32 +104,42 @@ public class TestFragment extends Fragment {
 
 
     private void init_recyclerView() {
-        recyclerViewAdapter = new RecyclerViewAdapter(getContext(), testList, 1);
-
+        if (getActivity() == null) return;
+        recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), testList, 1);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
-        SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(23);
-//        testRecyclerView.addItemDecoration(spacesItemDecoration);
         testRecyclerView.setLayoutManager(staggeredGridLayoutManager);
         testRecyclerView.setAdapter(recyclerViewAdapter);
     }
 
 
     private void populateTestList() {
-        Log.e(TAG, "populate test list ");
         Query firstQuery = firebaseFirestore.collection("Admin").orderBy("created", Query.Direction.DESCENDING);
-        firstQuery.addSnapshotListener((queryDocumentSnapshots, e) -> {
+        firstQuery.limit(30);
+        listenerRegistration = firstQuery.addSnapshotListener((queryDocumentSnapshots, e) -> {
             if (queryDocumentSnapshots != null) {
                 for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                     QuizContract quizContract = doc.getDocument().toObject(QuizContract.class);
                     if (quizContract.getSubject_code() != null) {
                         testList.add(quizContract);
+                        if (testList.size() == 1) {
+                            recyclerViewAdapter.notifyDataSetChanged();
+                        }else {
+                            recyclerViewAdapter.notifyItemInserted(testList.indexOf(quizContract));
+                        }
                     }
-                    recyclerViewAdapter.notifyDataSetChanged();
                 }
             }
         });
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.e(TestFragment.class.getName(), "onStop");
+        if (listenerRegistration != null) {
+            listenerRegistration.remove();
+        }
+    }
 
     private void hideList() {
         nestedScrollView.setVisibility(View.VISIBLE);

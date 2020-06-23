@@ -1,4 +1,4 @@
-package com.tes.theengineeringsolutions.activities.auth;
+package com.tes.theengineeringsolutions.auth;
 
 import android.os.Bundle;
 import android.view.View;

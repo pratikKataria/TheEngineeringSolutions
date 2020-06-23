@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1024821864249",
+    "firebase_url": "https://theengineeringsolutions-ea6b8.firebaseio.com",
+    "project_id": "theengineeringsolutions-ea6b8",
+    "storage_bucket": "theengineeringsolutions-ea6b8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1024821864249:android:ae6b41bd56a6440e132ae8",
+        "android_client_info": {
+          "package_name": "com.tes.theengineeringsolutions"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1024821864249-2ka1qqcj7gc6sgqt6vvi1143go6vg9se.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tes.theengineeringsolutions",
+            "certificate_hash": "535fc0eaa9f67f7d6f3bd93f8c02966af3c41e3c"
+          }
+        },
+        {
+          "client_id": "1024821864249-jg9ltfncbvjq636gmnflrvnqj0l6ibuu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-PiJPHXdsE5Q4U_ytHm8hc5g3q858KVU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1024821864249-jg9ltfncbvjq636gmnflrvnqj0l6ibuu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

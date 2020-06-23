@@ -32,16 +32,17 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
-import com.tes.theengineeringsolutions.activities.about.About;
-import com.tes.theengineeringsolutions.activities.about.Developer;
-import com.tes.theengineeringsolutions.activities.admin.StudentsResults;
-import com.tes.theengineeringsolutions.activities.auth.LoginActivity;
+import com.tes.theengineeringsolutions.about.About;
+import com.tes.theengineeringsolutions.about.Developer;
+import com.tes.theengineeringsolutions.admin.StudentsResults;
+import com.tes.theengineeringsolutions.auth.LoginActivity;
 import com.tes.theengineeringsolutions.Fragments.HomeFragment;
 import com.tes.theengineeringsolutions.Fragments.ResultFragment;
 import com.tes.theengineeringsolutions.Fragments.TestFragment;
 import com.tes.theengineeringsolutions.Models.ConnectivityReceiver;
 import com.tes.theengineeringsolutions.Models.Encryption;
 import com.tes.theengineeringsolutions.R;
+import com.tes.theengineeringsolutions.utils.SnackBarNoSwipe;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,12 +59,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     private ActionBarDrawerToggle actionBarDrawerToggle;//  actionbar
     private BottomNavigationView bottomNavigationView;//bottom navigation bar
     private Toolbar mToolbar;// top toolbar in activity
-    private SharedPreferences sharedPreferences;
-    private Editor editor;
-    //Fragments Classes
-    private HomeFragment homeFragment;
-    private TestFragment testFragment;
-    private ResultFragment resultFragment;
+
 
     private void initializeFields() {
 
@@ -76,11 +72,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         //find the view inside activity
         bottomNavigationView = findViewById(R.id.activityMain_bottom_navigation_view);
 
-        //home fragment instance
-        homeFragment = new HomeFragment();
-
-        sharedPreferences = getSharedPreferences("DOCUMENT_VERIFICATION", 0);
-        editor = sharedPreferences.edit();
     }
 
     //onStart check for  firebase Auth instance
@@ -102,11 +93,6 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
 
         checkConnection();
         initializeFields();
-
-        Log.e(Tag, "SHARED PREFERENCES NOT WORKING");
-        if (!sharedPreferences.getBoolean("isVerified", false)) {
-            check_if_document_present();
-        }
 
         // sets the Toolbar to act as the ActionBar for this Fragment window
         //Make sure the toolbar exists in the activity and is not null
@@ -196,14 +182,35 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     private void logoutUser() {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.signOut();
-        editor.putBoolean("isVerified", false);
-        editor.commit();
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkConnection();
+        // register connection status listener
+        mNavigationView.getMenu().getItem(0).setChecked(true);
+        MyApplication.getInstance().setConnectivityListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        checkConnection();
+    }
 
     private void checkConnection() {
         boolean isConnected = isConnected();
+        showSnack(isConnected);
+    }
+
+    /**
+     * Callback will be triggered when there is change in
+     * network connection
+     */
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
         showSnack(isConnected);
     }
 
@@ -228,163 +235,8 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         View view = snackbar.getView();
         TextView textView = view.findViewById(com.google.android.material.R.id.snackbar_text);
         textView.setTextColor(color);
-        snackbar.setBehavior(new NoSwipeBehavior());
+        snackbar.setBehavior(new SnackBarNoSwipe());
         snackbar.show();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkConnection();
-        // register connection status listener
-        mNavigationView.getMenu().getItem(0).setChecked(true);
-        MyApplication.getInstance().setConnectivityListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        checkConnection();
-    }
-
-    /**
-     * Callback will be triggered when there is change in
-     * network connection
-     */
-    @Override
-    public void onNetworkConnectionChanged(boolean isConnected) {
-        showSnack(isConnected);
-    }
-
-    private void check_if_document_present() {
-        String fireUID = FirebaseAuth.getInstance().getUid();
-        if (fireUID != null) {
-            DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(fireUID);
-            documentReference.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    if (documentSnapshot != null && documentSnapshot.exists()) {
-                        Map<String, Object> header = documentSnapshot.getData();
-                        if (header != null && header.containsKey("user_info")) {
-                            editor.putBoolean("isVerified", true);
-                            editor.commit();
-                            Toast.makeText(this, "Document Verified", Toast.LENGTH_SHORT).show();
-                        } else {
-                            showAlertDialog();
-                        }
-                    } else {
-                        showAlertDialog();
-                    }
-                }
-            });
-        }
-    }
-
-    void showAlertDialog() {
-        View alertLayout = getLayoutInflater().inflate(R.layout.alert_dialog_document_varification, null);
-        final EditText userNameEditText = alertLayout.findViewById(R.id.username);
-        final EditText email = alertLayout.findViewById(R.id.email);
-        final EditText mPassEditText = alertLayout.findViewById(R.id.password);
-        final MaterialButton continueBtn = alertLayout.findViewById(R.id.alert_dialog_mb_continue);
-        final ProgressBar progressBar = alertLayout.findViewById(R.id.progressbar);
-
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setView(alertLayout);
-        alert.setCancelable(false);
-
-        AlertDialog dialog = alert.create();
-
-
-        continueBtn.setOnClickListener(v -> {
-
-            if (userNameEditText.getText().toString().isEmpty()) {
-                userNameEditText.setError("should not be empty");
-                userNameEditText.requestFocus();
-                return;
-            }
-
-            if (email.getText().toString().isEmpty()) {
-                email.setError("should not be empty");
-                email.requestFocus();
-                return;
-            }
-            if (mPassEditText.getText().toString().isEmpty()) {
-                mPassEditText.setError("should not be empty");
-                mPassEditText.requestFocus();
-                return;
-            }
-            if (mPassEditText.getText().toString().length() > 6) {
-                mPassEditText.setError("should not be less then 6");
-                mPassEditText.requestFocus();
-                return;
-            }
-
-            String emailString = email.getText().toString();
-            String passString = mPassEditText.getText().toString();
-            String usernameString = userNameEditText.getText().toString();
-            String currentUid = FirebaseAuth.getInstance().getUid();
-            String fireBaseEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
-            progressBar.setVisibility(View.VISIBLE);
-
-            String pass = sharedPreferences.getString("5f4dcc3b5aa765d61d8327deb882cf99", "");
-            if (emailString.equals(fireBaseEmail)) {
-                if (passString.equals(new Encryption().decrypt(pass, "5f4dcc3b5aa765d61d8327deb882cf99"))) {
-                    if (FirebaseAuth.getInstance().getUid() != null) {
-                        Map<String, String> userIDS = new HashMap<>();
-                        userIDS.put(emailString, currentUid);
-                        Map<String, String> userDocuments = new HashMap<>();
-                        userDocuments.put("user_id", currentUid);
-                        userDocuments.put("user_name", usernameString);
-                        userDocuments.put("email_address", emailString);
-                        userDocuments.put("password", passString);
-                        userDocuments.put("Branch", "nd");
-                        userDocuments.put("user_address", "nd");
-                        userDocuments.put("gender", "nd");
-                        Log.e(TAG, "document Reference firebase email  " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                        DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(currentUid);
-                        Map<String, Object> header = new HashMap<>();
-                        header.put("user_info",userDocuments);
-                        documentReference.set(header, SetOptions.merge()).addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()) {
-                                Log.e(TAG, "document Reference");
-                                FirebaseFirestore.getInstance().collection("Admin").document("UIDS").set(userIDS, SetOptions.merge()).addOnCompleteListener(task2 -> {
-                                    if (task2.isSuccessful()) {
-                                        dialog.dismiss();
-                                        progressBar.setVisibility(View.GONE);
-                                        editor.putBoolean("isVerified", true);
-                                        editor.commit();
-                                        Toast.makeText(this, "Admin permission granted", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        progressBar.setVisibility(View.GONE);
-                                        Toast.makeText(this, "fail to get Admin permision", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                                progressBar.setVisibility(View.GONE);
-                                Toast.makeText(MainActivity.this, "Document uploaded sucessfully", Toast.LENGTH_SHORT).show();
-                            } else {
-                                progressBar.setVisibility(View.GONE);
-                                Toast.makeText(MainActivity.this, "fail to upload document", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                } else {
-                    progressBar.setVisibility(View.GONE);
-                    Toast.makeText(this, "wrong password", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(this, "wrong email", Toast.LENGTH_SHORT).show();
-            }
-        });
-        dialog.show();
-    }
-
-    class NoSwipeBehavior extends BaseTransientBottomBar.Behavior {
-        @Override
-        public boolean canSwipeDismissView(View child) {
-            return false;
-        }
-    }
 }

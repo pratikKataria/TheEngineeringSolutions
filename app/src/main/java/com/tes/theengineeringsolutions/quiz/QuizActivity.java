@@ -1,4 +1,4 @@
-package com.tes.theengineeringsolutions.activities.quiz;
+package com.tes.theengineeringsolutions.quiz;
 
 import android.content.Intent;
 import android.os.Bundle;

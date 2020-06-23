@@ -1,4 +1,4 @@
-package com.tes.theengineeringsolutions.activities.admin;
+package com.tes.theengineeringsolutions.admin;
 
 import android.os.Bundle;
 import android.os.Handler;

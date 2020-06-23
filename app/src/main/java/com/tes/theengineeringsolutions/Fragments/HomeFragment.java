@@ -18,9 +18,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.tes.theengineeringsolutions.activities.admin.PostMessageActivity;
-import com.tes.theengineeringsolutions.activities.admin.UploadNotesActivity;
-import com.tes.theengineeringsolutions.activities.admin.UploadTestFile;
+import com.tes.theengineeringsolutions.admin.PostMessageActivity;
+import com.tes.theengineeringsolutions.admin.UploadNotesActivity;
+import com.tes.theengineeringsolutions.admin.UploadTestFile;
 import com.tes.theengineeringsolutions.CustomViewPager.SectionsPagerAdapter;
 import com.tes.theengineeringsolutions.R;
 
@@ -93,8 +93,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private void setUsername() {
         if (FirebaseAuth.getInstance().getUid() != null) {
-            DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
-            documentReference.get().addOnCompleteListener(task -> {
+            DocumentReference usernameDocumentReference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
+            usernameDocumentReference.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot snapshot = task.getResult();
                     if (snapshot != null && snapshot.exists() && snapshot.getData() != null && snapshot.getData().containsKey("user_info")) {

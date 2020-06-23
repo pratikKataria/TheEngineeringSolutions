@@ -14,14 +14,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.admin.ViewStudentResultActivity"/>
-        <activity android:name=".activities.admin.StudentsResults" />
-        <activity android:name=".activities.admin.UploadNotesActivity" />
-        <activity android:name=".activities.admin.PostMessageActivity" />
-        <activity android:name=".activities.about.About" />
-        <activity android:name=".activities.about.Developer" />
-        <activity android:name=".activities.quiz.UploadResultsActivity" />
-        <activity android:name=".activities.quiz.QuizResult" />
+        <activity android:name=".admin.ViewStudentResultActivity"/>
+        <activity android:name=".admin.StudentsResults" />
+        <activity android:name=".admin.UploadNotesActivity" />
+        <activity android:name=".admin.PostMessageActivity" />
+        <activity android:name=".about.About" />
+        <activity android:name=".about.Developer" />
+        <activity android:name=".quiz.UploadResultsActivity" />
+        <activity android:name=".quiz.QuizResult" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -43,19 +43,19 @@
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="com.tes.theengineeringsolutions.Models" />
 
-        <activity android:name=".activities.quiz.QuizActivity" />
-        <activity android:name=".activities.auth.SplashActivity">
+        <activity android:name=".quiz.QuizActivity" />
+        <activity android:name=".auth.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.admin.UploadTestFile" />
+        <activity android:name=".admin.UploadTestFile" />
         <activity android:name=".activities.MainActivity" />
-        <activity android:name=".activities.auth.LoginActivity" />
-        <activity android:name=".activities.auth.ForgetPasswordActivity" />
-        <activity android:name=".activities.auth.SignupActivity" />
+        <activity android:name=".auth.LoginActivity" />
+        <activity android:name=".auth.ForgetPasswordActivity" />
+        <activity android:name=".auth.SignupActivity" />
 
         <receiver
             android:name=".Models.ConnectivityReceiver"

@@ -1,4 +1,4 @@
-package com.tes.theengineeringsolutions.activities.admin;
+package com.tes.theengineeringsolutions.admin;
 
 import android.content.ContentResolver;
 import android.content.Intent;

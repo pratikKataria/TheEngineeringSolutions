@@ -1,4 +1,4 @@
-package com.tes.theengineeringsolutions.activities.about;
+package com.tes.theengineeringsolutions.about;
 
 import androidx.appcompat.app.AppCompatActivity;
 

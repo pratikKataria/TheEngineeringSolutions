@@ -1,4 +1,4 @@
-package com.tes.theengineeringsolutions.activities.auth;
+package com.tes.theengineeringsolutions.auth;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String EMAIL_PATTERN = "(\\W|^)[\\w.+\\-]*@gmail\\.com(\\W|$)";
-    private static final String regexPassword = "(?=.*[a-z])(?=.*[A-Z])(?=.*[\\d])(?=.*[~`!@#\\$%\\^&\\*\\(\\)\\-_\\+=\\{\\}\\[\\]\\|\\;:\"<>,./\\?]).{8,}";
     private TextInputEditText mEmailAdd;
     private TextInputEditText mPass;
     private TextView mRegister;

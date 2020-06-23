@@ -1,4 +1,4 @@
-package com.tes.theengineeringsolutions.activities.auth;
+package com.tes.theengineeringsolutions.auth;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,9 +18,10 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
-import com.tes.theengineeringsolutions.activities.MainActivity;
+import com.google.firebase.firestore.WriteBatch;
 import com.tes.theengineeringsolutions.Models.Encryption;
 import com.tes.theengineeringsolutions.R;
+import com.tes.theengineeringsolutions.activities.MainActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -126,8 +127,7 @@ public class SignupActivity extends AppCompatActivity {
                         mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
                                 storePass(password);
-                                setUIDS(email);
-                                createUserDocument();
+                                storeUserCredentials(email);
                             } else {
                                 Toast.makeText(this, "LOGIN ERROR", Toast.LENGTH_SHORT).show();
                                 mProgressBar.setVisibility(View.GONE);
@@ -151,52 +151,86 @@ public class SignupActivity extends AppCompatActivity {
                 });//createUserWithEmailAndPassword
     }
 
-    public void setUIDS(String email) {
-        if (mFirebaseAuth.getUid() != null) {
-            String uidString = mFirebaseAuth.getUid();
-            Map<String, String> map = new HashMap<>();
-            map.put(email, uidString);
-            DocumentReference documentReference = firebaseFirestore.collection("Admin").document("UIDS");
-            documentReference.set(map, SetOptions.merge()).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    createUserDocument();
-                    Toast.makeText(SignupActivity.this, "uid SET", Toast.LENGTH_SHORT).show();
-                } else {
-                    mProgressBar.setVisibility(View.GONE);
-                    Toast.makeText(SignupActivity.this, "Unable to set uid", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+    public void storeUserCredentials(String email) {
+        WriteBatch batch = firebaseFirestore.batch();
+
+        String uidString = mFirebaseAuth.getUid();
+        Map<String, String> map = new HashMap<>();
+        map.put(email, uidString);
+        DocumentReference adminUidsDatabaseReference = firebaseFirestore.collection("Admin").document("UIDS");
+
+        batch.set(adminUidsDatabaseReference, map, SetOptions.merge());
+
+        Map<String, Object> rootMap = new HashMap<>();
+        Map<String, Object> userDocuments = new HashMap<>();
+        userDocuments.put("user_id", mFirebaseAuth.getUid());
+        userDocuments.put("user_name", mUsername.getText().toString());
+        userDocuments.put("email_address", mEmail.getText().toString());
+        userDocuments.put("password", mPassword.getText().toString());
+        userDocuments.put("Branch", "nd");
+        userDocuments.put("user_address", "nd");
+        userDocuments.put("gender", "nd");
+        rootMap.put("user_info", userDocuments);
+        DocumentReference userInfoDatabaseReference = firebaseFirestore.collection("User").document(mFirebaseAuth.getUid());
+
+        batch.set(userInfoDatabaseReference, rootMap);
+        batch.commit().addOnSuccessListener(success -> {
+            startActivity(new Intent(SignupActivity.this, MainActivity.class));
+            finish();
+        }).addOnFailureListener(failed -> {
+            retry();
+        });
     }
 
-    public void createUserDocument() {
-        if (mFirebaseAuth.getUid() != null) {
-            Map<String, Object> rootMap = new HashMap<>();
-            Map<String, Object> userDocuments = new HashMap<>();
-            userDocuments.put("user_id", mFirebaseAuth.getUid());
-            userDocuments.put("user_name", mUsername.getText().toString());
-            userDocuments.put("email_address", mEmail.getText().toString());
-            userDocuments.put("password", mPassword.getText().toString());
-            userDocuments.put("Branch", "nd");
-            userDocuments.put("user_address", "nd");
-            userDocuments.put("gender", "nd");
-            rootMap.put("user_info", userDocuments);
-            DocumentReference documentReference = firebaseFirestore.collection("User").document(mFirebaseAuth.getUid());
-            documentReference.set(rootMap).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
-                    finish();
-                    Toast.makeText(SignupActivity.this, "document uploaded successfully", Toast.LENGTH_LONG).show();
-                } else
-                    Toast.makeText(SignupActivity.this, "fail to upload documents", Toast.LENGTH_LONG).show();
-            });
-        }
+    private void retry() {
     }
+
+//    public void setUIDS(String email) {
+//        if (mFirebaseAuth.getUid() != null) {
+//            String uidString = mFirebaseAuth.getUid();
+//            Map<String, String> map = new HashMap<>();
+//            map.put(email, uidString);
+//            DocumentReference documentReference = firebaseFirestore.collection("Admin").document("UIDS");
+//            documentReference.set(map, SetOptions.merge()).addOnCompleteListener(task -> {
+//                if (task.isSuccessful()) {
+//                    createUserDocument();
+//                    Toast.makeText(SignupActivity.this, "uid SET", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    mProgressBar.setVisibility(View.GONE);
+//                    Toast.makeText(SignupActivity.this, "Unable to set uid", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
+//    }
+//
+//    public void createUserDocument() {
+//        if (mFirebaseAuth.getUid() != null) {
+//            Map<String, Object> rootMap = new HashMap<>();
+//            Map<String, Object> userDocuments = new HashMap<>();
+//            userDocuments.put("user_id", mFirebaseAuth.getUid());
+//            userDocuments.put("user_name", mUsername.getText().toString());
+//            userDocuments.put("email_address", mEmail.getText().toString());
+//            userDocuments.put("password", mPassword.getText().toString());
+//            userDocuments.put("Branch", "nd");
+//            userDocuments.put("user_address", "nd");
+//            userDocuments.put("gender", "nd");
+//            rootMap.put("user_info", userDocuments);
+//            DocumentReference documentReference = firebaseFirestore.collection("User").document(mFirebaseAuth.getUid());
+//            documentReference.set(rootMap).addOnCompleteListener(task -> {
+//                if (task.isSuccessful()) {
+//                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
+//                    finish();
+//                    Toast.makeText(SignupActivity.this, "document uploaded successfully", Toast.LENGTH_LONG).show();
+//                } else
+//                    Toast.makeText(SignupActivity.this, "fail to upload documents", Toast.LENGTH_LONG).show();
+//            });
+//        }
+//    }
 
     private void storePass(String pass) {
         SharedPreferences sharedPreferences = getSharedPreferences("DOCUMENT_VERIFICATION", 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("5f4dcc3b5aa765d61d8327deb882cf99", new Encryption().encrypt(pass, "5f4dcc3b5aa765d61d8327deb882cf99"));
-        editor.commit();
+        editor.apply();
     }
 }

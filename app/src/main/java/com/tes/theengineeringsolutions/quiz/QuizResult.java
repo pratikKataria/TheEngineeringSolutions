@@ -1,4 +1,4 @@
-package com.tes.theengineeringsolutions.activities.quiz;
+package com.tes.theengineeringsolutions.quiz;
 
 import android.os.Bundle;
 import android.util.Log;
