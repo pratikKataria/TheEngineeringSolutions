@@ -3,6 +3,7 @@ package com.tes.theengineeringsolutions.auth;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -153,7 +154,7 @@ public class SignupActivity extends AppCompatActivity {
 
     public void storeUserCredentials(String email) {
         WriteBatch batch = firebaseFirestore.batch();
-
+        Log.e(SignupActivity.class.getName(), "store user Creadentials");
         String uidString = mFirebaseAuth.getUid();
         Map<String, String> map = new HashMap<>();
         map.put(email, uidString);

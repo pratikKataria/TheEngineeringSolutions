@@ -9,4 +9,5 @@
     <dimen name="cardDescFonts">18dp</dimen>
     <dimen name="cardEelevation">5dp</dimen>
     <dimen name="navigationFontSize">18dp</dimen>
+    <dimen name="testCardViewCorner">16dp</dimen>
 </resources>

@@ -216,9 +216,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private ImageButton mLockBtn;
         private ImageButton mDownloadBtn;
         private ProgressBar progressBar;
-        private MaterialCardView materialCardView;
         private AlertDialog alertDialog;
-        private HashMap<String, Boolean> isCompleted;
 
         public TestCardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -232,8 +230,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mDownloadBtn = itemView.findViewById(R.id.card_ib_download_test_file);
             progressBar = itemView.findViewById(R.id.card_pb_progress);
             textViewSubjectCode = itemView.findViewById(R.id.card_tv_test_unique_name);
-            materialCardView = itemView.findViewById(R.id.card_view);
-
         }
 
         void setCardView(String testTitle, String uniqueName, String date, String noOfQuestion, String testDuration) {
