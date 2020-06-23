@@ -1,14 +1,13 @@
 package com.tes.theengineeringsolutions.Adapters;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -16,12 +15,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -30,10 +32,10 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.opencsv.CSVReader;
-import com.tes.theengineeringsolutions.quiz.QuizActivity;
 import com.tes.theengineeringsolutions.Models.LocalTestDatabase;
 import com.tes.theengineeringsolutions.Models.QuizContract;
 import com.tes.theengineeringsolutions.R;
+import com.tes.theengineeringsolutions.quiz.QuizActivity;
 
 import java.io.File;
 import java.io.FileReader;
@@ -329,19 +331,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void showAlertDialog() {
             View alertLayout = inflater.inflate(R.layout.alert_dialog_custom_view, null);
             final TextView mdisplayText = alertLayout.findViewById(R.id.alert_dialog_tv_display_text);
-            final EditText mPassEditText = alertLayout.findViewById(R.id.alert_dialog_et_pass);
+            final TextInputEditText mPassEditText = alertLayout.findViewById(R.id.alert_dialog_et_passEditText);
             final MaterialButton continueBtn = alertLayout.findViewById(R.id.alert_dialog_mb_continue);
             final MaterialButton cancelBtn = alertLayout.findViewById(R.id.alert_dialog_mb_cancel);
             final ProgressBar progressBar = alertLayout.findViewById(R.id.progressbar);
+            final LottieAnimationView lottieAnimationView = alertLayout.findViewById(R.id.lottieLockAnimation);
 
             mdisplayText.setText(textViewDisplayName.getText().toString());
 
-            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            MaterialAlertDialogBuilder alert = new MaterialAlertDialogBuilder(context);
             alert.setView(alertLayout);
             alert.setCancelable(false);
 
             alertDialog = alert.create();
-
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
             continueBtn.setOnClickListener(v -> {
                 if (mPassEditText.getText().toString().equals("")) {
@@ -349,19 +352,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     mPassEditText.requestFocus();
                     return;
                 }
-                DocumentReference documentReference = FirebaseFirestore.getInstance().collection("Admin").document(textViewSubjectCode.getText().toString());
+
                 progressBar.setVisibility(View.VISIBLE);
-                documentReference.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        Map<String, Object> data = documentSnapshot.getData();
-                        if (data.get("password").equals(mPassEditText.getText().toString())) {
-                            setTestCompleted();
-                        } else {
-                            progressBar.setVisibility(View.GONE);
-                            Toast.makeText(context, "wrong password", Toast.LENGTH_SHORT).show();
-                        }
+                lottieAnimationView.setMinAndMaxProgress(.20F, .50F);
+                lottieAnimationView.playAnimation();
+
+                DocumentReference documentReference = FirebaseFirestore.getInstance().collection("Admin").document(textViewSubjectCode.getText().toString());
+                documentReference.get().addOnSuccessListener(success -> {
+                    Map<String, Object> data = success.getData();
+                    Log.e(RecyclerViewAdapter.class.getName(), success.getData() + " ");
+                    if (data != null && data.containsKey("password") && data.get("password") != null && data.get("password").equals(mPassEditText.getText().toString())) {
+                        setTestCompleted();
+                        lottieAnimationView.setMinAndMaxProgress(.60F, .80F);
+                        lottieAnimationView.playAnimation();
+                        progressBar.setVisibility(View.GONE);
+                    } else {
+                        Toast.makeText(context, "wrong password", Toast.LENGTH_SHORT).show();
+                        lottieAnimationView.setProgress(0);
+                        lottieAnimationView.pauseAnimation();
+                        progressBar.setVisibility(View.GONE);
                     }
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(context, "error" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    lottieAnimationView.setProgress(0);
+                    lottieAnimationView.pauseAnimation();
+                    progressBar.setVisibility(View.GONE);
                 });
             });
             cancelBtn.setOnClickListener(v -> alertDialog.dismiss());
