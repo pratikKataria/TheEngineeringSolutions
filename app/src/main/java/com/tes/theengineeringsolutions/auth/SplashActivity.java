@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.tes.theengineeringsolutions.R;
 import com.tes.theengineeringsolutions.activities.MainActivity;
+import com.tes.theengineeringsolutions.quiz.QuizActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,15 +41,18 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen_layout);
-
-        Log.d("SPLASH ACTIVITY", "result check permission" + checkPermission() + "");
-
-        if (checkPermission()) {
-            requestPermissions(permissionList, PERMISSION_REQUEST_CODE);
-        } else {
-            startActivity();
-            Toast.makeText(this, "go the main activity", Toast.LENGTH_SHORT).show();
-        }
+        startActivity(new Intent(
+                        SplashActivity.this,
+                        QuizActivity.class
+                ));
+//        Log.d("SPLASH ACTIVITY", "result check permission" + checkPermission() + "");
+//
+//        if (checkPermission()) {
+//            requestPermissions(permissionList, PERMISSION_REQUEST_CODE);
+//        } else {
+//            startActivity();
+//            Toast.makeText(this, "go the main activity", Toast.LENGTH_SHORT).show();
+//        }
 
     }
 

@@ -1,15 +1,19 @@
 package com.tes.theengineeringsolutions.Models;
 
+import android.location.LocationManager;
+
+import androidx.annotation.Nullable;
+
 import com.orm.SugarRecord;
 
 public class LocalTestDatabase extends SugarRecord {
-    int questionNo;
-    String questions;
-    String choice1;
-    String choice2;
-    String choice3;
-    String choice4;
-    int answer;
+    private int questionNo;
+    private String questions;
+    private String choice1;
+    private String choice2;
+    private String choice3;
+    private String choice4;
+    private int answer;
     boolean isCompleted;
 
     public LocalTestDatabase() {
@@ -91,4 +95,12 @@ public class LocalTestDatabase extends SugarRecord {
         this.answer = answer;
     }
 
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof LocalTestDatabase) {
+            LocalTestDatabase localTestDatabase = (LocalTestDatabase) obj;
+            return localTestDatabase.getQuestionNo() == questionNo;
+        }
+        return false;
+    }
 }

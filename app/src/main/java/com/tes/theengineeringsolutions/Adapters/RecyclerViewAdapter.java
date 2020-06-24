@@ -337,10 +337,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     Map<String, Object> data = success.getData();
                     Log.e(RecyclerViewAdapter.class.getName(), success.getData() + " ");
                     if (data != null && data.containsKey("password") && data.get("password") != null && data.get("password").equals(mPassEditText.getText().toString())) {
-                        setTestCompleted();
+                        isTableCreate();
+                        alertDialog.cancel();
+                        startQuizActivity();
                         lottieAnimationView.setMinAndMaxProgress(.60F, .80F);
                         lottieAnimationView.playAnimation();
                         progressBar.setVisibility(View.GONE);
+                        startQuizActivity();
                     } else {
                         Toast.makeText(context, "wrong password", Toast.LENGTH_SHORT).show();
                         lottieAnimationView.setProgress(0);
@@ -370,7 +373,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if (task.isSuccessful()) {
                             isTableCreate();
                             alertDialog.cancel();
-                            startIntent();
+                            startQuizActivity();
                         } else {
                             Toast.makeText(context, "check your internet connection", Toast.LENGTH_SHORT).show();
                         }
@@ -392,12 +395,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     emp.save();
                     tdb.add(emp);
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
+                Log.e(RecyclerViewAdapter.class.getName(), "exeption " + e.getMessage());
                 e.printStackTrace();
             }
         }
 
-        void startIntent() {
+        void startQuizActivity() {
             Intent intent = new Intent(context, QuizActivity.class);
             intent.putExtra("TEST_NAME", textViewDisplayName.getText().toString());
             intent.putExtra("TEST_CODE", textViewSubjectCode.getText().toString());
