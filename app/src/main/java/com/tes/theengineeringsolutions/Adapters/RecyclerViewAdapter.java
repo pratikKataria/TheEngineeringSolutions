@@ -126,14 +126,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 break;
             case VIEW_TYPE_TESTVIEW:
                 TestCardViewHolder testCardViewHolder = (TestCardViewHolder) holder;
+                QuizContract quizContract = testList.get(position);
 
-                testCardViewHolder.setCardView(testList.get(position).getDisplay_name() + "",
-                        testList.get(position).getSubject_code() + "",
-                        testList.get(position).getDate() + "",
-                        testList.get(position).getNumber_of_questions() + " questions",
-                        testList.get(position).getTest_duration() + " mins");
-
-                testCardViewHolder.setTextViewIsCompleted();
+                testCardViewHolder.setCardView(quizContract.getDisplay_name() + "",
+                        quizContract.getSubject_code() + "",
+                        quizContract.getDate() + "",
+                        quizContract.getNumber_of_questions() + " questions",
+                        quizContract.getTest_duration() + " mins",
+                        quizContract.isQuizCompletedByUser);
 
                 testCardViewHolder.mLockBtn.setOnClickListener(v -> {
                     testCardViewHolder.clearDataBase();
@@ -142,7 +142,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     else Toast.makeText(context, "download file first", Toast.LENGTH_SHORT).show();
                 });
 
-                testCardViewHolder.mDownloadBtn.setOnClickListener(v -> testCardViewHolder.downloadFile(testList.get(position).getFile_uri()));
+                testCardViewHolder.mDownloadBtn.setOnClickListener(v -> testCardViewHolder.downloadFile(quizContract.getFile_uri()));
                 break;
 
             case VIEW_TYPE_RESULTVIEW:
@@ -234,12 +234,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textViewSubjectCode = itemView.findViewById(R.id.card_tv_test_unique_name);
         }
 
-        void setCardView(String testTitle, String uniqueName, String date, String noOfQuestion, String testDuration) {
+        void setCardView(String testTitle, String uniqueName, String date, String noOfQuestion, String testDuration, String isCompletedText) {
             textViewDisplayName.setText(testTitle);//set testTile with firestore
             textViewSubjectCode.setText(uniqueName);// e
             texViewDate.setText(date);//set date fetched form firestore
             textViewNoOfQuestion.setText(noOfQuestion);//set no questions
             textViewDuration.setText(testDuration);//set testDuration
+            textViewIsCompleted.setText(isCompletedText);
         }
 
         void downloadFile(String url) {
@@ -270,32 +271,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         }
 
-        void setTextViewIsCompleted() {
-            DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
-            documentReference.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot snapshot = task.getResult();
-                    if (snapshot != null) {
-                        if (snapshot.exists()) {
-                            Map<String, Object> header = snapshot.getData();
-                            Map<String, Boolean> data = (Map<String, Boolean>) header.get("test_completed");
-                            if (data != null) {
-                                Log.e(TAG, "data.get () - " + data.get(textViewSubjectCode.getText().toString()));
-                                if (data.containsKey(textViewSubjectCode.getText().toString()) && data.get(textViewSubjectCode.getText().toString())) {
-                                    textViewIsCompleted.setText("completed");
-                                } else {
-                                    textViewIsCompleted.setText("not completed");
-                                    textViewIsCompleted.setTextColor(context.getColor(R.color.CeriseRed));
-                                }
-                            } else {
-                               textViewIsCompleted.setText("not completed");
-                                textViewIsCompleted.setTextColor(context.getColor(R.color.CeriseRed));
-                            }
-                        }
-                    }
-                }
-            });
-        }
 
         void isTestCompleted() {
             progressBar.setVisibility(View.VISIBLE);

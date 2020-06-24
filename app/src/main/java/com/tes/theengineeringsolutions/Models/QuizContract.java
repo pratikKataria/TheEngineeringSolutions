@@ -18,6 +18,8 @@ public class QuizContract {
     Date timeStamp;
     private String badge;
 
+    public String isQuizCompletedByUser = "";
+
     public QuizContract() {
         //required
     }

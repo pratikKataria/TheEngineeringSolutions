@@ -17,7 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.google.android.material.chip.Chip;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -27,7 +30,10 @@ import com.tes.theengineeringsolutions.Models.QuizContract;
 import com.tes.theengineeringsolutions.R;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -100,6 +106,7 @@ public class TestFragment extends Fragment {
 
     private void init_recyclerView() {
         if (getActivity() == null) return;
+        testRecyclerView.setHasFixedSize(true);
         recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), testList, 1);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         testRecyclerView.setLayoutManager(staggeredGridLayoutManager);
@@ -129,10 +136,36 @@ public class TestFragment extends Fragment {
                         }else {
                             recyclerViewAdapter.notifyItemInserted(testList.indexOf(quizContract));
                         }
+                        setTextViewIsCompleted(quizContract.getSubject_code());
                     }
                 }
             }
         });
+    }
+
+    void setTextViewIsCompleted(String subjectCode) {
+        DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
+        documentReference.get().addOnSuccessListener(success -> {
+            Map<String, Object> root = success.getData();
+            if (root != null && root.containsKey("test_completed")) {
+                Map<String, Boolean> data = (Map<String, Boolean>) root.get("test_completed");
+                if (data != null && data.containsKey(subjectCode)) {
+                    updateTestList(subjectCode, "completed");
+                } else {
+                    updateTestList(subjectCode, "not completed");
+                }
+            }
+        });
+    }
+
+    public void updateTestList(String subjectCode, String isCompletedText) {
+        for (QuizContract quizContract : testList) {
+            if (quizContract.getSubject_code().equals(subjectCode)) {
+                quizContract.isQuizCompletedByUser = isCompletedText;
+                int indexOf = testList.indexOf(quizContract);
+                recyclerViewAdapter.notifyItemChanged(indexOf);
+            }
+        }
     }
 
     @Override
