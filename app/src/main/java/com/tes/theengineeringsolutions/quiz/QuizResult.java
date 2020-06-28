@@ -1,7 +1,6 @@
 package com.tes.theengineeringsolutions.quiz;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,19 +10,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tes.theengineeringsolutions.Adapters.ResultRecyclerView;
 import com.tes.theengineeringsolutions.Models.LocalTestDatabase;
 import com.tes.theengineeringsolutions.R;
+import com.tes.theengineeringsolutions.utils.SharedPrefsUtils;
 import com.timqi.sectorprogressview.ColorfulRingProgressView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class QuizResult extends AppCompatActivity {
 
-    private HashMap<Integer, Integer> questionAnswered;
 
     private RecyclerView testRecyclerView;
     private List<LocalTestDatabase> testList;
-    private ResultRecyclerView recyclerViewAdapter;
     private TextView textViewChecklist;
     private TextView textViewPercentage;
     private TextView textViewTotalScore;
@@ -36,11 +33,7 @@ public class QuizResult extends AppCompatActivity {
         textViewTotalScore = findViewById(R.id.actQuizResult_tv_score);
         sectorProgressView = findViewById(R.id.crpv);
 
-
-        questionAnswered = (HashMap<Integer, Integer>) getIntent().getSerializableExtra("QUESTION_ANSWERED");
         testList = new ArrayList<>();
-
-        recyclerViewAdapter = new ResultRecyclerView(this, testList, questionAnswered);
         populateTestList();
     }
 
@@ -50,19 +43,9 @@ public class QuizResult extends AppCompatActivity {
         setContentView(R.layout.activity_quiz_result);
 
         initializeFields();
-        questionAnswered.forEach((key, value) -> {
-            Log.e("QUIZRESULT HASHMAP", "Key : " + key + " Value : " + value);
-        });
+        initRecyclerView();
 
-        recyclerViewAdapter.notifyDataSetChanged();
-
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(RecyclerView.VERTICAL);
-        testRecyclerView.setLayoutManager(layoutManager);
-        testRecyclerView.setAdapter(recyclerViewAdapter);
-
-
-        int[] decisions = calculateCorrect(questionAnswered);
+        int[] decisions = calculateCorrect();
         int totalQuestion = LocalTestDatabase.listAll(LocalTestDatabase.class).size();
         float percent = ((((float) decisions[0]) / totalQuestion)) * 100;
 
@@ -73,31 +56,36 @@ public class QuizResult extends AppCompatActivity {
             textViewPercentage.setText(0 + "%");
             sectorProgressView.setPercent(0);
         }
-        textViewTotalScore.setText(decisions[0] + "/" + questionAnswered.size());
-        textViewChecklist.setText("checklist " + decisions[0] + "/" + questionAnswered.size() + " " + ((int) percent));
+        int questionAnswered = SharedPrefsUtils.preferenceSize(this);
+        textViewTotalScore.setText(decisions[0] + "/" + questionAnswered);
+        textViewChecklist.setText("checklist " + decisions[0] + "/" + questionAnswered + " " + ((int) percent));
     }
 
-    private int[] calculateCorrect(HashMap<Integer, Integer> qAnswered) {
-        int[] decisions = {0, 0};
-        for (LocalTestDatabase q : testList) {
-            if (qAnswered.containsKey(q.getQuestionNo() - 1)) {
-                if (q.getAnswer() == qAnswered.get(q.getQuestionNo() - 1)) {
-                    decisions[0] = decisions[0] + 1;
-                    Log.d("CORRRRRRRRRRECT QUIZRESUKT", "" + decisions[0]);
-                } else decisions[1] = decisions[1] + 1;
-            }
+    private void initRecyclerView() {
+        ResultRecyclerView recyclerViewAdapter = new ResultRecyclerView(this, testList);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
+        testRecyclerView.setLayoutManager(layoutManager);
+        testRecyclerView.setAdapter(recyclerViewAdapter);
+    }
+
+    private int[] calculateCorrect() {
+        int[] countNumberOfCorrectAndIncorrectQuestions = {0, 0};
+
+        for (LocalTestDatabase currentQuestion : testList) {
+            int answer = SharedPrefsUtils.getIntegerPreference(this, currentQuestion.getQuestionNo() + "", -1);
+            if (answer != -1 && answer == currentQuestion.getAnswer())
+                countNumberOfCorrectAndIncorrectQuestions[0] = countNumberOfCorrectAndIncorrectQuestions[0] + 1;
+            else
+                countNumberOfCorrectAndIncorrectQuestions[1] = countNumberOfCorrectAndIncorrectQuestions[1] + 1;
         }
-        return decisions;
+        return countNumberOfCorrectAndIncorrectQuestions;
     }
-
 
     private void populateTestList() {
-        for (int questionNumber : questionAnswered.keySet()) {
-            String questionNumberString = (questionNumber + 1) + "";
-            Log.d("QUIZ RESULT", "question number" + questionNumber);
-            List<LocalTestDatabase> localTestDatabase = LocalTestDatabase.findWithQuery(LocalTestDatabase.class, "SELECT * FROM LOCAL_TEST_DATABASE WHERE QUESTION_NO == ?", questionNumberString);
+        for (String questionNumber : SharedPrefsUtils.keysList(this)) {
+            List<LocalTestDatabase> localTestDatabase = LocalTestDatabase.findWithQuery(LocalTestDatabase.class, "SELECT * FROM LOCAL_TEST_DATABASE WHERE QUESTION_NO == ?", questionNumber);
             testList.addAll(localTestDatabase);
-            recyclerViewAdapter.notifyDataSetChanged();
         }
     }
 

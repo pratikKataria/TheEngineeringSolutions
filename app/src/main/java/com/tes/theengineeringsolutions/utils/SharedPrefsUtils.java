@@ -9,7 +9,9 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A pack of helpful getter and setter methods for reading/writing to {@link SharedPreferences}.
@@ -242,4 +244,23 @@ final public class SharedPrefsUtils {
         map.entrySet().forEach(stringObjectEntry -> Log.e(SharedPrefsUtils.class.getName(), stringObjectEntry.getKey() + " key " + "  value : " + stringObjectEntry.getValue()));
     }
 
+    public static Set<String> keysList(Context context) {
+        Set<String> set = new HashSet<>();
+        try {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            Map<String, Object> map = (Map<String, Object>) sharedPreferences.getAll();
+            set = map.keySet();
+            return set;
+        } catch (Exception xe) {
+            Log.e(SharedPrefsUtils.class.getName(), xe.getMessage() + "");
+            xe.printStackTrace();
+        }
+
+        return set;
+    }
+
+    public static boolean contains(Context context, String key){
+        SharedPreferences sharedPrefsUtils = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPrefsUtils.contains(key);
+    }
 }

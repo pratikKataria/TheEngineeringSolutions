@@ -1,7 +1,6 @@
 package com.tes.theengineeringsolutions.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.chip.Chip;
 import com.tes.theengineeringsolutions.Models.LocalTestDatabase;
 import com.tes.theengineeringsolutions.R;
+import com.tes.theengineeringsolutions.utils.SharedPrefsUtils;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class ResultRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -25,20 +24,14 @@ public class ResultRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
     //where 1 is for empty view
     private static final int VIEW_TYPE_EMPTY = 1;
 
-    private HashMap<Integer, Integer> questionAnswered;
-
-    private LayoutInflater inflater;
-
     //context
     private Context context;
     //list of list to show in recycler view
     private List<LocalTestDatabase> testList;
 
-    public ResultRecyclerView(Context context, List<LocalTestDatabase> testList, HashMap<Integer, Integer> questionAnswered) {
+    public ResultRecyclerView(Context context, List<LocalTestDatabase> testList) {
         this.testList = testList;
         this.context = context;
-        this.questionAnswered = questionAnswered;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @NonNull
@@ -77,24 +70,22 @@ public class ResultRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
             ResultRecyclerView.TestCardViewHolder testCardViewHolder = (ResultRecyclerView.TestCardViewHolder) holder;
             String question = testList.get(position).getQuestions();
             int questionNumber = testList.get(position).getQuestionNo();
-            int answer = testList.get(position).getAnswer();
+            int correctAnswer = testList.get(position).getAnswer();
 
-            testCardViewHolder.setCardView(questionNumber, question, answer);
+            testCardViewHolder.setCardView(questionNumber, question);
 
-            if (questionAnswered.containsKey(questionNumber-1)) {
-                if (answer == questionAnswered.get(questionNumber-1)) {
-                    testCardViewHolder.isCorrect.setText("correct");
-                    testCardViewHolder.isCorrect.setTextColor(context.getColor(R.color.subTitle));
-                    Log.e("user answered questions: ", answer+"");
-                    testCardViewHolder.wrongAnswer.setVisibility(View.GONE);
-                } else {
-                    testCardViewHolder.isCorrect.setText("wrong");
-                    testCardViewHolder.isCorrect.setTextColor(context.getColor(R.color.CeriseRed));
-                    testCardViewHolder.wrongAnswer.setText(setChipChoice(position, questionAnswered.get(questionNumber-1)));
-                }
+            int studentAnswer = SharedPrefsUtils.getIntegerPreference(context, Integer.toString(questionNumber), -1);
+            if (correctAnswer == studentAnswer) {
+                testCardViewHolder.isCorrect.setText("correct");
+                testCardViewHolder.isCorrect.setTextColor(context.getColor(R.color.subTitle));
+                testCardViewHolder.wrongAnswer.setVisibility(View.GONE);
+            } else {
+                testCardViewHolder.isCorrect.setText("wrong");
+                testCardViewHolder.isCorrect.setTextColor(context.getColor(R.color.CeriseRed));
+                testCardViewHolder.wrongAnswer.setText(setChipChoice(position, studentAnswer));
             }
 
-            testCardViewHolder.correctAnswer.setText(setChipChoice(position, answer));
+            testCardViewHolder.correctAnswer.setText(setChipChoice(position, correctAnswer));
         }
     }
 
@@ -170,7 +161,7 @@ public class ResultRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
 
-        public void setCardView(int questionNumber, String question, int answer) {
+        public void setCardView(int questionNumber, String question) {
             textViewQuestionNumber.setText(questionNumber + "");
             textViewQuestion.setText(question);
         }
