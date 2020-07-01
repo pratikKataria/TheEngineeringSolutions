@@ -61,9 +61,9 @@ public class QuizActivity extends AppCompatActivity {
         submitMb.setOnClickListener(n -> showSubmitDialog());
         TextView textViewTime = findViewById(R.id.textView_time);
 
-//        testViewTestName.setText(getIntent().getStringExtra("TEST_NAME"));
-//        testViewTestCode.setText(getIntent().getStringExtra("TEST_CODE"));
-//        textViewTime.setText(getIntent().getStringExtra("TEST_TOTAL_QUESTION").substring(0,2)+"  \u2022  "+ getIntent().getStringExtra("TEST_DURATION").substring(0,2) +" MINS");
+        testViewTestName.setText(getIntent().getStringExtra("TEST_NAME"));
+        testViewTestCode.setText(getIntent().getStringExtra("TEST_CODE"));
+        textViewTime.setText(getIntent().getStringExtra("TEST_TOTAL_QUESTION").substring(0,2)+"  \u2022  "+ getIntent().getStringExtra("TEST_DURATION").substring(0,2) +" MINS");
 
 
         QuizDatabase quizDatabase = QuizDatabase.getInstance(this);

@@ -39,6 +39,7 @@ import com.tes.theengineeringsolutions.Models.QuizContract;
 import com.tes.theengineeringsolutions.QuizDatabase;
 import com.tes.theengineeringsolutions.R;
 import com.tes.theengineeringsolutions.quiz.QuizActivity;
+import com.tes.theengineeringsolutions.utils.SharedPrefsUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -405,6 +406,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 QuizDatabase quizDatabase = QuizDatabase.getInstance(context);
                 localTestDatabaseDoa = quizDatabase.testDatabaseDoa();
                 new DeleteAllLocalTestDatabase(localTestDatabaseDoa).execute();
+                SharedPrefsUtils.clearAllPreference(context);
 
                 for (QuestionModel questionModel : tdb) {
                     insert(questionModel);

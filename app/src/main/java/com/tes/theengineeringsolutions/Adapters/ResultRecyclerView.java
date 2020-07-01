@@ -75,14 +75,17 @@ public class ResultRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
             testCardViewHolder.setCardView(questionNumber, question);
 
             int studentAnswer = SharedPrefsUtils.getIntegerPreference(context, Integer.toString(questionNumber), -1);
-            if (correctAnswer == studentAnswer) {
-                testCardViewHolder.isCorrect.setText("correct");
-                testCardViewHolder.isCorrect.setTextColor(context.getColor(R.color.subTitle));
-                testCardViewHolder.wrongAnswer.setVisibility(View.GONE);
-            } else {
-                testCardViewHolder.isCorrect.setText("wrong");
-                testCardViewHolder.isCorrect.setTextColor(context.getColor(R.color.CeriseRed));
-                testCardViewHolder.wrongAnswer.setText(setChipChoice(position, studentAnswer));
+
+            if (studentAnswer != -1) {
+                if (correctAnswer == studentAnswer) {
+                    testCardViewHolder.isCorrect.setText("correct");
+                    testCardViewHolder.isCorrect.setTextColor(context.getColor(R.color.subTitle));
+                    testCardViewHolder.wrongAnswer.setVisibility(View.GONE);
+                } else {
+                    testCardViewHolder.isCorrect.setText("wrong");
+                    testCardViewHolder.isCorrect.setTextColor(context.getColor(R.color.CeriseRed));
+                    testCardViewHolder.wrongAnswer.setText(setChipChoice(position, studentAnswer));
+                }
             }
 
             testCardViewHolder.correctAnswer.setText(setChipChoice(position, correctAnswer));

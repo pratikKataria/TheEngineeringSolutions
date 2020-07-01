@@ -21,9 +21,11 @@ import com.google.firebase.firestore.WriteBatch;
 import com.hanks.htextview.evaporate.EvaporateTextView;
 import com.tes.theengineeringsolutions.Models.ConnectivityReceiver;
 import com.tes.theengineeringsolutions.Models.QuestionModel;
+import com.tes.theengineeringsolutions.QuizDatabase;
 import com.tes.theengineeringsolutions.R;
 import com.tes.theengineeringsolutions.activities.MyApplication;
 import com.tes.theengineeringsolutions.utils.ColorUtils;
+import com.tes.theengineeringsolutions.utils.GetQuestionListAsyncTask;
 import com.tes.theengineeringsolutions.utils.SharedPrefsUtils;
 import com.tes.theengineeringsolutions.utils.SnackBarNoSwipe;
 
@@ -33,6 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import static com.tes.theengineeringsolutions.Models.ConnectivityReceiver.isConnected;
 
@@ -51,7 +54,11 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         subject = getIntent().getStringExtra("SUBJECT_NAME");
         totalQuestion = getIntent().getIntExtra("TOTAL_QUESTIONS", 0);
 
-        getTestResultList();
+        try {
+            getTestResultList();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
         batchWriteCloudFirestore();
     }
 
@@ -72,12 +79,15 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         }, 1000);
     }
 
-    private void getTestResultList() {
-//        for (String questionNumber : SharedPrefsUtils.keysList(this)) {
-//            questionList.addAll(QuestionModel.findWithQuery(QuestionModel.class, "SELECT * FROM LOCAL_TEST_DATABASE WHERE QUESTION_NO == ?", questionNumber));
-//        }
-
-        //todo room implemetnation
+    private void getTestResultList() throws ExecutionException, InterruptedException {
+        for (String questionNumber : SharedPrefsUtils.keysList(this)) {
+            List<QuestionModel> tempList = new GetQuestionListAsyncTask(QuizDatabase.getInstance(this).testDatabaseDoa()).execute().get();
+            for (QuestionModel questionModel : tempList) {
+                if ((questionModel.getQuestionNo() == Integer.parseInt(questionNumber))) {
+                    questionList.add(questionModel);
+                }
+            }
+        }
     }
 
     private Map<String, String> getStudentResultMap(String subject, String subjectCode, int totalQuestions) {

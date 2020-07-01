@@ -9,15 +9,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tes.theengineeringsolutions.Adapters.ResultRecyclerView;
 import com.tes.theengineeringsolutions.Models.QuestionModel;
+import com.tes.theengineeringsolutions.QuizDatabase;
 import com.tes.theengineeringsolutions.R;
+import com.tes.theengineeringsolutions.utils.GetQuestionListAsyncTask;
 import com.tes.theengineeringsolutions.utils.SharedPrefsUtils;
 import com.timqi.sectorprogressview.ColorfulRingProgressView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class QuizResult extends AppCompatActivity {
-
 
     private RecyclerView testRecyclerView;
     private List<QuestionModel> testList;
@@ -25,6 +27,7 @@ public class QuizResult extends AppCompatActivity {
     private TextView textViewPercentage;
     private TextView textViewTotalScore;
     private ColorfulRingProgressView sectorProgressView;
+    private int totalQuestion;
 
     private void initializeFields() {
         testRecyclerView = findViewById(R.id.actQuizResult_question_list);
@@ -34,7 +37,11 @@ public class QuizResult extends AppCompatActivity {
         sectorProgressView = findViewById(R.id.crpv);
 
         testList = new ArrayList<>();
-        populateTestList();
+        try {
+            populateTestList();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -46,9 +53,6 @@ public class QuizResult extends AppCompatActivity {
         initRecyclerView();
 
         int[] decisions = calculateCorrect();
-        //todo room implementation
-//        int totalQuestion = QuestionModel.listAll(QuestionModel.class).size();
-        int totalQuestion = 100;
         float percent = ((((float) decisions[0]) / totalQuestion)) * 100;
 
         if (totalQuestion > 0) {
@@ -76,19 +80,29 @@ public class QuizResult extends AppCompatActivity {
 
         for (QuestionModel currentQuestion : testList) {
             int answer = SharedPrefsUtils.getIntegerPreference(this, currentQuestion.getQuestionNo() + "", -1);
-            if (answer != -1 && answer == currentQuestion.getAnswer())
-                countNumberOfCorrectAndIncorrectQuestions[0] = countNumberOfCorrectAndIncorrectQuestions[0] + 1;
-            else
-                countNumberOfCorrectAndIncorrectQuestions[1] = countNumberOfCorrectAndIncorrectQuestions[1] + 1;
+
+            if (answer != -1) {
+                if (answer == currentQuestion.getAnswer())
+                    countNumberOfCorrectAndIncorrectQuestions[0] = countNumberOfCorrectAndIncorrectQuestions[0] + 1;
+                else
+                    countNumberOfCorrectAndIncorrectQuestions[1] = countNumberOfCorrectAndIncorrectQuestions[1] + 1;
+            }
+
+
         }
         return countNumberOfCorrectAndIncorrectQuestions;
     }
 
-    private void populateTestList() {
-//        for (String questionNumber : SharedPrefsUtils.keysList(this)) {
-//            List<QuestionModel> localTestDatabase = QuestionModel.findWithQuery(QuestionModel.class, "SELECT * FROM LOCAL_TEST_DATABASE WHERE QUESTION_NO == ?", questionNumber);
-//            testList.addAll(localTestDatabase);
-//        }
+    private void populateTestList() throws ExecutionException, InterruptedException {
+        for (String questionNumber : SharedPrefsUtils.keysList(this)) {
+            List<QuestionModel> tempList = new GetQuestionListAsyncTask(QuizDatabase.getInstance(this).testDatabaseDoa()).execute().get();
+            totalQuestion = tempList.size();
+            for (QuestionModel questionModel : tempList) {
+                if ((questionModel.getQuestionNo() == Integer.parseInt(questionNumber))) {
+                    testList.add(questionModel);
+                }
+            }
+        }
     }
 
 }
