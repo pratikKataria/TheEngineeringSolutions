@@ -144,7 +144,7 @@ public class TestFragment extends Fragment {
             Map<String, Object> root = success.getData();
             if (root != null && root.containsKey("test_completed")) {
                 Map<String, Boolean> data = (Map<String, Boolean>) root.get("test_completed");
-                if (data != null && data.containsKey(subjectCode)) {
+                if ((data != null) && data.containsKey(subjectCode) && data.get(subjectCode)) {
                     updateTestList(subjectCode, "completed");
                 } else {
                     updateTestList(subjectCode, "not completed");

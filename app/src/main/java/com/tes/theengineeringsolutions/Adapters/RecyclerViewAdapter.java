@@ -361,27 +361,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             alertDialog.show();
         }
 
-        void setTestCompleted() {
-            if (FirebaseAuth.getInstance().getUid() != null) {
-                DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
-                documentReference.get().addOnCompleteListener(task -> {
-                    Map<String, Object> header = new HashMap<>();
-                    Map<String, Boolean> data = new HashMap<>();
-                    data.put(textViewSubjectCode.getText().toString(), true);
-                    header.put("test_completed", data);
-                    documentReference.set(header, SetOptions.merge()).addOnCompleteListener(task1 -> {
-                        if (task.isSuccessful()) {
-                            createTestTable();
-                            alertDialog.cancel();
-                            startQuizActivity();
-                        } else {
-                            Toast.makeText(context, "check your internet connection", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                });
-            }
-        }
-
         LocalTestDatabaseDoa localTestDatabaseDoa;
 
         void createTestTable() {
@@ -412,11 +391,30 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     insert(questionModel);
                 }
 
-                startQuizActivity();
-
+                setTestCompleted();
             } catch (Exception e) {
                 Log.e(RecyclerViewAdapter.class.getName(), "exeption " + e.getMessage());
                 e.printStackTrace();
+            }
+        }
+
+        void setTestCompleted() {
+            if (FirebaseAuth.getInstance().getUid() != null) {
+                DocumentReference documentReference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
+                documentReference.get().addOnCompleteListener(task -> {
+                    Map<String, Object> header = new HashMap<>();
+                    Map<String, Boolean> data = new HashMap<>();
+                    data.put(textViewSubjectCode.getText().toString(), true);
+                    header.put("test_completed", data);
+                    documentReference.set(header, SetOptions.merge()).addOnCompleteListener(task1 -> {
+                        if (task.isSuccessful()) {
+                            alertDialog.cancel();
+                            startQuizActivity();
+                        } else {
+                            Toast.makeText(context, "check your internet connection", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                });
             }
         }
 

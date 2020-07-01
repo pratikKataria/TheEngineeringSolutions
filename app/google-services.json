@@ -1,42 +1,42 @@
 {
   "project_info": {
-    "project_number": "169155525169",
-    "firebase_url": "https://the-engineering-solutions.firebaseio.com",
-    "project_id": "the-engineering-solutions",
-    "storage_bucket": "the-engineering-solutions.appspot.com"
+    "project_number": "1024821864249",
+    "firebase_url": "https://theengineeringsolutions-ea6b8.firebaseio.com",
+    "project_id": "theengineeringsolutions-ea6b8",
+    "storage_bucket": "theengineeringsolutions-ea6b8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:169155525169:android:10a4a0a97699e1cf3e3310",
+        "mobilesdk_app_id": "1:1024821864249:android:ae6b41bd56a6440e132ae8",
         "android_client_info": {
           "package_name": "com.tes.theengineeringsolutions"
         }
       },
       "oauth_client": [
         {
-          "client_id": "169155525169-fef00lr0o6to29ilqbernjs4s5nf9pv9.apps.googleusercontent.com",
+          "client_id": "1024821864249-2ka1qqcj7gc6sgqt6vvi1143go6vg9se.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.tes.theengineeringsolutions",
-            "certificate_hash": "8b593eda0d0aa3f8b2cf9ad6d8f2d573b6c27be4"
+            "certificate_hash": "535fc0eaa9f67f7d6f3bd93f8c02966af3c41e3c"
           }
         },
         {
-          "client_id": "169155525169-083o6u6t525vm4ek73vgj9b6o58osdfd.apps.googleusercontent.com",
+          "client_id": "1024821864249-jg9ltfncbvjq636gmnflrvnqj0l6ibuu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBuD5TDgN4FLhuD2DSD8vk_uPvjH8KEHgM"
+          "current_key": "AIzaSyC-PiJPHXdsE5Q4U_ytHm8hc5g3q858KVU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "169155525169-083o6u6t525vm4ek73vgj9b6o58osdfd.apps.googleusercontent.com",
+              "client_id": "1024821864249-jg9ltfncbvjq636gmnflrvnqj0l6ibuu.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -213,6 +213,7 @@ public class QuizActivity extends AppCompatActivity {
         Intent intent = new Intent(QuizActivity.this, UploadResultsActivity.class);
         intent.putExtra("TEST_CODE", testViewTestCode.getText().toString());
         intent.putExtra("SUBJECT_NAME", testViewTestName.getText().toString());
+        intent.putExtra("TOTAL_QUESTIONS", questionList.size());
         startActivity(intent);
         finish();
     }
