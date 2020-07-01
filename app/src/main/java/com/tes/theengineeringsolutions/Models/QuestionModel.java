@@ -1,12 +1,13 @@
 package com.tes.theengineeringsolutions.Models;
 
-import android.location.LocationManager;
-
 import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-import com.orm.SugarRecord;
+@Entity(tableName = "questions_options")
+public class QuestionModel {
 
-public class LocalTestDatabase extends SugarRecord {
+    @PrimaryKey
     private int questionNo;
     private String questions;
     private String choice1;
@@ -16,11 +17,11 @@ public class LocalTestDatabase extends SugarRecord {
     private int answer;
     boolean isCompleted;
 
-    public LocalTestDatabase() {
+    public QuestionModel() {
         //required
     }
 
-    public LocalTestDatabase(int questionNo, String questions, String choice1, String choice2, String choice3, String choice4, int answer, boolean isCompleted) {
+    public QuestionModel(int questionNo, String questions, String choice1, String choice2, String choice3, String choice4, int answer, boolean isCompleted) {
         this.questionNo = questionNo;
         this.questions = questions;
         this.choice1 = choice1;
@@ -30,6 +31,7 @@ public class LocalTestDatabase extends SugarRecord {
         this.answer = answer;
         this.isCompleted = isCompleted;
     }
+
 
     public boolean isCompleted() {
         return isCompleted;
@@ -97,9 +99,9 @@ public class LocalTestDatabase extends SugarRecord {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if (obj instanceof LocalTestDatabase) {
-            LocalTestDatabase localTestDatabase = (LocalTestDatabase) obj;
-            return localTestDatabase.getQuestionNo() == questionNo;
+        if (obj instanceof QuestionModel) {
+            QuestionModel questionModel = (QuestionModel) obj;
+            return questionModel.getQuestionNo() == questionNo;
         }
         return false;
     }

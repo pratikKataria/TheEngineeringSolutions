@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
-import com.tes.theengineeringsolutions.Models.LocalTestDatabase;
+import com.tes.theengineeringsolutions.Models.QuestionModel;
 import com.tes.theengineeringsolutions.R;
 import com.tes.theengineeringsolutions.utils.SharedPrefsUtils;
 
@@ -27,9 +27,9 @@ public class ResultRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
     //context
     private Context context;
     //list of list to show in recycler view
-    private List<LocalTestDatabase> testList;
+    private List<QuestionModel> testList;
 
-    public ResultRecyclerView(Context context, List<LocalTestDatabase> testList) {
+    public ResultRecyclerView(Context context, List<QuestionModel> testList) {
         this.testList = testList;
         this.context = context;
     }
@@ -90,16 +90,16 @@ public class ResultRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private String setChipChoice(int position, int option) {
-        LocalTestDatabase localTestDatabase = testList.get(position);
+        QuestionModel questionModel = testList.get(position);
         switch (option) {
             case 1:
-                return localTestDatabase.getChoice1();
+                return questionModel.getChoice1();
             case 2:
-                return localTestDatabase.getChoice2();
+                return questionModel.getChoice2();
             case 3:
-                return localTestDatabase.getChoice3();
+                return questionModel.getChoice3();
             case 4:
-                return localTestDatabase.getChoice4();
+                return questionModel.getChoice4();
             default:
                 return -1 + "";
         }

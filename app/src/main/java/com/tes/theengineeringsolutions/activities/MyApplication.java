@@ -1,9 +1,9 @@
 package com.tes.theengineeringsolutions.activities;
 
-import com.orm.SugarApp;
+import android.app.Application;
 import com.tes.theengineeringsolutions.Models.ConnectivityReceiver;
 
-public class MyApplication extends SugarApp {
+public class MyApplication extends Application {
 
     private static MyApplication mInstance;
 

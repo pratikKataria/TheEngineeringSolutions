@@ -33,16 +33,6 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <meta-data
-            android:name="DATABASE"
-            android:value="LocalTestDatabase.db" />
-        <meta-data
-            android:name="VERSION"
-            android:value="2" />
-        <meta-data
-            android:name="DOMAIN_PACKAGE_NAME"
-            android:value="com.tes.theengineeringsolutions.Models" />
-
         <activity android:name=".quiz.QuizActivity" />
         <activity android:name=".auth.SplashActivity">
             <intent-filter>

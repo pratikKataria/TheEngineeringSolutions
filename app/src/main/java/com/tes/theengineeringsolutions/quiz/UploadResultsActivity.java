@@ -20,7 +20,7 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 import com.hanks.htextview.evaporate.EvaporateTextView;
 import com.tes.theengineeringsolutions.Models.ConnectivityReceiver;
-import com.tes.theengineeringsolutions.Models.LocalTestDatabase;
+import com.tes.theengineeringsolutions.Models.QuestionModel;
 import com.tes.theengineeringsolutions.R;
 import com.tes.theengineeringsolutions.activities.MyApplication;
 import com.tes.theengineeringsolutions.utils.ColorUtils;
@@ -38,7 +38,7 @@ import static com.tes.theengineeringsolutions.Models.ConnectivityReceiver.isConn
 
 public class UploadResultsActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
-    private List<LocalTestDatabase> questionList = new ArrayList<>();
+    private List<QuestionModel> questionList = new ArrayList<>();
     private String subjectCode;
     private String subject;
     private int totalQuestion;
@@ -73,9 +73,11 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
     }
 
     private void getTestResultList() {
-        for (String questionNumber : SharedPrefsUtils.keysList(this)) {
-            questionList.addAll(LocalTestDatabase.findWithQuery(LocalTestDatabase.class, "SELECT * FROM LOCAL_TEST_DATABASE WHERE QUESTION_NO == ?", questionNumber));
-        }
+//        for (String questionNumber : SharedPrefsUtils.keysList(this)) {
+//            questionList.addAll(QuestionModel.findWithQuery(QuestionModel.class, "SELECT * FROM LOCAL_TEST_DATABASE WHERE QUESTION_NO == ?", questionNumber));
+//        }
+
+        //todo room implemetnation
     }
 
     private Map<String, String> getStudentResultMap(String subject, String subjectCode, int totalQuestions) {
@@ -103,7 +105,7 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
     private int[] checkAnswers() {
         int[] countNumberOfCorrectAndIncorrectQuestions = {0, 0};
 
-        for (LocalTestDatabase currentQuestion : questionList) {
+        for (QuestionModel currentQuestion : questionList) {
             int answer = SharedPrefsUtils.getIntegerPreference(this, currentQuestion.getQuestionNo() + "", -1);
             if (answer != -1 && answer == currentQuestion.getAnswer())
                 countNumberOfCorrectAndIncorrectQuestions[0] = countNumberOfCorrectAndIncorrectQuestions[0] + 1;

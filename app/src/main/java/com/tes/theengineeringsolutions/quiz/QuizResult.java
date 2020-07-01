@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tes.theengineeringsolutions.Adapters.ResultRecyclerView;
-import com.tes.theengineeringsolutions.Models.LocalTestDatabase;
+import com.tes.theengineeringsolutions.Models.QuestionModel;
 import com.tes.theengineeringsolutions.R;
 import com.tes.theengineeringsolutions.utils.SharedPrefsUtils;
 import com.timqi.sectorprogressview.ColorfulRingProgressView;
@@ -20,7 +20,7 @@ public class QuizResult extends AppCompatActivity {
 
 
     private RecyclerView testRecyclerView;
-    private List<LocalTestDatabase> testList;
+    private List<QuestionModel> testList;
     private TextView textViewChecklist;
     private TextView textViewPercentage;
     private TextView textViewTotalScore;
@@ -46,7 +46,9 @@ public class QuizResult extends AppCompatActivity {
         initRecyclerView();
 
         int[] decisions = calculateCorrect();
-        int totalQuestion = LocalTestDatabase.listAll(LocalTestDatabase.class).size();
+        //todo room implementation
+//        int totalQuestion = QuestionModel.listAll(QuestionModel.class).size();
+        int totalQuestion = 100;
         float percent = ((((float) decisions[0]) / totalQuestion)) * 100;
 
         if (totalQuestion > 0) {
@@ -72,7 +74,7 @@ public class QuizResult extends AppCompatActivity {
     private int[] calculateCorrect() {
         int[] countNumberOfCorrectAndIncorrectQuestions = {0, 0};
 
-        for (LocalTestDatabase currentQuestion : testList) {
+        for (QuestionModel currentQuestion : testList) {
             int answer = SharedPrefsUtils.getIntegerPreference(this, currentQuestion.getQuestionNo() + "", -1);
             if (answer != -1 && answer == currentQuestion.getAnswer())
                 countNumberOfCorrectAndIncorrectQuestions[0] = countNumberOfCorrectAndIncorrectQuestions[0] + 1;
@@ -83,10 +85,10 @@ public class QuizResult extends AppCompatActivity {
     }
 
     private void populateTestList() {
-        for (String questionNumber : SharedPrefsUtils.keysList(this)) {
-            List<LocalTestDatabase> localTestDatabase = LocalTestDatabase.findWithQuery(LocalTestDatabase.class, "SELECT * FROM LOCAL_TEST_DATABASE WHERE QUESTION_NO == ?", questionNumber);
-            testList.addAll(localTestDatabase);
-        }
+//        for (String questionNumber : SharedPrefsUtils.keysList(this)) {
+//            List<QuestionModel> localTestDatabase = QuestionModel.findWithQuery(QuestionModel.class, "SELECT * FROM LOCAL_TEST_DATABASE WHERE QUESTION_NO == ?", questionNumber);
+//            testList.addAll(localTestDatabase);
+//        }
     }
 
 }

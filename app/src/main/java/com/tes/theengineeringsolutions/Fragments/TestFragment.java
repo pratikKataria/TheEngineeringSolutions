@@ -1,6 +1,7 @@
 package com.tes.theengineeringsolutions.Fragments;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -20,20 +21,18 @@ import com.google.android.material.chip.Chip;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.tes.theengineeringsolutions.Adapters.RecyclerViewAdapter;
-import com.tes.theengineeringsolutions.Models.LocalTestDatabase;
+import com.tes.theengineeringsolutions.LocalTestDatabaseDoa;
 import com.tes.theengineeringsolutions.Models.QuizContract;
+import com.tes.theengineeringsolutions.QuizDatabase;
 import com.tes.theengineeringsolutions.R;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,7 +55,6 @@ public class TestFragment extends Fragment {
     public TestFragment() {
         // Required empty public constructor
     }
-
 
     private void init_fields(View view) {
         testRecyclerView = view.findViewById(R.id.fragTest_rv);
@@ -84,9 +82,6 @@ public class TestFragment extends Fragment {
         init_fields(view);
 
         init_recyclerView();
-
-
-        LocalTestDatabase.deleteAll(LocalTestDatabase.class);
 
         recyclerViewAdapter.notifyDataSetChanged();
 

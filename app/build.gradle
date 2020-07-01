@@ -43,8 +43,6 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-storage:6.2.0'
     implementation 'com.firebaseui:firebase-ui-firestore:6.2.0'
 
-    implementation 'com.github.satyan:sugar:1.5'
-
     implementation 'com.google.android.material:material:1.0.0'
 
     implementation 'com.basgeekball:awesome-validation:4.2'
@@ -66,6 +64,10 @@ dependencies {
 
     implementation 'com.hanks:htextview-base:0.1.6'
     implementation "com.hanks:htextview-evaporate:0.1.6"
+
+    def room_version = "2.2.5"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'

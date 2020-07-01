@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,14 +33,15 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.opencsv.CSVReader;
-import com.tes.theengineeringsolutions.Models.LocalTestDatabase;
+import com.tes.theengineeringsolutions.LocalTestDatabaseDoa;
+import com.tes.theengineeringsolutions.Models.QuestionModel;
 import com.tes.theengineeringsolutions.Models.QuizContract;
+import com.tes.theengineeringsolutions.QuizDatabase;
 import com.tes.theengineeringsolutions.R;
 import com.tes.theengineeringsolutions.quiz.QuizActivity;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,7 +138,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         quizContract.isQuizCompletedByUser);
 
                 testCardViewHolder.mLockBtn.setOnClickListener(v -> {
-                    testCardViewHolder.clearDataBase();
                     if (testCardViewHolder.isFileExist())
                         testCardViewHolder.isTestCompleted();
                     else Toast.makeText(context, "download file first", Toast.LENGTH_SHORT).show();
@@ -337,13 +338,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     Map<String, Object> data = success.getData();
                     Log.e(RecyclerViewAdapter.class.getName(), success.getData() + " ");
                     if (data != null && data.containsKey("password") && data.get("password") != null && data.get("password").equals(mPassEditText.getText().toString())) {
-                        isTableCreate();
+                        createTestTable();
                         alertDialog.cancel();
-                        startQuizActivity();
                         lottieAnimationView.setMinAndMaxProgress(.60F, .80F);
                         lottieAnimationView.playAnimation();
                         progressBar.setVisibility(View.GONE);
-                        startQuizActivity();
                     } else {
                         Toast.makeText(context, "wrong password", Toast.LENGTH_SHORT).show();
                         lottieAnimationView.setProgress(0);
@@ -371,7 +370,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     header.put("test_completed", data);
                     documentReference.set(header, SetOptions.merge()).addOnCompleteListener(task1 -> {
                         if (task.isSuccessful()) {
-                            isTableCreate();
+                            createTestTable();
                             alertDialog.cancel();
                             startQuizActivity();
                         } else {
@@ -382,24 +381,48 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         }
 
-        void isTableCreate() {
+        LocalTestDatabaseDoa localTestDatabaseDoa;
+
+        void createTestTable() {
             try {
                 //this.getData.getpath();/data/data/com.tes.theengineeringsolutions/test_files/Gkgkueue03.csv
                 CSVReader reader = new CSVReader(new FileReader("/data/data/com.tes.theengineeringsolutions/test_files/" + textViewSubjectCode.getText().toString() + ".csv"), ',');
-                List<LocalTestDatabase> tdb = new ArrayList<>();
+                List<QuestionModel> tdb = new ArrayList<>();
                 String[] rec = null;
                 int questionNo = 1;
                 while ((rec = reader.readNext()) != null) {
-                    Log.e("CSVREADER", rec[0] + rec[1] + rec[2] + rec[3] + rec[4] + rec[5]);
-                    LocalTestDatabase emp = new LocalTestDatabase(questionNo++, rec[0]+"", rec[1]+"", rec[2]+"", rec[3]+"", rec[4]+"", Integer.parseInt(rec[5]), false);
-                    emp.save();
-                    tdb.add(emp);
+                    int correctAnswerChoice = 0;
+                    try {
+                        correctAnswerChoice = Integer.parseInt(rec[5]);
+                    } catch (Exception xe) {
+                        Toast.makeText(context, "File is corrupted: please upload file without question number", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    QuestionModel test = new QuestionModel(questionNo++, rec[0] + "", rec[1] + "", rec[2] + "", rec[3] + "", rec[4] + " ", correctAnswerChoice, false);
+                    tdb.add(test);
                 }
+
+                QuizDatabase quizDatabase = QuizDatabase.getInstance(context);
+                localTestDatabaseDoa = quizDatabase.testDatabaseDoa();
+                new DeleteAllLocalTestDatabase(localTestDatabaseDoa).execute();
+
+                for (QuestionModel questionModel : tdb) {
+                    insert(questionModel);
+                }
+
+                startQuizActivity();
+
             } catch (Exception e) {
                 Log.e(RecyclerViewAdapter.class.getName(), "exeption " + e.getMessage());
                 e.printStackTrace();
             }
         }
+
+
+        public void insert(QuestionModel questionModel) {
+            new InsertLocalTestDatabase(localTestDatabaseDoa).execute(questionModel);
+        }
+
 
         void startQuizActivity() {
             Intent intent = new Intent(context, QuizActivity.class);
@@ -410,16 +433,40 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             context.startActivity(intent);
         }
 
-        void clearDataBase() {
-            if (LocalTestDatabase.listAll(LocalTestDatabase.class).size() > 0)
-                LocalTestDatabase.deleteAll(LocalTestDatabase.class);
-
-        }
-
         boolean isFileExist() {
             return new File("/data/data/com.tes.theengineeringsolutions/test_files/" + textViewSubjectCode.getText().toString() + ".csv").exists();
         }
 
+    }
+
+    private static class InsertLocalTestDatabase extends AsyncTask<QuestionModel, Void, Void> {
+
+        private LocalTestDatabaseDoa databaseDao;
+
+        private InsertLocalTestDatabase(LocalTestDatabaseDoa databaseDoa) {
+            this.databaseDao = databaseDoa;
+        }
+
+        @Override
+        protected Void doInBackground(QuestionModel... questionModels) {
+            databaseDao.insert(questionModels[0]);
+            return null;
+        }
+    }
+
+    private static class DeleteAllLocalTestDatabase extends AsyncTask<Void, Void, Void> {
+
+        private LocalTestDatabaseDoa databaseDao;
+
+        private DeleteAllLocalTestDatabase(LocalTestDatabaseDoa databaseDoa) {
+            this.databaseDao = databaseDoa;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            databaseDao.deleteAllQuestions();
+            return null;
+        }
     }
 
     //view of card layout

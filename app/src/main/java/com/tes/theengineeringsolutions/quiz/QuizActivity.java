@@ -2,6 +2,7 @@ package com.tes.theengineeringsolutions.quiz;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RadioButton;
@@ -13,11 +14,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
-import com.tes.theengineeringsolutions.Models.LocalTestDatabase;
+import com.tes.theengineeringsolutions.LocalTestDatabaseDoa;
+import com.tes.theengineeringsolutions.Models.QuestionModel;
+import com.tes.theengineeringsolutions.QuizDatabase;
 import com.tes.theengineeringsolutions.R;
 import com.tes.theengineeringsolutions.utils.SharedPrefsUtils;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /*
  * created by pratik katariya
@@ -41,7 +45,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private int questionNumber;
     private int numberOfQuestionContainsInList;
-    private List<LocalTestDatabase> questionList;
+    private List<QuestionModel> questionList;
 
     private void initFields() {
         testViewQuestions = findViewById(R.id.testSession_tv_question);
@@ -54,16 +58,41 @@ public class QuizActivity extends AppCompatActivity {
         nextBtn = findViewById(R.id.testSession_mb_next);
         previousBtn = findViewById(R.id.testSession_mb_previous);
         MaterialButton submitMb = findViewById(R.id.testSession_mb_submit);
-        submitMb.setOnClickListener(n-> showSubmitDialog());
+        submitMb.setOnClickListener(n -> showSubmitDialog());
         TextView textViewTime = findViewById(R.id.textView_time);
 
 //        testViewTestName.setText(getIntent().getStringExtra("TEST_NAME"));
 //        testViewTestCode.setText(getIntent().getStringExtra("TEST_CODE"));
 //        textViewTime.setText(getIntent().getStringExtra("TEST_TOTAL_QUESTION").substring(0,2)+"  \u2022  "+ getIntent().getStringExtra("TEST_DURATION").substring(0,2) +" MINS");
 
-        questionList = LocalTestDatabase.listAll(LocalTestDatabase.class);
-        if (questionList != null)
+
+        QuizDatabase quizDatabase = QuizDatabase.getInstance(this);
+        LocalTestDatabaseDoa localTestDatabaseDoa = quizDatabase.testDatabaseDoa();
+        try {
+            questionList = new QuestionList(localTestDatabaseDoa).execute().get();
             numberOfQuestionContainsInList = questionList.size();
+            Log.e(QuizActivity.class.getName(), questionList.size() + " ");
+            Log.e(QuizActivity.class.getName(), questionList + " ");
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static class QuestionList extends AsyncTask<Void, Void, List<QuestionModel>> {
+
+        LocalTestDatabaseDoa localTestDatabaseDoa;
+
+        public QuestionList(LocalTestDatabaseDoa localTestDatabaseDoa) {
+            this.localTestDatabaseDoa = localTestDatabaseDoa;
+        }
+
+
+        @Override
+        protected List<QuestionModel> doInBackground(Void... voids) {
+            return localTestDatabaseDoa.getAllQuestionsAndOptions();
+        }
     }
 
     @Override
@@ -119,13 +148,13 @@ public class QuizActivity extends AppCompatActivity {
     };
 
     public void setQuestionAndChoices() {
-        LocalTestDatabase localTestDatabase = questionList.get(questionNumber);
-        if (localTestDatabase == null) return;
-        testViewQuestions.setText("Q" + localTestDatabase.getQuestionNo() + ". " + localTestDatabase.getQuestions());
-        ((RadioButton) choicesGroup.getChildAt(0)).setText(localTestDatabase.getChoice1());
-        ((RadioButton) choicesGroup.getChildAt(1)).setText(localTestDatabase.getChoice2());
-        ((RadioButton) choicesGroup.getChildAt(2)).setText(localTestDatabase.getChoice3());
-        ((RadioButton) choicesGroup.getChildAt(3)).setText(localTestDatabase.getChoice4());
+        QuestionModel questionModel = questionList.get(questionNumber);
+        if (questionModel == null) return;
+        testViewQuestions.setText("Q" + questionModel.getQuestionNo() + ". " + questionModel.getQuestions());
+        ((RadioButton) choicesGroup.getChildAt(0)).setText(questionModel.getChoice1());
+        ((RadioButton) choicesGroup.getChildAt(1)).setText(questionModel.getChoice2());
+        ((RadioButton) choicesGroup.getChildAt(2)).setText(questionModel.getChoice3());
+        ((RadioButton) choicesGroup.getChildAt(3)).setText(questionModel.getChoice4());
     }
 
     private void updateQuizProgressStatus() {
