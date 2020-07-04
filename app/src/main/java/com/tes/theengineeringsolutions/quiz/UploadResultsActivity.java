@@ -1,5 +1,6 @@
 package com.tes.theengineeringsolutions.quiz;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,15 +16,16 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 import com.hanks.htextview.evaporate.EvaporateTextView;
 import com.tes.theengineeringsolutions.Models.ConnectivityReceiver;
 import com.tes.theengineeringsolutions.Models.QuestionModel;
-import com.tes.theengineeringsolutions.QuizDatabase;
 import com.tes.theengineeringsolutions.R;
 import com.tes.theengineeringsolutions.activities.MyApplication;
+import com.tes.theengineeringsolutions.roomdatabase.QuizDatabase;
 import com.tes.theengineeringsolutions.utils.ColorUtils;
 import com.tes.theengineeringsolutions.utils.GetQuestionListAsyncTask;
 import com.tes.theengineeringsolutions.utils.SharedPrefsUtils;
@@ -48,6 +50,7 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
     private EvaporateTextView evaporateTextView;
     private MaterialButton retryButton;
     private LottieAnimationView lottieAnimationView;
+    private boolean isTestPassed;
 
     private void init_fields() {
         subjectCode = getIntent().getStringExtra("TEST_CODE");
@@ -94,6 +97,7 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
 
         int[] countedNumberCorrectAndIncorrectAnswers = checkAnswers();
         float percent = ((((float) countedNumberCorrectAndIncorrectAnswers[0]) / totalQuestion)) * 100;
+        isTestPassed = percent > 25;
 
         Map<String, String> resultHashMap = new HashMap<>();
         resultHashMap.put("subject", subject);
@@ -136,18 +140,37 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
         DocumentReference resultDocumentReference = FirebaseFirestore.getInstance().collection("Results").document(FirebaseAuth.getInstance().getUid());
         writeBatch.set(resultDocumentReference, header, SetOptions.merge());
 
-        writeBatch.commit().addOnSuccessListener(aVoid -> {
-            evaporateTextView.animateText("Test uploaded");
-            showQuizResultActivity();
-        }).addOnFailureListener(e -> {
-            evaporateTextView.animateText("Failed to upload" + e.getMessage());
-            lottieAnimationView.pauseAnimation();
-            retryButton.setVisibility(View.VISIBLE);
-            retryButton.setOnClickListener(v -> {
-                batchWriteCloudFirestore();
-                lottieAnimationView.playAnimation();
-                retryButton.setVisibility(View.GONE);
-            });
+        Map<String, Integer> setProgress = new HashMap<>();
+        @SuppressLint("SimpleDateFormat") String simpleDateFormat = new SimpleDateFormat("MM'-'YYYY").format(new Date());
+        DocumentReference testProgressDocumentReference = FirebaseFirestore.getInstance().collection("TestProgress").document(simpleDateFormat);
+        testProgressDocumentReference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                String firebaseId = FirebaseAuth.getInstance().getUid();
+                if (documentSnapshot != null && documentSnapshot.contains(firebaseId)) {
+                    long progress = (int) documentSnapshot.get(firebaseId);
+                    setProgress.put(firebaseId, (int)progress + 1);
+                } else {
+                    setProgress.put(firebaseId, 1);
+                }
+
+                if (isTestPassed)
+                    writeBatch.set(testProgressDocumentReference, setProgress, SetOptions.merge());
+
+                writeBatch.commit().addOnSuccessListener(aVoid -> {
+                    evaporateTextView.animateText("Test uploaded");
+                    showQuizResultActivity();
+                }).addOnFailureListener(e -> {
+                    evaporateTextView.animateText("Failed to upload" + e.getMessage());
+                    lottieAnimationView.pauseAnimation();
+                    retryButton.setVisibility(View.VISIBLE);
+                    retryButton.setOnClickListener(v -> {
+                        batchWriteCloudFirestore();
+                        lottieAnimationView.playAnimation();
+                        retryButton.setVisibility(View.GONE);
+                    });
+                });
+            }
         });
     }
 
@@ -226,44 +249,5 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
                 });
     }
 
-
-    //    private void setProgress(boolean isPass) {
-//        if (isPass) {
-//            Map<String, Object> header = new HashMap<>();
-//            Map<String, Integer> data = new HashMap<>();
-//            DocumentReference reference = FirebaseFirestore.getInstance().collection("User").document(FirebaseAuth.getInstance().getUid());
-//            reference.get().addOnCompleteListener(task -> {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot documentSnapshot = task.getResult();
-//                    if (documentSnapshot != null && documentSnapshot.exists()) {
-//                        Map<String, Object> data1 = documentSnapshot.getData();
-//                        if (data1 != null && data1.containsKey("test_progress")) {
-//                            if (((Map<String, Object>) data1.get("test_progress")).containsKey(stringDate.substring(7))) {
-//                                long number = (Long) ((Map<String, Object>) data1.get("test_progress")).get(stringDate.substring(7));
-//                                data.put(stringDate.substring(7), ((int) number + 1));
-//                                header.put("test_progress", data);
-//                                reference.set(header, SetOptions.merge());
-//                                Toast.makeText(this, "progress upgraded", Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                data.put(stringDate.substring(7), 0);
-//                                header.put("test_progress", data);
-//                                reference.set(header, SetOptions.merge());
-//                                Toast.makeText(this, "progress set", Toast.LENGTH_SHORT).show();
-//                            }
-//                        } else {
-//                            data.put(stringDate.substring(7), 1);
-//                            header.put("test_progress", data);
-//                            reference.set(header, SetOptions.merge());
-//                            Toast.makeText(this, "progress set", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                } else {
-//                    String e = task.getException().getMessage();
-//                    Log.e("TESTFRAGMENT", e);
-//                    Toast.makeText(this, "failed to set progress", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-//    }
 
 }

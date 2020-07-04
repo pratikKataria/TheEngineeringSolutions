@@ -2,7 +2,7 @@ package com.tes.theengineeringsolutions.utils;
 
 import android.os.AsyncTask;
 
-import com.tes.theengineeringsolutions.LocalTestDatabaseDoa;
+import com.tes.theengineeringsolutions.roomdatabase.LocalTestDatabaseDoa;
 import com.tes.theengineeringsolutions.Models.QuestionModel;
 
 import java.util.List;

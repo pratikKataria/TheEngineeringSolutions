@@ -21,6 +21,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
@@ -51,9 +52,6 @@ import static com.tes.theengineeringsolutions.Models.ConnectivityReceiver.isConn
 
 public class MainActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
-    private static final String Tag = "MAINACTIVITY";
-    private static String TAG = "MAINACTIVITY";
-    private MaterialButton mMaterialButton;
     private DrawerLayout mDrawerLayout; // layout to implement side nav bar
     private NavigationView mNavigationView; // side var bar
     private ActionBarDrawerToggle actionBarDrawerToggle;//  actionbar

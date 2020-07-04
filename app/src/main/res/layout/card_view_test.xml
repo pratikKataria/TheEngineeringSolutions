@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
@@ -101,20 +101,21 @@
                 android:layout_marginStart="16dp"
                 android:layout_gravity="center">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/card_ib_lock"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_lock_black" />
+                    android:src="@drawable/ic_lock_black"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/card_ib_download_test_file"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_marginStart="8dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_cloud_download" />
+                    android:src="@drawable/ic_cloud_download"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+
             </LinearLayout>
 
             <TextView
@@ -129,4 +130,4 @@
                 android:textColor="@color/darkGrey" />
         </LinearLayout>
     </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>

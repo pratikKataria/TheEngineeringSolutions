@@ -1,7 +1,6 @@
 package com.tes.theengineeringsolutions.Fragments;
 
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -11,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,9 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.tes.theengineeringsolutions.Adapters.RecyclerViewAdapter;
-import com.tes.theengineeringsolutions.LocalTestDatabaseDoa;
 import com.tes.theengineeringsolutions.Models.QuizContract;
-import com.tes.theengineeringsolutions.QuizDatabase;
 import com.tes.theengineeringsolutions.R;
 
 import java.util.ArrayList;
@@ -50,6 +48,7 @@ public class TestFragment extends Fragment {
 
     private FirebaseFirestore firebaseFirestore;
     private ListenerRegistration listenerRegistration;
+
 
 
     public TestFragment() {
@@ -86,6 +85,7 @@ public class TestFragment extends Fragment {
         recyclerViewAdapter.notifyDataSetChanged();
 
         reloadBtn.setOnClickListener(v -> reload());
+
         return view;
     }
 
@@ -164,12 +164,21 @@ public class TestFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         Log.e(TestFragment.class.getName(), "onStop");
         if (listenerRegistration != null) {
             listenerRegistration.remove();
         }
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+
     }
 
     private void hideList() {

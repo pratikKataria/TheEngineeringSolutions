@@ -1,7 +1,6 @@
-package com.tes.theengineeringsolutions;
+package com.tes.theengineeringsolutions.roomdatabase;
 
 import android.content.Context;
-
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;

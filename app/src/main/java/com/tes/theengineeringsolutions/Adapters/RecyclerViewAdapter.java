@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -33,10 +33,10 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.opencsv.CSVReader;
-import com.tes.theengineeringsolutions.LocalTestDatabaseDoa;
+import com.tes.theengineeringsolutions.roomdatabase.LocalTestDatabaseDoa;
 import com.tes.theengineeringsolutions.Models.QuestionModel;
 import com.tes.theengineeringsolutions.Models.QuizContract;
-import com.tes.theengineeringsolutions.QuizDatabase;
+import com.tes.theengineeringsolutions.roomdatabase.QuizDatabase;
 import com.tes.theengineeringsolutions.R;
 import com.tes.theengineeringsolutions.quiz.QuizActivity;
 import com.tes.theengineeringsolutions.utils.SharedPrefsUtils;
@@ -217,8 +217,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private TextView textViewDuration;
         private TextView textViewSubjectCode;
         private TextView textViewIsCompleted;
-        private ImageButton mLockBtn;
-        private ImageButton mDownloadBtn;
+        private ImageView mLockBtn;
+        private ImageView mDownloadBtn;
         private ProgressBar progressBar;
         private AlertDialog alertDialog;
 
@@ -340,7 +340,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     Log.e(RecyclerViewAdapter.class.getName(), success.getData() + " ");
                     if (data != null && data.containsKey("password") && data.get("password") != null && data.get("password").equals(mPassEditText.getText().toString())) {
                         createTestTable();
-                        alertDialog.cancel();
                         lottieAnimationView.setMinAndMaxProgress(.60F, .80F);
                         lottieAnimationView.playAnimation();
                         progressBar.setVisibility(View.GONE);
@@ -408,7 +407,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     header.put("test_completed", data);
                     documentReference.set(header, SetOptions.merge()).addOnCompleteListener(task1 -> {
                         if (task.isSuccessful()) {
-                            alertDialog.cancel();
                             startQuizActivity();
                         } else {
                             Toast.makeText(context, "check your internet connection", Toast.LENGTH_SHORT).show();
@@ -430,6 +428,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             intent.putExtra("TEST_CODE", textViewSubjectCode.getText().toString());
             intent.putExtra("TEST_DURATION", textViewDuration.getText().toString());
             intent.putExtra("TEST_TOTAL_QUESTION", textViewNoOfQuestion.getText().toString());
+            alertDialog.cancel();
             context.startActivity(intent);
         }
 

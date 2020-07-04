@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tes.theengineeringsolutions.Adapters.ResultRecyclerView;
 import com.tes.theengineeringsolutions.Models.QuestionModel;
-import com.tes.theengineeringsolutions.QuizDatabase;
+import com.tes.theengineeringsolutions.roomdatabase.QuizDatabase;
 import com.tes.theengineeringsolutions.R;
 import com.tes.theengineeringsolutions.utils.GetQuestionListAsyncTask;
 import com.tes.theengineeringsolutions.utils.SharedPrefsUtils;

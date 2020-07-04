@@ -1,4 +1,4 @@
-package com.tes.theengineeringsolutions;
+package com.tes.theengineeringsolutions.roomdatabase;
 
 import androidx.room.Dao;
 import androidx.room.Delete;

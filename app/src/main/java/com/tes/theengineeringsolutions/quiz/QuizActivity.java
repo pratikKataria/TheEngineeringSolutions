@@ -14,9 +14,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
-import com.tes.theengineeringsolutions.LocalTestDatabaseDoa;
+import com.tes.theengineeringsolutions.roomdatabase.LocalTestDatabaseDoa;
 import com.tes.theengineeringsolutions.Models.QuestionModel;
-import com.tes.theengineeringsolutions.QuizDatabase;
+import com.tes.theengineeringsolutions.roomdatabase.QuizDatabase;
 import com.tes.theengineeringsolutions.R;
 import com.tes.theengineeringsolutions.utils.SharedPrefsUtils;
 
@@ -169,13 +169,6 @@ public class QuizActivity extends AppCompatActivity {
             RadioButton radioButton = (RadioButton) choicesGroup.getChildAt(answerChoice - 1);
             radioButton.setChecked(true);
         }
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        SharedPrefsUtils.clearAllPreference(this);
     }
 
     private void showSubmitDialog() {
