@@ -142,16 +142,15 @@ public class UploadResultsActivity extends AppCompatActivity implements Connecti
 
         Map<String, Integer> setProgress = new HashMap<>();
         @SuppressLint("SimpleDateFormat") String simpleDateFormat = new SimpleDateFormat("MM'-'YYYY").format(new Date());
-        DocumentReference testProgressDocumentReference = FirebaseFirestore.getInstance().collection("TestProgress").document(simpleDateFormat);
+        DocumentReference testProgressDocumentReference = FirebaseFirestore.getInstance().collection("TestProgress").document(FirebaseAuth.getInstance().getUid());
         testProgressDocumentReference.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot documentSnapshot = task.getResult();
-                String firebaseId = FirebaseAuth.getInstance().getUid();
-                if (documentSnapshot != null && documentSnapshot.contains(firebaseId)) {
-                    long progress = (int) documentSnapshot.get(firebaseId);
-                    setProgress.put(firebaseId, (int)progress + 1);
+                if (documentSnapshot != null && documentSnapshot.contains(simpleDateFormat)) {
+                    long progress = (int) documentSnapshot.get(simpleDateFormat);
+                    setProgress.put(simpleDateFormat, (int)progress + 1);
                 } else {
-                    setProgress.put(firebaseId, 1);
+                    setProgress.put(simpleDateFormat, 1);
                 }
 
                 if (isTestPassed)
